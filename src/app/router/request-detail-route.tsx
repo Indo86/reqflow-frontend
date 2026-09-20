@@ -1,15 +1,9 @@
-import { useParams } from 'react-router-dom'
-import { RequestDetailPage } from '@/features/requests/request-detail-page'
-import { findRequestDetail } from '@/lib/mock/request-details'
+import { RequestDetailPage } from '@/features/requests/pages/request-detail-page'
 
-// The generic (non-preview) route always renders from the Request Owner's
-// perspective — there is no real session yet, and an owner never approves
-// their own request, so this never shows approval actions. The exact
-// relationship variants (current approver / non-current / admin) live under
-// the dedicated /preview/request-detail/* routes instead.
+// Real data (F2) — RequestDetailPage fetches by :requestId itself via
+// useParams + useRequestQuery. The F0.5 mock RequestDetailPage (variant-
+// driven, no /pages/ prefix) is untouched and still serves
+// /preview/request-detail/* routes.
 export function RequestDetailRoute() {
-  const { requestId } = useParams<{ requestId: string }>()
-  const detail = findRequestDetail(requestId)
-
-  return <RequestDetailPage detail={detail} variant="owner-draft" />
+  return <RequestDetailPage />
 }

@@ -1,16 +1,26 @@
-import { AppShell } from '@/app/layout/app-shell'
+import { AppShell, type AppShellUser } from '@/app/layout/app-shell'
 import { PageHeader } from '@/components/shared/page-header'
 import { Tabs } from '@/components/shared/tabs'
 import { NotificationItem } from '@/components/shared/notification-item'
 import { deniZaky } from '@/lib/mock/users'
-import { navigationByRole } from '@/lib/mock/navigation'
+import { previewNavigationByRole, type NavItemConfig } from '@/lib/mock/navigation'
 import { mockNotifications } from '@/lib/mock/notifications'
 
-export function NotificationsPage() {
+interface NotificationsPageProps {
+  user?: AppShellUser
+  navItems?: NavItemConfig[]
+  onLogout?: () => void
+}
+
+export function NotificationsPage({
+  user = deniZaky,
+  navItems = previewNavigationByRole.Employee,
+  onLogout,
+}: NotificationsPageProps = {}) {
   const unreadCount = mockNotifications.filter((item) => item.unread).length
 
   return (
-    <AppShell user={deniZaky} navItems={navigationByRole.Employee} activeKey="notifications">
+    <AppShell user={user} navItems={navItems} activeKey="notifications" onLogout={onLogout}>
       <PageHeader
         title="Notifications"
         subtitle="Updates on requests, approvals, and comments"

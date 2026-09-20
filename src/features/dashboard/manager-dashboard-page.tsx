@@ -1,18 +1,31 @@
 import { Plus } from 'lucide-react'
-import { AppShell } from '@/app/layout/app-shell'
+import { AppShell, type AppShellUser } from '@/app/layout/app-shell'
 import { PageHeader } from '@/components/shared/page-header'
 import { StatCard } from '@/components/shared/stat-card'
 import { SectionCard } from '@/components/shared/section-card'
 import { sarahWijaya } from '@/lib/mock/users'
-import { navigationByRole } from '@/lib/mock/navigation'
+import { previewNavigationByRole, type NavItemConfig } from '@/lib/mock/navigation'
 import { managerRecentRequests, managerStats } from '@/lib/mock/dashboards'
 import { managerAttentionRows } from '@/lib/mock/approvals'
 import { ApprovalAttentionTable } from './approval-attention-table'
 import { RecentRequestsTable } from './recent-requests-table'
 
-export function ManagerDashboardPage() {
+interface ManagerDashboardPageProps {
+  user?: AppShellUser
+  navItems?: NavItemConfig[]
+  onLogout?: () => void
+}
+
+// Reused for both the Manager and Finance real dashboards in F1 (no
+// distinct Finance dashboard exists in the F0.5 design) — see
+// dashboard-route.tsx.
+export function ManagerDashboardPage({
+  user = sarahWijaya,
+  navItems = previewNavigationByRole.Manager,
+  onLogout,
+}: ManagerDashboardPageProps = {}) {
   return (
-    <AppShell user={sarahWijaya} navItems={navigationByRole.Manager} activeKey="dashboard">
+    <AppShell user={user} navItems={navItems} activeKey="dashboard" onLogout={onLogout}>
       <PageHeader
         title="Dashboard"
         subtitle="What needs your decision, and the status of your own requests"

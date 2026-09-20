@@ -1,5 +1,5 @@
 import { Download } from 'lucide-react'
-import { AppShell } from '@/app/layout/app-shell'
+import { AppShell, type AppShellUser } from '@/app/layout/app-shell'
 import { PageHeader } from '@/components/shared/page-header'
 import { StatCard } from '@/components/shared/stat-card'
 import { SectionCard } from '@/components/shared/section-card'
@@ -8,12 +8,22 @@ import { TrendLineChart } from '@/components/shared/trend-line-chart'
 import { ActivityItem } from '@/components/shared/activity-item'
 import { FilterPill } from '@/components/shared/filter-bar'
 import { adminUser } from '@/lib/mock/users'
-import { navigationByRole } from '@/lib/mock/navigation'
+import { previewNavigationByRole, type NavItemConfig } from '@/lib/mock/navigation'
 import { adminStats, recentActivity, requestsOverTimeSeries, statusBreakdown, typeBreakdown } from '@/lib/mock/dashboards'
 
-export function AdminDashboardPage() {
+interface AdminDashboardPageProps {
+  user?: AppShellUser
+  navItems?: NavItemConfig[]
+  onLogout?: () => void
+}
+
+export function AdminDashboardPage({
+  user = adminUser,
+  navItems = previewNavigationByRole.Admin,
+  onLogout,
+}: AdminDashboardPageProps = {}) {
   return (
-    <AppShell user={adminUser} navItems={navigationByRole.Admin} activeKey="dashboard">
+    <AppShell user={user} navItems={navItems} activeKey="dashboard" onLogout={onLogout}>
       <PageHeader
         title="Dashboard"
         subtitle="Organization-wide overview of requests and approvals"

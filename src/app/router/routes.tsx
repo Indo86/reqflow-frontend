@@ -1,13 +1,17 @@
 import { Navigate, type RouteObject } from 'react-router-dom'
 import { AppLayout } from '@/app/layout/app-layout'
 import { RouteErrorBoundary } from '@/components/shared/route-error-boundary'
-import { LoginPage } from '@/features/auth/login-page'
-import { OwnerDashboardPage } from '@/features/dashboard/owner-dashboard-page'
-import { MyRequestsPage } from '@/features/requests/my-requests-page'
-import { ApprovalsInboxPage } from '@/features/approvals/approvals-inbox-page'
-import { NotificationsPage } from '@/features/notifications/notifications-page'
-import { ReportsPage } from '@/features/reports/reports-page'
+import { LoginPage } from '@/features/auth/pages/login-page'
+import { GuestOnlyRoute } from '@/features/auth/components/guest-only-route'
+import { ProtectedRoute } from '@/features/auth/components/protected-route'
+import { DashboardRoute } from './dashboard-route'
+import { RequestsRoute } from './requests-route'
+import { ApprovalsRoute } from './approvals-route'
+import { NotificationsRoute } from './notifications-route'
+import { ReportsRoute } from './reports-route'
 import { RequestDetailRoute } from './request-detail-route'
+import { RequestFormRoute } from './request-form-route'
+import { ApprovalReviewRoute } from './approval-review-route'
 import { previewRoutes } from './preview-routes'
 import { NotFoundPage } from './not-found-page'
 
@@ -17,14 +21,32 @@ export const routes: RouteObject[] = [
     element: <AppLayout />,
     errorElement: <RouteErrorBoundary />,
     children: [
-      { index: true, element: <Navigate to="/login" replace /> },
-      { path: 'login', element: <LoginPage /> },
-      { path: 'dashboard', element: <OwnerDashboardPage /> },
-      { path: 'requests', element: <MyRequestsPage /> },
-      { path: 'requests/:requestId', element: <RequestDetailRoute /> },
-      { path: 'approvals', element: <ApprovalsInboxPage persona="manager" /> },
-      { path: 'notifications', element: <NotificationsPage /> },
-      { path: 'reports', element: <ReportsPage /> },
+      { index: true, element: <Navigate to="/dashboard" replace /> },
+      {
+        path: 'login',
+        element: (
+          <GuestOnlyRoute>
+            <LoginPage />
+          </GuestOnlyRoute>
+        ),
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          { path: 'dashboard', element: <DashboardRoute /> },
+          { path: 'requests', element: <RequestsRoute /> },
+          { path: 'requests/new', element: <RequestFormRoute /> },
+          { path: 'requests/:requestId', element: <RequestDetailRoute /> },
+          { path: 'requests/:requestId/edit', element: <RequestFormRoute /> },
+          { path: 'approvals', element: <ApprovalsRoute /> },
+          { path: 'approvals/:approvalId', element: <ApprovalReviewRoute /> },
+          { path: 'notifications', element: <NotificationsRoute /> },
+          { path: 'reports', element: <ReportsRoute /> },
+        ],
+      },
+      // Design-preview routes are intentionally outside the auth boundary —
+      // they render fixed mock personas for design QA and never touch real
+      // session state. See src/app/router/preview-routes.tsx.
       ...previewRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],

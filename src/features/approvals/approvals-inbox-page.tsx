@@ -1,12 +1,12 @@
 import { Download } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { AppShell } from '@/app/layout/app-shell'
+import { AppShell, type AppShellUser } from '@/app/layout/app-shell'
 import { PageHeader } from '@/components/shared/page-header'
 import { Tabs } from '@/components/shared/tabs'
 import { DataTableShell } from '@/components/shared/data-table-shell'
 import { Badge } from '@/components/shared/badge'
 import { UserAvatar } from '@/components/shared/user-avatar'
-import { navigationByRole } from '@/lib/mock/navigation'
+import { previewNavigationByRole, type NavItemConfig } from '@/lib/mock/navigation'
 import { andiPratama, rinaPutri, sarahWijaya } from '@/lib/mock/users'
 import { approvalsByPersona, type ApprovalPersona } from '@/lib/mock/approvals'
 import { formatRupiah } from '@/lib/utils/format-currency'
@@ -30,12 +30,20 @@ const personaReviewHref: Record<ApprovalPersona, string> = {
   director: '/preview/request-detail/current-approver',
 }
 
-export function ApprovalsInboxPage({ persona }: { persona: ApprovalPersona }) {
+interface ApprovalsInboxPageProps {
+  persona: ApprovalPersona
+  user?: AppShellUser
+  navItems?: NavItemConfig[]
+  onLogout?: () => void
+}
+
+export function ApprovalsInboxPage({ persona, user, navItems, onLogout }: ApprovalsInboxPageProps) {
   const queue = approvalsByPersona[persona]
-  const user = personaUser[persona]
+  const resolvedUser = user ?? personaUser[persona]
+  const resolvedNavItems = navItems ?? previewNavigationByRole[personaRole[persona]]
 
   return (
-    <AppShell user={user} navItems={navigationByRole[personaRole[persona]]} activeKey="approvals">
+    <AppShell user={resolvedUser} navItems={resolvedNavItems} activeKey="approvals" onLogout={onLogout}>
       <PageHeader
         title={queue.title}
         subtitle={queue.subtitle}

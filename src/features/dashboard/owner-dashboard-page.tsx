@@ -1,18 +1,31 @@
 import { Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { AppShell } from '@/app/layout/app-shell'
+import { AppShell, type AppShellUser } from '@/app/layout/app-shell'
 import { PageHeader } from '@/components/shared/page-header'
 import { StatCard } from '@/components/shared/stat-card'
 import { SectionCard } from '@/components/shared/section-card'
 import { BreakdownList } from '@/components/shared/breakdown-list'
 import { deniZaky } from '@/lib/mock/users'
-import { navigationByRole } from '@/lib/mock/navigation'
+import { previewNavigationByRole, type NavItemConfig } from '@/lib/mock/navigation'
 import { ownerRecentRequests, ownerStats, ownerStatusBreakdown } from '@/lib/mock/dashboards'
 import { RecentRequestsTable } from './recent-requests-table'
 
-export function OwnerDashboardPage() {
+interface OwnerDashboardPageProps {
+  user?: AppShellUser
+  navItems?: NavItemConfig[]
+  onLogout?: () => void
+}
+
+// user/navItems default to the F0.5 mock persona so /preview/owner/dashboard
+// keeps working unchanged; the real /dashboard route passes the actual
+// signed-in user and role-aware nav (see F1 dashboard-route.tsx).
+export function OwnerDashboardPage({
+  user = deniZaky,
+  navItems = previewNavigationByRole.Employee,
+  onLogout,
+}: OwnerDashboardPageProps = {}) {
   return (
-    <AppShell user={deniZaky} navItems={navigationByRole.Employee} activeKey="dashboard">
+    <AppShell user={user} navItems={navItems} activeKey="dashboard" onLogout={onLogout}>
       <PageHeader
         title="Dashboard"
         subtitle="Overview of your requests"

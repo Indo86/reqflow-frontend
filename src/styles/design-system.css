@@ -589,3 +589,10 @@ svg.icon { display: block; flex-shrink: 0; }
   .detail-columns { flex-direction: column; }
   .detail-side { width: 100%; }
 }
+
+/* Native <dialog>-based confirmation prompts (Request cancel/delete) — no
+   dialog/modal dependency exists in this project, and the browser's own
+   <dialog> element already gives focus trapping, Escape-to-close, and a
+   backdrop for free. */
+dialog.confirm-dialog { border: none; border-radius: 12px; padding: 0; max-width: 360px; width: calc(100% - 32px); }
+dialog.confirm-dialog::backdrop { background: rgba(15, 23, 42, 0.45); }

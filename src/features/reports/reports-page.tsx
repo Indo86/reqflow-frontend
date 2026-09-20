@@ -1,12 +1,12 @@
 import { Calendar, Download } from 'lucide-react'
-import { AppShell } from '@/app/layout/app-shell'
+import { AppShell, type AppShellUser } from '@/app/layout/app-shell'
 import { PageHeader } from '@/components/shared/page-header'
 import { SectionCard } from '@/components/shared/section-card'
 import { FilterBar, FilterPill, FilterSpacer } from '@/components/shared/filter-bar'
 import { BreakdownList } from '@/components/shared/breakdown-list'
 import { TrendLineChart } from '@/components/shared/trend-line-chart'
 import { adminUser } from '@/lib/mock/users'
-import { navigationByRole } from '@/lib/mock/navigation'
+import { previewNavigationByRole, type NavItemConfig } from '@/lib/mock/navigation'
 import {
   reportDepartmentBreakdown,
   reportRequestsOverTime,
@@ -17,9 +17,19 @@ import {
   workflowDurationLabels,
 } from '@/lib/mock/reports'
 
-export function ReportsPage() {
+interface ReportsPageProps {
+  user?: AppShellUser
+  navItems?: NavItemConfig[]
+  onLogout?: () => void
+}
+
+export function ReportsPage({
+  user = adminUser,
+  navItems = previewNavigationByRole.Admin,
+  onLogout,
+}: ReportsPageProps = {}) {
   return (
-    <AppShell user={adminUser} navItems={navigationByRole.Admin} activeKey="reports">
+    <AppShell user={user} navItems={navItems} activeKey="reports" onLogout={onLogout}>
       <PageHeader
         title="Reports"
         subtitle="Organization-wide insights into request volume, approvals, and workflow performance"

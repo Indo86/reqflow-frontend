@@ -1,19 +1,33 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { Settings, Workflow } from 'lucide-react'
-import type { MockUser } from '@/types/domain'
+import { LogOut, Settings, Workflow } from 'lucide-react'
 import type { NavItemConfig } from '@/lib/mock/navigation'
 import { UserAvatar } from '@/components/shared/user-avatar'
 import { cn } from '@/lib/utils'
 
+// Loose display-only shape so both mock personas (MockUser, a closed set of
+// literal unions) and the real authenticated session user (arbitrary backend
+// strings) satisfy it without a cast — see F1 "AppShell real-user
+// integration".
+export interface AppShellUser {
+  name: string
+  initials: string
+  role: string
+  department?: string
+}
+
 interface AppShellProps {
-  user: MockUser
+  user: AppShellUser
   navItems: NavItemConfig[]
   activeKey: string
   children: ReactNode
+  // Omitted entirely on the /preview/* mock-persona pages — there is no
+  // real session to sign out of there. Real authenticated routes pass a
+  // real handler (see F1 useLogout()).
+  onLogout?: () => void
 }
 
-export function AppShell({ user, navItems, activeKey, children }: AppShellProps) {
+export function AppShell({ user, navItems, activeKey, children, onLogout }: AppShellProps) {
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -40,6 +54,12 @@ export function AppShell({ user, navItems, activeKey, children }: AppShellProps)
             <Settings className="icon" width={17} height={17} strokeWidth={2} />
             <span>Settings</span>
           </button>
+          {onLogout ? (
+            <button type="button" className="nav-item" onClick={onLogout}>
+              <LogOut className="icon" width={17} height={17} strokeWidth={2} />
+              <span>Log out</span>
+            </button>
+          ) : null}
           <div className="user-row">
             <UserAvatar initials={user.initials} />
             <div className="user-meta">

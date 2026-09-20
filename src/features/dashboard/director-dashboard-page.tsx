@@ -1,19 +1,29 @@
 import { Plus } from 'lucide-react'
-import { AppShell } from '@/app/layout/app-shell'
+import { AppShell, type AppShellUser } from '@/app/layout/app-shell'
 import { PageHeader } from '@/components/shared/page-header'
 import { StatCard } from '@/components/shared/stat-card'
 import { SectionCard } from '@/components/shared/section-card'
 import { andiPratama } from '@/lib/mock/users'
-import { navigationByRole } from '@/lib/mock/navigation'
+import { previewNavigationByRole, type NavItemConfig } from '@/lib/mock/navigation'
 import { directorHighValueRows, directorRecentRequests, directorStats } from '@/lib/mock/dashboards'
 import { directorAttentionRows } from '@/lib/mock/approvals'
 import { ApprovalAttentionTable } from './approval-attention-table'
 import { RecentRequestsTable } from './recent-requests-table'
 import { formatRupiah } from '@/lib/utils/format-currency'
 
-export function DirectorDashboardPage() {
+interface DirectorDashboardPageProps {
+  user?: AppShellUser
+  navItems?: NavItemConfig[]
+  onLogout?: () => void
+}
+
+export function DirectorDashboardPage({
+  user = andiPratama,
+  navItems = previewNavigationByRole.Director,
+  onLogout,
+}: DirectorDashboardPageProps = {}) {
   return (
-    <AppShell user={andiPratama} navItems={navigationByRole.Director} activeKey="dashboard">
+    <AppShell user={user} navItems={navItems} activeKey="dashboard" onLogout={onLogout}>
       <PageHeader
         title="Dashboard"
         subtitle="Decisions requiring your attention, and the status of your own requests"

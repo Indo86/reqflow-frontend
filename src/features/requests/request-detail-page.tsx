@@ -12,7 +12,7 @@ import { EmptyState } from '@/components/shared/empty-state'
 import { CommentItem } from '@/components/shared/comment-item'
 import { ApprovalTimeline } from '@/components/shared/approval-timeline'
 import { UserAvatar } from '@/components/shared/user-avatar'
-import { navigationByRole } from '@/lib/mock/navigation'
+import { previewNavigationByRole } from '@/lib/mock/navigation'
 import { adminUser, andiPratama, deniZaky, sarahWijaya } from '@/lib/mock/users'
 import type { RequestDetail, RequestDetailVariant } from '@/types/domain'
 
@@ -26,7 +26,7 @@ function useVariantConfig(variant: RequestDetailVariant, detail: RequestDetail) 
     case 'owner-draft':
       return {
         user: deniZaky,
-        navItems: navigationByRole.Employee,
+        navItems: previewNavigationByRole.Employee,
         activeKey: 'requests',
         badges: <StatusBadge status={detail.status} /> as ReactNode,
         actions: (
@@ -61,7 +61,7 @@ function useVariantConfig(variant: RequestDetailVariant, detail: RequestDetail) 
     case 'current-approver':
       return {
         user: andiPratama,
-        navItems: navigationByRole.Director,
+        navItems: previewNavigationByRole.Director,
         activeKey: 'approvals',
         badges: (
           <>
@@ -92,7 +92,7 @@ function useVariantConfig(variant: RequestDetailVariant, detail: RequestDetail) 
     case 'non-current':
       return {
         user: sarahWijaya,
-        navItems: navigationByRole.Manager,
+        navItems: previewNavigationByRole.Manager,
         activeKey: 'requests',
         badges: (
           <>
@@ -114,7 +114,7 @@ function useVariantConfig(variant: RequestDetailVariant, detail: RequestDetail) 
     case 'admin-view-only':
       return {
         user: adminUser,
-        navItems: navigationByRole.Admin,
+        navItems: previewNavigationByRole.Admin,
         activeKey: 'requests',
         badges: (
           <>

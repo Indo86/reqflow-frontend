@@ -15,10 +15,12 @@ export interface NavItemConfig {
   icon: LucideIcon
 }
 
-// There is no real session yet, so each role's nav points at the static
-// preview route that demonstrates that role — except Employee, which owns
-// the plain (non-preview) routes as the default signed-out-preview persona.
-export const navigationByRole: Record<Role, NavItemConfig[]> = {
+// Used only by the /preview/* design-inspection routes, which render a fixed
+// mock persona regardless of who (if anyone) is actually signed in. Kept
+// deliberately separate from productionNavigationByRole below so preview
+// persona-switching can never influence, or be influenced by, real session
+// state — see F1 "Development preview routes".
+export const previewNavigationByRole: Record<Role, NavItemConfig[]> = {
   Employee: [
     { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { key: 'requests', label: 'My Requests', href: '/requests', icon: FileText },
@@ -45,6 +47,46 @@ export const navigationByRole: Record<Role, NavItemConfig[]> = {
   Admin: [
     { key: 'dashboard', label: 'Dashboard', href: '/preview/admin/dashboard', icon: LayoutDashboard },
     { key: 'requests', label: 'Requests', href: '/preview/admin/requests', icon: FileText },
+    { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
+    { key: 'reports', label: 'Reports', href: '/reports', icon: BarChart3 },
+  ],
+}
+
+// Used by real authenticated routes once F1 session/role data is available.
+// hrefs point at the plain generic routes, which are role-aware (see
+// src/app/router/*-route.tsx) and resolve to the same static F0.5 page
+// components previewNavigationByRole above points at directly. Mirrors the
+// authority model from the F0.5 design: Approvals only for Manager/Finance/
+// Director; Reports/org-wide Requests only for Admin. This is top-level
+// navigation UX only — the backend remains authoritative for every actual
+// request.
+export const productionNavigationByRole: Record<Role, NavItemConfig[]> = {
+  Employee: [
+    { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { key: 'requests', label: 'My Requests', href: '/requests', icon: FileText },
+    { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
+  ],
+  Manager: [
+    { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { key: 'requests', label: 'My Requests', href: '/requests', icon: FileText },
+    { key: 'approvals', label: 'Approvals', href: '/approvals', icon: ClipboardCheck },
+    { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
+  ],
+  Finance: [
+    { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { key: 'requests', label: 'My Requests', href: '/requests', icon: FileText },
+    { key: 'approvals', label: 'Approvals', href: '/approvals', icon: ClipboardCheck },
+    { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
+  ],
+  Director: [
+    { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { key: 'requests', label: 'My Requests', href: '/requests', icon: FileText },
+    { key: 'approvals', label: 'Approvals', href: '/approvals', icon: ClipboardCheck },
+    { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
+  ],
+  Admin: [
+    { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { key: 'requests', label: 'Requests', href: '/requests', icon: FileText },
     { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
     { key: 'reports', label: 'Reports', href: '/reports', icon: BarChart3 },
   ],

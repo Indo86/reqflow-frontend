@@ -1,6 +1,6 @@
 import { env } from '@/lib/env'
 import { ApiError, normalizeHttpError } from './api-error'
-export { ApiError } from './api-error'
+export { ApiError, normalizeHttpError } from './api-error'
 export type ApiClientOptions = Omit<RequestInit, 'body' | 'credentials'> & {
   body?: BodyInit | null
   json?: unknown
