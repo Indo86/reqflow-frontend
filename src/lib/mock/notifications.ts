@@ -1,0 +1,60 @@
+import type { NotificationItemData } from '@/types/domain'
+
+export const mockNotifications: NotificationItemData[] = [
+  {
+    id: 'n1',
+    kind: 'approved',
+    title: 'Request approved',
+    description: 'REQ-2026-00121 "Annual team offsite venue booking" was approved by Sarah Wijaya',
+    time: '10 minutes ago',
+    unread: true,
+  },
+  {
+    id: 'n2',
+    kind: 'assigned',
+    title: 'Approval assigned',
+    description: 'You have been assigned to review REQ-2026-00124 "Purchase new development laptops"',
+    time: '42 minutes ago',
+    unread: true,
+  },
+  {
+    id: 'n3',
+    kind: 'revision',
+    title: 'Revision requested',
+    description: 'Finance requested changes to REQ-2026-00119 "Client dinner reimbursement"',
+    time: '3 hours ago',
+    unread: true,
+  },
+  {
+    id: 'n4',
+    kind: 'comment',
+    title: 'Comment added',
+    description: 'Andi Pratama commented on REQ-2026-00119',
+    time: '5 hours ago',
+    unread: false,
+  },
+  {
+    id: 'n5',
+    kind: 'approved',
+    title: 'Request approved',
+    description: 'REQ-2026-00122 "Office equipment replacement" was approved by Rina Putri',
+    time: 'Yesterday',
+    unread: false,
+  },
+  {
+    id: 'n6',
+    kind: 'rejected',
+    title: 'Request rejected',
+    description: 'REQ-2026-00113 "Conference travel booking" was rejected by Rina Putri',
+    time: 'Yesterday',
+    unread: false,
+  },
+  {
+    id: 'n7',
+    kind: 'assigned',
+    title: 'Approval assigned',
+    description: 'You have been assigned to review REQ-2026-00115 "New HRIS software subscription"',
+    time: '2 days ago',
+    unread: false,
+  },
+]

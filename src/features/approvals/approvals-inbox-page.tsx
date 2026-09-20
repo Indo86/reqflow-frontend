@@ -1,0 +1,95 @@
+import { Download } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { AppShell } from '@/app/layout/app-shell'
+import { PageHeader } from '@/components/shared/page-header'
+import { Tabs } from '@/components/shared/tabs'
+import { DataTableShell } from '@/components/shared/data-table-shell'
+import { Badge } from '@/components/shared/badge'
+import { UserAvatar } from '@/components/shared/user-avatar'
+import { navigationByRole } from '@/lib/mock/navigation'
+import { andiPratama, rinaPutri, sarahWijaya } from '@/lib/mock/users'
+import { approvalsByPersona, type ApprovalPersona } from '@/lib/mock/approvals'
+import { formatRupiah } from '@/lib/utils/format-currency'
+import type { MockUser, Role } from '@/types/domain'
+
+const personaUser: Record<ApprovalPersona, MockUser> = {
+  manager: sarahWijaya,
+  finance: rinaPutri,
+  director: andiPratama,
+}
+
+const personaRole: Record<ApprovalPersona, Role> = {
+  manager: 'Manager',
+  finance: 'Finance',
+  director: 'Director',
+}
+
+const personaReviewHref: Record<ApprovalPersona, string> = {
+  manager: '/preview/request-detail/current-approver',
+  finance: '/preview/request-detail/current-approver',
+  director: '/preview/request-detail/current-approver',
+}
+
+export function ApprovalsInboxPage({ persona }: { persona: ApprovalPersona }) {
+  const queue = approvalsByPersona[persona]
+  const user = personaUser[persona]
+
+  return (
+    <AppShell user={user} navItems={navigationByRole[personaRole[persona]]} activeKey="approvals">
+      <PageHeader
+        title={queue.title}
+        subtitle={queue.subtitle}
+        actions={
+          <button type="button" className="btn btn-ghost">
+            <Download className="icon" width={15} height={15} strokeWidth={2} />
+            <span>Export</span>
+          </button>
+        }
+      />
+
+      <Tabs tabs={[{ label: 'Pending', count: queue.rows.length }, { label: 'Completed', count: queue.completedCount }]} />
+
+      <DataTableShell>
+        <thead>
+          <tr>
+            <th>Request #</th>
+            <th>Request</th>
+            <th>Requester</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Current Step</th>
+            <th>Submitted</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {queue.rows.map((row) => (
+            <tr key={row.id}>
+              <td className="cell-mono">{row.id}</td>
+              <td className="cell-primary">{row.title}</td>
+              <td>
+                <div className="cell-user">
+                  <UserAvatar initials={row.requester.initials} size={24} />
+                  <span>{row.requester.name}</span>
+                </div>
+              </td>
+              <td className="cell-secondary">{row.type}</td>
+              <td className="cell-primary">{formatRupiah(row.amount)}</td>
+              <td>
+                <Badge variant="amber">{row.currentStep}</Badge>
+              </td>
+              <td className="cell-secondary">{row.submittedAt}</td>
+              <td>
+                <div className="row-action">
+                  <Link to={personaReviewHref[persona]} className="btn btn-primary btn-sm">
+                    Review
+                  </Link>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </DataTableShell>
+    </AppShell>
+  )
+}
