@@ -1,9 +1,5 @@
-import type { Bucket } from '../types/dashboard'
-
 export interface RequestsOverTimeFilters {
-  from: string
-  to: string
-  bucket: Bucket
+  range: '1m' | '2m' | '6m' | '1y' | 'all'
 }
 
 export interface RecentActivityFilters {

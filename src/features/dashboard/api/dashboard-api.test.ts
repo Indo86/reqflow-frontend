@@ -5,6 +5,7 @@ import { dashboardSummaryFixture, recentActivityFixture, requestsOverTimeFixture
 import { getDashboardSummary } from './get-dashboard-summary'
 import { getRequestsOverTime } from './get-requests-over-time'
 import { getRecentActivity } from './get-recent-activity'
+import { dashboardKeys } from './dashboard-query-keys'
 
 describe('dashboard API layer', () => {
   it('getDashboardSummary calls GET /dashboard/summary with credentials included and no query params', async () => {
@@ -24,23 +25,30 @@ describe('dashboard API layer', () => {
     expect(result.requests.byStatus.DRAFT).toBe(0)
   })
 
-  it('getRequestsOverTime serializes from/to/bucket exactly as given, never adjusting the boundary', async () => {
+  it('getRequestsOverTime sends the semantic range parameter', async () => {
     const fetchSpy = stubFetch((url) =>
       url.pathname === '/dashboard/requests-over-time' ? jsonResponse(200, { data: requestsOverTimeFixture }) : errorResponse(404, 'NOT_FOUND', 'not found')
     )
 
-    const result = await getRequestsOverTime({ from: '2026-04-01T00:00:00.000Z', to: '2026-09-24T00:00:00.000Z', bucket: 'month' })
+    const result = await getRequestsOverTime({ range: '6m' })
 
     expect(fetchSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         pathname: '/dashboard/requests-over-time',
-        search: '?from=2026-04-01T00%3A00%3A00.000Z&to=2026-09-24T00%3A00%3A00.000Z&bucket=month',
+        search: '?range=6m',
       }),
       expect.anything()
     )
     // Real points preserved in the backend-returned order — never
     // reordered or zero-filled by this layer.
     expect(result.points.map((point) => point.count)).toEqual([4, 7, 3])
+  })
+
+  it('keeps each selected range in a distinct query cache key', () => {
+    expect(dashboardKeys.requestsOverTime({ range: '1m' })).not.toEqual(
+      dashboardKeys.requestsOverTime({ range: '1y' })
+    )
+    expect(dashboardKeys.requestsOverTime({ range: 'all' })).toContainEqual({ range: 'all' })
   })
 
   it('getRecentActivity sends the limit param and preserves newest-first backend order', async () => {

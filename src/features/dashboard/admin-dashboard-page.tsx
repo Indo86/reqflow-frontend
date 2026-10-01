@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Activity, Download } from 'lucide-react'
+import { Activity } from 'lucide-react'
 import { AppShell, type AppShellUser } from '@/app/layout/app-shell'
 import { PageHeader } from '@/components/shared/page-header'
 import { StatCard } from '@/components/shared/stat-card'
@@ -8,7 +8,6 @@ import { BreakdownList } from '@/components/shared/breakdown-list'
 import { TrendLineChart } from '@/components/shared/trend-line-chart'
 import { ActivityItem } from '@/components/shared/activity-item'
 import { EmptyState } from '@/components/shared/empty-state'
-import { FilterPill } from '@/components/shared/filter-bar'
 import { adminUser } from '@/lib/mock/users'
 import { previewNavigationByRole, type NavItemConfig } from '@/lib/mock/navigation'
 import { adminStats, recentActivity, requestsOverTimeSeries, statusBreakdown, typeBreakdown } from '@/lib/mock/dashboards'
@@ -19,7 +18,8 @@ import { useRequestsOverTimeQuery } from './hooks/use-requests-over-time-query'
 import { useRecentActivityQuery } from './hooks/use-recent-activity-query'
 import { buildAdminStats } from './lib/build-stat-cards'
 import { requestStatusBreakdownRows, requestTypeBreakdownRows } from './lib/request-status-presentation'
-import { formatPeriodLabel, lastSixMonthsRange } from './lib/requests-over-time-range'
+import { formatPeriodLabel } from './lib/requests-over-time-range'
+import type { DashboardRange } from './types/dashboard'
 
 interface AdminDashboardPageProps {
   user?: AppShellUser
@@ -28,13 +28,19 @@ interface AdminDashboardPageProps {
 }
 
 const RECENT_ACTIVITY_LIMIT = 8
+const DEFAULT_RANGE: DashboardRange = '6m'
+const RANGE_OPTIONS: Array<{ value: DashboardRange; label: string }> = [
+  { value: '1m', label: '1 Month' },
+  { value: '2m', label: '2 Months' },
+  { value: '6m', label: '6 Months' },
+  { value: '1y', label: '1 Year' },
+  { value: 'all', label: 'To Date' },
+]
 
 // See owner-dashboard-page.tsx for the onLogout-gated real/preview pattern.
-// The "Monthly" filter pill stays decorative in both modes — a fixed
-// 6-month/month-bucket window is the only range wired for F6; day/week
-// bucket switching is a documented simplification, not a backend
-// limitation (bucket=day|week are both real, supported values — see F6
-// report "known limitations").
+// Six months remains the intentional default. The selected semantic range
+// is part of the query key and the backend chooses the matching UTC window
+// and useful bucket granularity.
 export function AdminDashboardPage({
   user = adminUser,
   navItems = previewNavigationByRole.Admin,
@@ -42,11 +48,8 @@ export function AdminDashboardPage({
 }: AdminDashboardPageProps = {}) {
   const isProduction = Boolean(onLogout)
   const summaryQuery = useDashboardSummaryQuery({ enabled: isProduction })
-  // Frozen once per mount — recomputing `now` on every render would change
-  // the query's from/to on every render too, defeating caching and
-  // refetching in a loop (F6 "Performance": no unnecessary refetch loops).
-  const [range] = useState(() => lastSixMonthsRange())
-  const overTimeQuery = useRequestsOverTimeQuery({ ...range, bucket: 'month' }, { enabled: isProduction })
+  const [range, setRange] = useState<DashboardRange>(DEFAULT_RANGE)
+  const overTimeQuery = useRequestsOverTimeQuery({ range }, { enabled: isProduction })
   const activityQuery = useRecentActivityQuery({ limit: RECENT_ACTIVITY_LIMIT }, { enabled: isProduction })
 
   const stats = isProduction && summaryQuery.data ? buildAdminStats(summaryQuery.data) : adminStats
@@ -60,23 +63,18 @@ export function AdminDashboardPage({
       : typeBreakdown
   const chartPoints = isProduction
     ? (overTimeQuery.data?.points ?? []).map((point) => ({
-        label: formatPeriodLabel(point.periodStart, 'month'),
+        label: formatPeriodLabel(
+          point.periodStart,
+          overTimeQuery.data?.bucket ?? 'month',
+          range === '1y' || range === 'all'
+        ),
         value: point.count,
       }))
     : requestsOverTimeSeries
 
   return (
     <AppShell user={user} navItems={navItems} activeKey="dashboard" onLogout={onLogout}>
-      <PageHeader
-        title="Dashboard"
-        subtitle="Organization-wide overview of requests and approvals"
-        actions={
-          <button type="button" className="btn btn-ghost">
-            <Download className="icon" width={15} height={15} strokeWidth={2} />
-            <span>Export</span>
-          </button>
-        }
-      />
+      <PageHeader title="Dashboard" subtitle="Organization-wide overview of requests and approvals" />
 
       {isProduction && (summaryQuery.isPending || summaryQuery.isError) ? (
         <SectionQueryState
@@ -98,7 +96,21 @@ export function AdminDashboardPage({
 
       <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20, flexGrow: 1, minWidth: 0 }}>
-          <SectionCard title="Requests Over Time" subtitle="Last 6 months" headerAction={<FilterPill label="Monthly" />}>
+          <SectionCard
+            title="Requests Over Time"
+            subtitle={RANGE_OPTIONS.find((option) => option.value === range)?.label}
+            headerAction={
+              <select
+                aria-label="Chart time range"
+                className="text-input"
+                style={{ width: 132 }}
+                value={range}
+                onChange={(event) => setRange(event.target.value as DashboardRange)}
+              >
+                {RANGE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>
+            }
+          >
             {isProduction && (overTimeQuery.isPending || overTimeQuery.isError) ? (
               <SectionQueryState
                 isPending={overTimeQuery.isPending}
@@ -110,7 +122,7 @@ export function AdminDashboardPage({
                 genericErrorMessage="Something went wrong loading this chart."
               />
             ) : chartPoints.length === 0 ? (
-              <EmptyState icon={Activity} title="No requests in this range" body="Requests created in the last 6 months will show up here." />
+              <EmptyState icon={Activity} title="No requests in this range" body="Requests created in the selected range will show up here." />
             ) : (
               <TrendLineChart data={chartPoints} />
             )}

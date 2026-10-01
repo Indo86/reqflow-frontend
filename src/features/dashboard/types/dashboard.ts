@@ -8,6 +8,7 @@ import type {
 } from '../schemas/dashboard.schema'
 
 export type Bucket = z.infer<typeof bucketSchema>
+export type DashboardRange = '1m' | '2m' | '6m' | '1y' | 'all'
 
 export interface DashboardSummary {
   requests: {
@@ -33,6 +34,7 @@ export interface RequestsOverTimeResult {
   bucket: Bucket
   from: string
   to: string
+  range?: DashboardRange
   points: TimeSeriesPoint[]
 }
 

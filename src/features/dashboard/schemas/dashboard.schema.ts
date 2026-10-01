@@ -28,6 +28,7 @@ export const requestsOverTimeSchema = z.object({
     bucket: bucketSchema,
     from: z.string(),
     to: z.string(),
+    range: z.enum(['1m', '2m', '6m', '1y', 'all']).optional(),
     points: z.array(z.object({ periodStart: z.string(), count: z.number() })),
   }),
 })
