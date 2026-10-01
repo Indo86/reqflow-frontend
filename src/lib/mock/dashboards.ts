@@ -6,8 +6,12 @@ export interface StatCardData {
   value: string
   icon: 'requests' | 'pending' | 'approved' | 'revision' | 'pendingApproval' | 'rejected'
   tone: 'accent' | 'amber' | 'green' | 'orange' | 'red'
-  delta: string
-  trend: 'up' | 'down' | 'flat'
+  // Optional: real M10-backed cards have no historical/trend comparison
+  // field to draw from (dashboard.service.ts's summary is a live snapshot
+  // only), so they omit these rather than fabricate a delta. Mock cards
+  // keep passing both, unaffected — see F6 "Dashboard summary".
+  delta?: string
+  trend?: 'up' | 'down' | 'flat'
 }
 
 export const ownerStats: StatCardData[] = [

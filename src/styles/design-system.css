@@ -432,6 +432,7 @@ svg.icon { display: block; flex-shrink: 0; }
   border-left: none;
   border-right: none;
   cursor: pointer;
+  text-decoration: none;
 }
 .tab.active { color: var(--rf-accent); border-bottom-color: var(--rf-accent); }
 .tab-count {
@@ -534,8 +535,27 @@ svg.icon { display: block; flex-shrink: 0; }
   padding: 14px 16px;
   border-bottom: 1px solid var(--rf-border);
   position: relative;
+  text-decoration: none;
+  color: inherit;
 }
 .notif-item:last-child { border-bottom: none; }
+a.notif-item:hover { background: var(--surface-alt); }
+
+.nav-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--rf-accent);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+  margin-left: auto;
+}
 .notif-icon-wrap {
   width: 34px; height: 34px; border-radius: 999px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;

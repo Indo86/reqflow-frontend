@@ -342,6 +342,77 @@ delete is entirely backend-owned; the frontend only ever calls `DELETE /attachme
 Original filenames are always rendered as plain text (React's default escaping) — never through
 `dangerouslySetInnerHTML` — so a filename containing HTML-like characters cannot execute as markup.
 
+## User Management (F6.5)
+
+Admin-only organization member management — `src/features/users/` (`api/`, `components/`,
+`hooks/`, `lib/`, `pages/`, `schemas/`, `types/`), mirroring the F2 Requests module's structure
+exactly. Production routes: `/users`, `/users/new`, `/users/:userId`.
+
+**Navigation**: the "Users" nav item (`src/lib/mock/navigation.ts`) is only added to
+`productionNavigationByRole.Admin` — never to `previewNavigationByRole`, since there is no F0.5
+mock Users screen for `/preview/*` to point at. This is UX only; `UsersRoute` /
+`UserDetailRoute` / `UserFormRoute` additionally redirect a non-Admin who navigates here directly
+to `/dashboard`, and the backend independently enforces `requireRole(Role.ADMIN)` on every
+`/users` endpoint regardless of what the frontend shows or redirects.
+
+**Backend endpoints** (see backend README "User Management (F6.5)" for the full authorization/
+guard rationale):
+
+| Endpoint                | Method | Purpose                                         |
+| ------------------------ | ------ | ------------------------------------------------ |
+| `/users`                  | GET    | List, paginated, filterable (Admin)             |
+| `/users`                  | POST   | Create a user (Admin)                           |
+| `/users/:id`               | GET    | Detail (Admin)                                  |
+| `/users/:id`               | PATCH  | Edit name/email (Admin)                         |
+| `/users/:id/status`         | PATCH  | `{isActive}` — activate/deactivate (Admin)      |
+| `/users/:id/department`     | PATCH  | `{departmentId}` — assign/unassign (Admin)      |
+| `/users/:id/role`           | PATCH  | `{role}` — change role (Admin)                  |
+
+`GET /users` filters (`q`, `role`, `departmentId`, `isActive`, `page`/`pageSize`) are driven
+entirely through URL search params (`?q=&role=&departmentId=&isActive=&page=`), mirroring F2's
+`RequestFilters`/`parseRequestListParams` pattern exactly — never fetched unfiltered and filtered
+client-side. Department options reuse Reports' existing `useDepartmentsQuery`/`GET /departments`
+infrastructure rather than duplicating it.
+
+**Tenant scope is never client-controlled**: `CreateUserInput` has no `organizationId` field at
+the type level, and no request this feature sends ever includes one — organization scope is
+always derived from the authenticated Admin's own session, server-side.
+
+**User lifecycle**: `isActive` (Active/Inactive `UserStatusBadge`) is the only lifecycle action
+exposed — there is no hard-delete UI, matching the backend having no hard-delete endpoint at all
+(a User with any Request/Approval/Comment/Attachment history can't be hard-deleted at the
+database level — see backend README). Deactivation requires confirmation via the same generic
+`ConfirmDialog` (a native `<dialog>`, reused from `features/requests/components/` — it has no
+Request-specific props) F2 already uses for Cancel/Delete.
+
+**Profile vs. security-sensitive changes are visually and mechanically separate** on the detail
+page: a "Profile" section (name/email, `PATCH /users/:id`) has its own Save button; "Role"
+(`PATCH /users/:id/role`) and "Department" (`PATCH /users/:id/department`) are independent
+controls with their own actions; "Access" (activate/deactivate) is its own section. Every action
+still calls its own backend endpoint directly — this page never decides on its own whether a
+change is safe, it only renders whatever the backend actually accepted or refused.
+
+**Self-protection UX**: the Role and Deactivate controls are disabled (with an explanatory note)
+when the Admin is viewing their own user record, mirroring the backend's own
+`SELF_ROLE_CHANGE_NOT_ALLOWED` / `SELF_DEACTIVATION_NOT_ALLOWED` guards — a UX affordance only;
+the backend remains the sole authority and is never bypassed. A backend conflict
+(`409 USER_HAS_PENDING_APPROVALS`, `409 LAST_ACTIVE_ADMIN_REQUIRED`) is rendered as-is
+(`ApiError.message` is already backend-sanitized, same convention as every other feature here) —
+never hidden behind a generic "Something went wrong" message, and never retried automatically.
+
+**Session interaction**: if the Admin edits their own user record (profile, role, or department —
+all reachable in practice, since only self-*deactivation* and self-*role-change* are blocked, not
+self profile/department edits), the mutation additionally invalidates F1's session query
+(`authKeys.session()`) so the signed-in identity shown elsewhere in the app (sidebar name/role/
+department) stays in sync with a single TanStack Query source of truth — never a second,
+independently-updated copy of "who am I".
+
+**What F6.5 explicitly does not build**: public registration, self-signup, forgot-password,
+email invitations, SSO/OAuth/SAML/LDAP/SCIM, multiple roles per user, a custom permission builder,
+impersonation, bulk CSV user import, a hard-delete UI, organization switching, or Department CRUD
+(Department creation/editing has its own real backend endpoints already, but no frontend UI is
+built for it here — out of scope for F6.5).
+
 ## Tests and scope
 
 `src/test/setup.ts` enables jest-dom and RTL cleanup. `renderWithProviders` creates

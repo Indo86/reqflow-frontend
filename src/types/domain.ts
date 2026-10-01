@@ -64,15 +64,6 @@ export interface RequestDetail {
 
 export type RequestDetailVariant = 'owner-draft' | 'current-approver' | 'non-current' | 'admin-view-only'
 
-export interface NotificationItemData {
-  id: string
-  title: string
-  description: string
-  time: string
-  unread: boolean
-  kind: 'approved' | 'assigned' | 'revision' | 'comment' | 'rejected'
-}
-
 export interface ActivityEntry {
   id: string
   title: string

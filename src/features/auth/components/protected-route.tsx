@@ -15,5 +15,12 @@ export function ProtectedRoute() {
     return <Navigate to="/login" replace state={{ from: location }} />
   }
 
+  if (session.user.mustChangePassword && location.pathname !== '/change-password') {
+    return <Navigate to="/change-password" replace />
+  }
+  if (!session.user.mustChangePassword && location.pathname === '/change-password') {
+    return <Navigate to="/dashboard" replace />
+  }
+
   return <Outlet />
 }

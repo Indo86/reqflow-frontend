@@ -5,6 +5,7 @@ export const employeeProfile = {
   name: 'Eddie Employee',
   email: 'eddie@example.com',
   role: 'EMPLOYEE',
+  mustChangePassword: false,
   organization,
   department: { id: 'dept-eng', name: 'Engineering' },
 }
@@ -14,6 +15,7 @@ export const managerProfile = {
   name: 'Mona Manager',
   email: 'mona@example.com',
   role: 'MANAGER',
+  mustChangePassword: false,
   organization,
   department: { id: 'dept-eng', name: 'Engineering' },
 }
@@ -23,6 +25,7 @@ export const adminProfile = {
   name: 'Ava Admin',
   email: 'ava@example.com',
   role: 'ADMIN',
+  mustChangePassword: false,
   organization,
   department: null,
 }

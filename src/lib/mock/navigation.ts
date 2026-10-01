@@ -4,6 +4,8 @@ import {
   ClipboardCheck,
   FileText,
   LayoutDashboard,
+  Users,
+  KeyRound,
   type LucideIcon,
 } from 'lucide-react'
 import type { Role } from '@/types/domain'
@@ -87,7 +89,14 @@ export const productionNavigationByRole: Record<Role, NavItemConfig[]> = {
   Admin: [
     { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { key: 'requests', label: 'Requests', href: '/requests', icon: FileText },
+    // F6.5: Admin-only. Not added to previewNavigationByRole above — there
+    // is no F0.5 mock Users screen for /preview/* to point at.
+    { key: 'users', label: 'Users', href: '/users', icon: Users },
     { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
     { key: 'reports', label: 'Reports', href: '/reports', icon: BarChart3 },
   ],
+}
+
+for (const items of Object.values(productionNavigationByRole)) {
+  items.push({ key: 'password', label: 'Change Password', href: '/settings/change-password', icon: KeyRound })
 }

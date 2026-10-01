@@ -9,6 +9,7 @@ export interface SessionUser {
   role: Role
   organization: { id: string; name: string; slug: string }
   department: { id: string; name: string } | null
+  mustChangePassword: boolean
 }
 
 // Backend Role enum values (auth.types.ts / prisma schema.prisma) are
@@ -39,5 +40,6 @@ export function mapUserProfileResponse(dto: UserProfileResponse): SessionUser {
     role: roleLabels[dto.role],
     organization: dto.organization,
     department: dto.department,
+    mustChangePassword: dto.mustChangePassword,
   }
 }

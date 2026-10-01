@@ -12,8 +12,12 @@ import { ReportsRoute } from './reports-route'
 import { RequestDetailRoute } from './request-detail-route'
 import { RequestFormRoute } from './request-form-route'
 import { ApprovalReviewRoute } from './approval-review-route'
+import { UsersRoute } from './users-route'
+import { UserFormRoute } from './user-form-route'
+import { UserDetailRoute } from './user-detail-route'
 import { previewRoutes } from './preview-routes'
 import { NotFoundPage } from './not-found-page'
+import { ChangePasswordPage } from '@/features/auth/pages/change-password-page'
 
 export const routes: RouteObject[] = [
   {
@@ -33,6 +37,8 @@ export const routes: RouteObject[] = [
       {
         element: <ProtectedRoute />,
         children: [
+          { path: 'change-password', element: <ChangePasswordPage /> },
+          { path: 'settings/change-password', element: <ChangePasswordPage /> },
           { path: 'dashboard', element: <DashboardRoute /> },
           { path: 'requests', element: <RequestsRoute /> },
           { path: 'requests/new', element: <RequestFormRoute /> },
@@ -42,6 +48,9 @@ export const routes: RouteObject[] = [
           { path: 'approvals/:approvalId', element: <ApprovalReviewRoute /> },
           { path: 'notifications', element: <NotificationsRoute /> },
           { path: 'reports', element: <ReportsRoute /> },
+          { path: 'users', element: <UsersRoute /> },
+          { path: 'users/new', element: <UserFormRoute /> },
+          { path: 'users/:userId', element: <UserDetailRoute /> },
         ],
       },
       // Design-preview routes are intentionally outside the auth boundary —

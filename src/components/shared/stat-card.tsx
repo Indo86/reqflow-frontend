@@ -41,10 +41,12 @@ export function StatCard({ label, value, icon, tone, delta, trend }: StatCardDat
         </div>
       </div>
       <div className="stat-value">{value}</div>
-      <div className={`stat-delta ${trend}`}>
-        <TrendIcon className="icon" width={12} height={12} strokeWidth={2} />
-        <span>{delta}</span>
-      </div>
+      {delta ? (
+        <div className={`stat-delta ${trend ?? 'flat'}`}>
+          <TrendIcon className="icon" width={12} height={12} strokeWidth={2} />
+          <span>{delta}</span>
+        </div>
+      ) : null}
     </div>
   )
 }

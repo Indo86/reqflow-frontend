@@ -16,5 +16,6 @@ export const userProfileResponseSchema = z.object({
   role: backendRoleSchema,
   organization: z.object({ id: z.string(), name: z.string(), slug: z.string() }),
   department: z.object({ id: z.string(), name: z.string() }).nullable(),
+  mustChangePassword: z.boolean(),
 })
 export type UserProfileResponse = z.infer<typeof userProfileResponseSchema>

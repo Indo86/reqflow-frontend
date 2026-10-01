@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { LogOut, Settings, Workflow } from 'lucide-react'
 import type { NavItemConfig } from '@/lib/mock/navigation'
 import { UserAvatar } from '@/components/shared/user-avatar'
+import { NotificationBell } from '@/features/notifications/components/notification-bell'
 import { cn } from '@/lib/utils'
 
 // Loose display-only shape so both mock personas (MockUser, a closed set of
@@ -38,16 +39,20 @@ export function AppShell({ user, navItems, activeKey, children, onLogout }: AppS
           <div className="brand-name">ReqFlow</div>
         </div>
         <nav className="sidebar-nav">
-          {navItems.map((item) => (
-            <Link
-              key={item.key}
-              to={item.href}
-              className={cn('nav-item', item.key === activeKey && 'active')}
-            >
-              <item.icon className="icon" width={17} height={17} strokeWidth={2} />
-              <span>{item.label}</span>
-            </Link>
-          ))}
+          {navItems.map((item) =>
+            item.key === 'notifications' ? (
+              <NotificationBell key={item.key} item={item} active={item.key === activeKey} />
+            ) : (
+              <Link
+                key={item.key}
+                to={item.href}
+                className={cn('nav-item', item.key === activeKey && 'active')}
+              >
+                <item.icon className="icon" width={17} height={17} strokeWidth={2} />
+                <span>{item.label}</span>
+              </Link>
+            )
+          )}
         </nav>
         <div className="sidebar-footer">
           <button type="button" className="nav-item">

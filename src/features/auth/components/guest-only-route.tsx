@@ -18,7 +18,9 @@ export function GuestOnlyRoute({ children }: GuestOnlyRouteProps) {
   const session = useSession()
 
   if (session.status === 'loading') return <SessionBootstrapFallback />
-  if (session.status === 'authenticated') return <Navigate to={AUTHENTICATED_LANDING_ROUTE} replace />
+  if (session.status === 'authenticated') {
+    return <Navigate to={session.user.mustChangePassword ? '/change-password' : AUTHENTICATED_LANDING_ROUTE} replace />
+  }
 
   return <>{children}</>
 }
