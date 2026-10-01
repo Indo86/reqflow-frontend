@@ -57,7 +57,7 @@ export function RequestActions({ request }: RequestActionsProps) {
           {conflictMessage}
         </div>
       ) : null}
-      <div style={{ display: 'flex', gap: 8 }}>
+      <div className="action-group">
         {canDelete ? (
           <button
             type="button"

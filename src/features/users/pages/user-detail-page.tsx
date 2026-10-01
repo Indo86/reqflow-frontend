@@ -154,7 +154,7 @@ export function UserDetailPage({ user: shellUser, navItems, onLogout }: UserDeta
 
           <SectionCard title="Role" subtitle="Changing a role affects what this user can do — the backend refuses unsafe changes.">
             <ErrorBanner error={updateRole.error} />
-            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>
+            <div className="inline-field-action">
               <div className="field" style={{ flexGrow: 1 }}>
                 <label className="field-label" htmlFor="user-role-select">
                   Role
@@ -187,7 +187,7 @@ export function UserDetailPage({ user: shellUser, navItems, onLogout }: UserDeta
 
           <SectionCard title="Department">
             <ErrorBanner error={updateDepartment.error} />
-            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>
+            <div className="inline-field-action">
               <div className="field" style={{ flexGrow: 1 }}>
                 <label className="field-label" htmlFor="user-department-select">
                   Department

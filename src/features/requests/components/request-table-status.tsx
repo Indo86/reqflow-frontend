@@ -37,7 +37,7 @@ export function RequestTableStatus({
 }: RequestTableStatusProps) {
   if (isLoading) {
     return (
-      <tr>
+      <tr className="table-status-row">
         <td colSpan={colSpan}>
           <div className="empty-state" role="status" aria-label={loadingLabel}>
             <div className="empty-state-icon">
@@ -57,7 +57,7 @@ export function RequestTableStatus({
     const requestId = error instanceof ApiError ? error.requestId : undefined
     const message = error instanceof ApiError ? error.message : genericErrorMessage
     return (
-      <tr>
+      <tr className="table-status-row">
         <td colSpan={colSpan}>
           <div className="empty-state" role="alert">
             <div className="empty-state-icon">
@@ -84,7 +84,7 @@ export function RequestTableStatus({
 
   if (isEmpty) {
     return (
-      <tr>
+      <tr className="table-status-row">
         <td colSpan={colSpan}>
           <div className="empty-state">
             <div className="empty-state-icon">

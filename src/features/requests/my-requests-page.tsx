@@ -42,7 +42,7 @@ export function MyRequestsPage({
         <FilterPill label="Date" />
       </FilterBar>
 
-      <DataTableShell>
+      <DataTableShell mobileCards>
         <thead>
           <tr>
             <th>Request #</th>
@@ -56,14 +56,14 @@ export function MyRequestsPage({
         <tbody>
           {myRequests.map((request) => (
             <tr key={request.id}>
-              <td className="cell-mono">{request.id}</td>
-              <td className="cell-primary">{request.title}</td>
-              <td className="cell-secondary">{request.type}</td>
-              <td className="cell-primary">{formatRupiah(request.amount)}</td>
-              <td>
+              <td className="cell-mono" data-label="Request #">{request.id}</td>
+              <td className="cell-primary" data-label="Title">{request.title}</td>
+              <td className="cell-secondary" data-label="Type">{request.type}</td>
+              <td className="cell-primary" data-label="Amount">{formatRupiah(request.amount)}</td>
+              <td data-label="Status">
                 <StatusBadge status={request.status} />
               </td>
-              <td className="cell-secondary">{request.createdAt}</td>
+              <td className="cell-secondary" data-label="Created">{request.createdAt}</td>
             </tr>
           ))}
         </tbody>

@@ -29,8 +29,8 @@ export function TrendLineChart({ data, width = 780, height = 200 }: TrendLineCha
   const gridLines = [0, 1, 2, 3].map((i) => padding + (i * innerHeight) / 3)
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+    <div className="trend-chart">
+      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Requests trend chart" preserveAspectRatio="none">
         {gridLines.map((y) => (
           <line key={y} x1={padding} y1={y} x2={width - padding} y2={y} stroke="var(--rf-border)" strokeWidth={1} />
         ))}
@@ -47,7 +47,7 @@ export function TrendLineChart({ data, width = 780, height = 200 }: TrendLineCha
           <circle key={data[index].label} cx={p.x} cy={p.y} r={3.5} fill="#fff" stroke="var(--rf-accent)" strokeWidth={2} />
         ))}
       </svg>
-      <div style={{ display: 'flex', fontSize: 11.5, color: 'var(--text-tertiary)', padding: '0 8px' }}>
+      <div className="trend-chart-labels">
         {data.map((point) => (
           <div key={point.label} style={{ flex: 1, textAlign: 'center' }}>
             {point.label}

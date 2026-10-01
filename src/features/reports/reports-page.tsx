@@ -139,18 +139,18 @@ export function ReportsPage({
           <TrendLineChart data={reportRequestsOverTime} width={1080} height={210} />
         </SectionCard>
 
-        <div style={{ display: 'flex', gap: 20 }}>
-          <div style={{ flex: 1 }}>
+        <div className="report-breakdown-grid">
+          <div>
             <SectionCard title="Requests by Status">
               <BreakdownList rows={reportStatusBreakdown} />
             </SectionCard>
           </div>
-          <div style={{ flex: 1 }}>
+          <div>
             <SectionCard title="Requests by Type">
               <BreakdownList rows={reportTypeBreakdown} />
             </SectionCard>
           </div>
-          <div style={{ flex: 1 }}>
+          <div>
             <SectionCard title="Requests by Department">
               <BreakdownList rows={reportDepartmentBreakdown} />
             </SectionCard>
@@ -312,8 +312,8 @@ export function ReportsPage({
       )}
 
       {report ? (
-        <div style={{ display: 'flex', gap: 20 }}>
-          <div style={{ flex: 1 }}>
+        <div className="report-breakdown-grid">
+          <div>
             <SectionCard title="Requests by Status">
               {(() => {
                 const rows = requestStatusBreakdownRows(report.byStatus, report.totals.requests)
@@ -325,7 +325,7 @@ export function ReportsPage({
               })()}
             </SectionCard>
           </div>
-          <div style={{ flex: 1 }}>
+          <div>
             <SectionCard title="Requests by Type">
               {(() => {
                 const rows = requestTypeBreakdownRows(report.byType, report.totals.requests)
@@ -337,7 +337,7 @@ export function ReportsPage({
               })()}
             </SectionCard>
           </div>
-          <div style={{ flex: 1 }}>
+          <div>
             <SectionCard title="Requests by Department">
               {(() => {
                 const rows = departmentBreakdownRows(report.byDepartment, report.totals.requests)

@@ -15,11 +15,11 @@ export function RequestPagination({ page, pageSize, total, totalPages }: Request
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div className="pagination-bar">
       <span style={{ fontSize: 12.5, color: 'var(--text-tertiary)' }}>
         Showing {from}–{to} of {total} requests
       </span>
-      <div style={{ display: 'flex', gap: 6 }}>
+      <div className="pagination-actions">
         <button
           type="button"
           className="btn btn-secondary btn-sm"

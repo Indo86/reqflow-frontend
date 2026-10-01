@@ -47,7 +47,7 @@ export function AdminRequestsPage({
         </button>
       </FilterBar>
 
-      <DataTableShell>
+      <DataTableShell mobileCards>
         <thead>
           <tr>
             <th>Request #</th>
@@ -63,31 +63,31 @@ export function AdminRequestsPage({
         <tbody>
           {orgRequests.map((request) => (
             <tr key={request.id}>
-              <td className="cell-mono">{request.id}</td>
-              <td className="cell-primary">{request.title}</td>
-              <td className="cell-secondary">{request.type}</td>
-              <td className="cell-secondary">{request.department}</td>
-              <td className="cell-primary">{formatRupiah(request.amount)}</td>
-              <td>
+              <td className="cell-mono" data-label="Request #">{request.id}</td>
+              <td className="cell-primary" data-label="Title">{request.title}</td>
+              <td className="cell-secondary" data-label="Type">{request.type}</td>
+              <td className="cell-secondary" data-label="Department">{request.department}</td>
+              <td className="cell-primary" data-label="Amount">{formatRupiah(request.amount)}</td>
+              <td data-label="Status">
                 <StatusBadge status={request.status} />
               </td>
-              <td>
+              <td data-label="Created by">
                 <div className="cell-user">
                   <UserAvatar initials={request.requester.initials} size={24} />
                   <span>{request.requester.name}</span>
                 </div>
               </td>
-              <td className="cell-secondary">{request.createdAt}</td>
+              <td className="cell-secondary" data-label="Created">{request.createdAt}</td>
             </tr>
           ))}
         </tbody>
       </DataTableShell>
 
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="pagination-bar">
         <span style={{ fontSize: 12.5, color: 'var(--text-tertiary)' }}>
           Showing 1–{orgRequests.length} of 428 requests
         </span>
-        <div style={{ display: 'flex', gap: 6 }}>
+        <div className="pagination-actions">
           <button type="button" className="btn btn-secondary btn-sm">
             Previous
           </button>

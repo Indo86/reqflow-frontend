@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { LogOut, Settings, Workflow } from 'lucide-react'
+import { LogOut, Menu, Settings, Workflow, X } from 'lucide-react'
 import type { NavItemConfig } from '@/lib/mock/navigation'
 import { UserAvatar } from '@/components/shared/user-avatar'
 import { NotificationBell } from '@/features/notifications/components/notification-bell'
@@ -29,24 +29,78 @@ interface AppShellProps {
 }
 
 export function AppShell({ user, navItems, activeKey, children, onLogout }: AppShellProps) {
+  const [navigationOpen, setNavigationOpen] = useState(false)
+  const navigationId = useId()
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    const closeNavigation = () => setNavigationOpen(false)
+    window.addEventListener('popstate', closeNavigation)
+    return () => window.removeEventListener('popstate', closeNavigation)
+  }, [])
+
+  useEffect(() => {
+    if (!navigationOpen) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    closeButtonRef.current?.focus()
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setNavigationOpen(false)
+        menuButtonRef.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [navigationOpen])
+
   return (
     <div className="app-shell">
-      <aside className="sidebar">
+      <div className="mobile-topbar">
+        <button
+          ref={menuButtonRef}
+          type="button"
+          className="mobile-menu-button"
+          aria-label="Open navigation"
+          aria-expanded={navigationOpen}
+          aria-controls={navigationId}
+          onClick={() => setNavigationOpen(true)}
+        >
+          <Menu className="icon" width={21} height={21} strokeWidth={2} />
+        </button>
+        <div className="mobile-brand">
+          <div className="brand-mark">
+            <Workflow className="icon" width={15} height={15} strokeWidth={2} />
+          </div>
+          <span className="brand-name">ReqFlow</span>
+        </div>
+      </div>
+      {navigationOpen ? (
+        <button type="button" className="sidebar-backdrop" aria-label="Close navigation" onClick={() => { setNavigationOpen(false); menuButtonRef.current?.focus() }} />
+      ) : null}
+      <aside id={navigationId} className={`sidebar${navigationOpen ? ' is-open' : ''}`}>
         <div className="sidebar-brand">
           <div className="brand-mark">
             <Workflow className="icon" width={15} height={15} strokeWidth={2} />
           </div>
           <div className="brand-name">ReqFlow</div>
+          <button ref={closeButtonRef} type="button" className="sidebar-close" aria-label="Close navigation" onClick={() => { setNavigationOpen(false); menuButtonRef.current?.focus() }}>
+            <X className="icon" width={20} height={20} strokeWidth={2} />
+          </button>
         </div>
-        <nav className="sidebar-nav">
+        <nav className="sidebar-nav" aria-label="Primary navigation">
           {navItems.map((item) =>
             item.key === 'notifications' ? (
-              <NotificationBell key={item.key} item={item} active={item.key === activeKey} />
+              <NotificationBell key={item.key} item={item} active={item.key === activeKey} onNavigate={() => setNavigationOpen(false)} />
             ) : (
               <Link
                 key={item.key}
                 to={item.href}
                 className={cn('nav-item', item.key === activeKey && 'active')}
+                onClick={() => setNavigationOpen(false)}
               >
                 <item.icon className="icon" width={17} height={17} strokeWidth={2} />
                 <span>{item.label}</span>
@@ -60,7 +114,7 @@ export function AppShell({ user, navItems, activeKey, children, onLogout }: AppS
             <span>Settings</span>
           </button>
           {onLogout ? (
-            <button type="button" className="nav-item" onClick={onLogout}>
+            <button type="button" className="nav-item" onClick={() => { setNavigationOpen(false); onLogout() }}>
               <LogOut className="icon" width={17} height={17} strokeWidth={2} />
               <span>Log out</span>
             </button>
@@ -74,7 +128,7 @@ export function AppShell({ user, navItems, activeKey, children, onLogout }: AppS
           </div>
         </div>
       </aside>
-      <div className="main-area">
+      <div className="main-area" inert={navigationOpen}>
         <div className="main-content">{children}</div>
       </div>
     </div>

@@ -45,7 +45,7 @@ export function ApprovalInboxPage({ user, navItems, onLogout }: ApprovalInboxPag
 
       <Tabs tabs={[{ label: 'Pending', count: query.data?.meta.total }, { label: 'Completed' }]} />
 
-      <DataTableShell>
+      <DataTableShell mobileCards>
         <thead>
           <tr>
             <th>Request #</th>
@@ -73,15 +73,15 @@ export function ApprovalInboxPage({ user, navItems, onLogout }: ApprovalInboxPag
           />
           {query.data?.items.map((item) => (
             <tr key={item.id}>
-              <td className="cell-mono">{item.request.requestNumber}</td>
-              <td className="cell-primary">{item.request.title}</td>
-              <td className="cell-secondary">{item.request.createdBy.name}</td>
-              <td className="cell-secondary">{requestTypeLabels[item.request.type]}</td>
-              <td className="cell-primary">{formatRequestAmount(item.request.amount)}</td>
-              <td>
+              <td className="cell-mono" data-label="Request #">{item.request.requestNumber}</td>
+              <td className="cell-primary" data-label="Request">{item.request.title}</td>
+              <td className="cell-secondary" data-label="Requester">{item.request.createdBy.name}</td>
+              <td className="cell-secondary" data-label="Type">{requestTypeLabels[item.request.type]}</td>
+              <td className="cell-primary" data-label="Amount">{formatRequestAmount(item.request.amount)}</td>
+              <td data-label="Current step">
                 <Badge variant="amber">{approvalStepTypeLabels[item.stepType]}</Badge>
               </td>
-              <td>
+              <td data-label="Action">
                 <div className="row-action">
                   <Link to={`/approvals/${item.id}`} className="btn btn-primary btn-sm">
                     Review

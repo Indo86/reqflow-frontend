@@ -94,8 +94,8 @@ export function AdminDashboardPage({
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, flexGrow: 1, minWidth: 0 }}>
+      <div className="dashboard-layout">
+        <div className="dashboard-primary">
           <SectionCard
             title="Requests Over Time"
             subtitle={RANGE_OPTIONS.find((option) => option.value === range)?.label}
@@ -127,8 +127,8 @@ export function AdminDashboardPage({
               <TrendLineChart data={chartPoints} />
             )}
           </SectionCard>
-          <div style={{ display: 'flex', gap: 20 }}>
-            <div style={{ flex: 1 }}>
+          <div className="dashboard-breakdown-grid">
+            <div>
               <SectionCard title="Requests by Status">
                 {realStatusRows.length === 0 ? (
                   <EmptyState icon={Activity} title="No status data yet" body="Status breakdown will show up here." />
@@ -137,7 +137,7 @@ export function AdminDashboardPage({
                 )}
               </SectionCard>
             </div>
-            <div style={{ flex: 1 }}>
+            <div>
               <SectionCard title="Requests by Type">
                 {realTypeRows.length === 0 ? (
                   <EmptyState icon={Activity} title="No type data yet" body="Type breakdown will show up here." />
@@ -148,7 +148,7 @@ export function AdminDashboardPage({
             </div>
           </div>
         </div>
-        <div style={{ width: 340, flexShrink: 0 }}>
+        <div className="dashboard-aside">
           <SectionCard title="Recent Activity">
             {!isProduction ? (
               <div className="timeline">

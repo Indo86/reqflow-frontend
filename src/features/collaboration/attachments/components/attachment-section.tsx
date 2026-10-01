@@ -158,7 +158,7 @@ export function AttachmentSection({ requestId, currentUserId, canWrite }: Attach
                 <p className="comment-text" style={{ color: 'var(--text-tertiary)', fontSize: 11.5 }}>
                   {formatBytes(attachment.size)} · {attachment.uploadedBy.name} · {formatDate(attachment.createdAt)}
                 </p>
-                <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+                <div className="attachment-actions">
                   <button
                     type="button"
                     className="btn btn-secondary btn-sm"

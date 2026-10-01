@@ -40,7 +40,7 @@ export function ConfirmDialog({
         <p className="body-text" style={{ marginBottom: 16 }}>
           {description}
         </p>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+        <div className="dialog-actions">
           <button type="button" className="btn btn-secondary" onClick={onCancel} disabled={isConfirming}>
             Keep it
           </button>

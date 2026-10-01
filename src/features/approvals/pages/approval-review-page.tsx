@@ -95,7 +95,7 @@ export function ApprovalReviewPage() {
         showBackLink
         title={
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div className="detail-title-meta">
               <span className="cell-mono" style={{ fontSize: 13 }}>
                 {detail.request.requestNumber}
               </span>

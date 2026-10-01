@@ -79,8 +79,8 @@ export function OwnerDashboardPage({
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
-        <div style={{ flexGrow: 1, minWidth: 0 }}>
+      <div className="dashboard-layout">
+        <div className="dashboard-primary">
           <SectionCard
             title="My Recent Requests"
             headerAction={
@@ -112,7 +112,7 @@ export function OwnerDashboardPage({
             ) : null}
           </SectionCard>
         </div>
-        <div style={{ width: 340, flexShrink: 0 }}>
+        <div className="dashboard-aside">
           <SectionCard title="My Requests by Status">
             {statusRows.length === 0 ? (
               <EmptyState icon={FileText} title="No status data yet" body="Your status breakdown will show up here." />

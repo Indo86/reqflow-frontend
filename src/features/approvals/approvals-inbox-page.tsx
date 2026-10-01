@@ -57,7 +57,7 @@ export function ApprovalsInboxPage({ persona, user, navItems, onLogout }: Approv
 
       <Tabs tabs={[{ label: 'Pending', count: queue.rows.length }, { label: 'Completed', count: queue.completedCount }]} />
 
-      <DataTableShell>
+      <DataTableShell mobileCards>
         <thead>
           <tr>
             <th>Request #</th>
@@ -73,21 +73,21 @@ export function ApprovalsInboxPage({ persona, user, navItems, onLogout }: Approv
         <tbody>
           {queue.rows.map((row) => (
             <tr key={row.id}>
-              <td className="cell-mono">{row.id}</td>
-              <td className="cell-primary">{row.title}</td>
-              <td>
+              <td className="cell-mono" data-label="Request #">{row.id}</td>
+              <td className="cell-primary" data-label="Request">{row.title}</td>
+              <td data-label="Requester">
                 <div className="cell-user">
                   <UserAvatar initials={row.requester.initials} size={24} />
                   <span>{row.requester.name}</span>
                 </div>
               </td>
-              <td className="cell-secondary">{row.type}</td>
-              <td className="cell-primary">{formatRupiah(row.amount)}</td>
-              <td>
+              <td className="cell-secondary" data-label="Type">{row.type}</td>
+              <td className="cell-primary" data-label="Amount">{formatRupiah(row.amount)}</td>
+              <td data-label="Current step">
                 <Badge variant="amber">{row.currentStep}</Badge>
               </td>
-              <td className="cell-secondary">{row.submittedAt}</td>
-              <td>
+              <td className="cell-secondary" data-label="Submitted">{row.submittedAt}</td>
+              <td data-label="Action">
                 <div className="row-action">
                   <Link to={personaReviewHref[persona]} className="btn btn-primary btn-sm">
                     Review

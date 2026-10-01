@@ -45,7 +45,7 @@ export function UsersPage({ user, navItems, onLogout }: UsersPageProps) {
 
       <UserFilters />
 
-      <DataTableShell>
+      <DataTableShell mobileCards>
         <thead>
           <tr>
             <th>Name</th>
@@ -68,13 +68,13 @@ export function UsersPage({ user, navItems, onLogout }: UsersPageProps) {
           />
           {query.data?.items.map((item) => (
             <tr key={item.id}>
-              <td className="cell-primary">
+              <td className="cell-primary" data-label="Name">
                 <Link to={`/users/${item.id}`}>{item.name}</Link>
               </td>
-              <td className="cell-secondary">{item.email}</td>
-              <td className="cell-secondary">{roleLabels[item.role]}</td>
-              <td className="cell-secondary">{item.department?.name ?? 'No department'}</td>
-              <td>
+              <td className="cell-secondary" data-label="Email">{item.email}</td>
+              <td className="cell-secondary" data-label="Role">{roleLabels[item.role]}</td>
+              <td className="cell-secondary" data-label="Department">{item.department?.name ?? 'No department'}</td>
+              <td data-label="Status">
                 <UserStatusBadge isActive={item.isActive} />
               </td>
             </tr>

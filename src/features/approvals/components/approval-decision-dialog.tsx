@@ -86,7 +86,7 @@ export function ApprovalDecisionDialog({
             {errorMessage}
           </div>
         ) : null}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+        <div className="dialog-actions">
           <button type="button" className="btn btn-secondary" onClick={onCancel} disabled={isSubmitting}>
             Cancel
           </button>

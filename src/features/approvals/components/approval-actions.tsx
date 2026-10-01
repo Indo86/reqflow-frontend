@@ -57,7 +57,7 @@ export function ApprovalActions({ approvalId, requestId }: ApprovalActionsProps)
           {conflictMessage}
         </div>
       ) : null}
-      <div style={{ display: 'flex', gap: 8 }}>
+      <div className="action-group">
         <button
           type="button"
           className="btn btn-danger-ghost"

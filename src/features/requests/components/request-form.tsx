@@ -154,7 +154,7 @@ export function RequestForm({
         ) : null}
       </div>
 
-      <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 4 }}>
+      <div className="form-actions">
         <button type="button" className="btn btn-secondary" onClick={onCancel} disabled={isSubmitting}>
           Cancel
         </button>

@@ -57,6 +57,7 @@ export function LoginPage() {
 
   return (
     <div
+      className="login-page"
       style={{
         minHeight: '100svh',
         width: '100%',
@@ -68,7 +69,7 @@ export function LoginPage() {
         padding: 24,
       }}
     >
-      <div style={{ position: 'absolute', top: 32, left: 40, display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div className="login-brand">
         <div className="brand-mark">
           <Workflow className="icon" width={15} height={15} strokeWidth={2} />
         </div>
@@ -77,7 +78,7 @@ export function LoginPage() {
         </div>
       </div>
 
-      <div className="card" style={{ width: 400, maxWidth: '100%', padding: '36px 36px 30px 36px', boxShadow: 'var(--shadow-md)' }}>
+      <div className="card login-card">
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, marginBottom: 26 }}>
           <div className="brand-mark" style={{ width: 44, height: 44, borderRadius: 11 }}>
             <Workflow className="icon" width={22} height={22} strokeWidth={2} />

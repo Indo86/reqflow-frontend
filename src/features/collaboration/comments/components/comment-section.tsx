@@ -129,8 +129,7 @@ export function CommentSection({ requestId, currentUserId, currentUserInitials, 
               comment.author.id === currentUserId ? (
                 <button
                   type="button"
-                  className="btn-icon"
-                  style={{ width: 24, height: 24, marginLeft: 'auto' }}
+                  className="btn-icon comment-delete-button"
                   aria-label="Delete comment"
                   onClick={() => setPendingDeleteId(comment.id)}
                 >
@@ -143,7 +142,7 @@ export function CommentSection({ requestId, currentUserId, currentUserInitials, 
       )}
 
       {canWrite ? (
-        <form onSubmit={onSubmit} noValidate style={{ display: 'flex', gap: 10, borderTop: '1px solid var(--border)', paddingTop: 16 }}>
+        <form className="comment-form" onSubmit={onSubmit} noValidate>
           <UserAvatar initials={currentUserInitials} />
           <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
             <label className="sr-only" htmlFor="new-comment-content">

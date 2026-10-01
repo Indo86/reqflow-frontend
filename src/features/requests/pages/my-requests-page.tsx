@@ -46,7 +46,7 @@ export function MyRequestsPage({ user, navItems, onLogout }: MyRequestsPageProps
 
       <RequestFilters searchPlaceholder="Search my requests..." />
 
-      <DataTableShell>
+      <DataTableShell mobileCards>
         <thead>
           <tr>
             <th>Request #</th>
@@ -80,16 +80,16 @@ export function MyRequestsPage({ user, navItems, onLogout }: MyRequestsPageProps
           />
           {query.data?.items.map((request) => (
             <tr key={request.id}>
-              <td className="cell-mono">
+              <td className="cell-mono" data-label="Request #">
                 <Link to={`/requests/${request.id}`}>{request.requestNumber}</Link>
               </td>
-              <td className="cell-primary">{request.title}</td>
-              <td className="cell-secondary">{requestTypeLabels[request.type]}</td>
-              <td className="cell-primary">{formatRequestAmount(request.amount)}</td>
-              <td>
+              <td className="cell-primary" data-label="Title">{request.title}</td>
+              <td className="cell-secondary" data-label="Type">{requestTypeLabels[request.type]}</td>
+              <td className="cell-primary" data-label="Amount">{formatRequestAmount(request.amount)}</td>
+              <td data-label="Status">
                 <RequestStatusBadge status={request.status} />
               </td>
-              <td className="cell-secondary">{new Date(request.createdAt).toLocaleDateString()}</td>
+              <td className="cell-secondary" data-label="Created">{new Date(request.createdAt).toLocaleDateString()}</td>
             </tr>
           ))}
         </tbody>
