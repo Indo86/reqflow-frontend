@@ -15,6 +15,7 @@ import { UserAvatar } from '@/components/shared/user-avatar'
 import { previewNavigationByRole } from '@/lib/mock/navigation'
 import { adminUser, andiPratama, deniZaky, sarahWijaya } from '@/lib/mock/users'
 import type { RequestDetail, RequestDetailVariant } from '@/types/domain'
+import { RichTextRenderer } from './components/rich-text-renderer'
 
 interface RequestDetailPageProps {
   detail: RequestDetail
@@ -170,7 +171,7 @@ export function RequestDetailPage({ detail, variant }: RequestDetailPageProps) {
       <div className="detail-columns">
         <div className="detail-main">
           <SectionCard title="Description">
-            <p className="body-text">{detail.description}</p>
+            <RichTextRenderer value={detail.description} />
           </SectionCard>
 
           <SectionCard title="Request Information">

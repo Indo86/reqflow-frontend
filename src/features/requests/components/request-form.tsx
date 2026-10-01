@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { ApiError } from '@/lib/api'
 import { requestFormSchema, type RequestFormValues } from '../schemas/request-form.schema'
 import { requestTypeLabels, type RequestType } from '../types/request'
+import { RichTextEditor } from './rich-text-editor'
 
 interface RequestFormProps {
   // Present only in edit mode, computed once by the caller from already-
@@ -32,6 +33,7 @@ export function RequestForm({
 }: RequestFormProps) {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<RequestFormValues>({
@@ -109,13 +111,19 @@ export function RequestForm({
         <label className="field-label" htmlFor="request-description">
           Description
         </label>
-        <textarea
-          id="request-description"
-          className="text-input"
-          style={{ height: 'auto', minHeight: 100, padding: '10px 12px', resize: 'vertical' }}
-          aria-invalid={errors.description ? true : undefined}
-          aria-describedby={errors.description ? 'request-description-error' : undefined}
-          {...register('description')}
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <RichTextEditor
+              id="request-description"
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              invalid={Boolean(errors.description)}
+              describedBy={errors.description ? 'request-description-error' : undefined}
+            />
+          )}
         />
         {errors.description ? (
           <span id="request-description-error" style={{ fontSize: 11.5, color: 'var(--red-text)' }}>

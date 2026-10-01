@@ -588,6 +588,32 @@ a.notif-item:hover { background: var(--surface-alt); }
 .kv-value { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
 .body-text { font-size: 13.5px; line-height: 1.65; color: var(--text-secondary); }
 
+/* ---------- Request rich text ---------- */
+
+.rich-text-editor { border: 1px solid var(--rf-border-strong); border-radius: var(--rf-radius-sm); overflow: hidden; background: var(--surface); }
+.rich-text-editor:focus-within { border-color: var(--rf-accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--rf-accent) 18%, transparent); }
+.rich-text-editor.is-invalid { border-color: var(--red-text); }
+.rich-text-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding: 7px; border-bottom: 1px solid var(--rf-border); background: var(--surface-alt); }
+.rich-text-toolbar-button { min-height: 28px; padding: 3px 8px; border: 1px solid transparent; border-radius: 5px; background: transparent; color: var(--text-secondary); font-size: 11.5px; font-weight: 650; cursor: pointer; }
+.rich-text-toolbar-button:hover:not(:disabled) { background: var(--surface); border-color: var(--rf-border-strong); color: var(--text-primary); }
+.rich-text-toolbar-button.is-active { background: var(--rf-accent-soft); border-color: var(--rf-accent); color: var(--rf-accent); }
+.rich-text-toolbar-button:disabled { opacity: 0.42; cursor: not-allowed; }
+.rich-text-editor .tiptap { min-height: 150px; padding: 12px; outline: none; font-size: 13.5px; line-height: 1.65; color: var(--text-primary); }
+.rich-text-editor .tiptap p.is-editor-empty:first-child::before { content: attr(data-placeholder); float: left; height: 0; color: var(--text-tertiary); pointer-events: none; }
+.rich-text-editor-loading { min-height: 180px; padding: 12px; color: var(--text-tertiary); }
+.field-error { display: block; padding: 0 12px 8px; color: var(--red-text); font-size: 11.5px; }
+.rich-text-renderer .tiptap { color: var(--text-secondary); font-size: 13.5px; line-height: 1.65; overflow-wrap: anywhere; }
+.rich-text-editor .tiptap > :first-child, .rich-text-renderer .tiptap > :first-child { margin-top: 0; }
+.rich-text-editor .tiptap > :last-child, .rich-text-renderer .tiptap > :last-child { margin-bottom: 0; }
+.rich-text-editor .tiptap p, .rich-text-renderer .tiptap p { margin: 0 0 0.8em; }
+.rich-text-editor .tiptap h2, .rich-text-renderer .tiptap h2 { margin: 1em 0 0.45em; font-size: 1.35em; line-height: 1.3; color: var(--text-primary); }
+.rich-text-editor .tiptap h3, .rich-text-renderer .tiptap h3 { margin: 0.9em 0 0.4em; font-size: 1.15em; line-height: 1.35; color: var(--text-primary); }
+.rich-text-editor .tiptap ul, .rich-text-editor .tiptap ol, .rich-text-renderer .tiptap ul, .rich-text-renderer .tiptap ol { margin: 0.6em 0 0.9em; padding-left: 1.5rem; }
+.rich-text-editor .tiptap ul, .rich-text-renderer .tiptap ul { list-style: disc; }
+.rich-text-editor .tiptap ol, .rich-text-renderer .tiptap ol { list-style: decimal; }
+.rich-text-editor .tiptap blockquote, .rich-text-renderer .tiptap blockquote { margin: 0.8em 0; padding: 0.35em 0 0.35em 0.9em; border-left: 3px solid var(--rf-border-strong); color: var(--text-tertiary); }
+.rich-text-editor .tiptap a, .rich-text-renderer .tiptap a { color: var(--rf-accent); text-decoration: underline; }
+
 .chip-strip { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .chip-strip-item { display: flex; align-items: center; gap: 8px; }
 .chip-strip-item svg { color: var(--text-tertiary); }

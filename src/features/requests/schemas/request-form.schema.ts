@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { backendRequestTypeSchema } from './request.schema'
+import { validateDescriptionValue } from '../rich-text/description-format'
 
 // Mirrors reqFlow-backend's createRequestSchema (src/schemas/request.schema.ts)
 // for client-side UX validation only — the backend re-validates and remains
@@ -11,11 +12,10 @@ import { backendRequestTypeSchema } from './request.schema'
 export const requestFormSchema = z.object({
   type: backendRequestTypeSchema,
   title: z.string().trim().min(3, 'Title must be at least 3 characters.').max(150, 'Title must be at most 150 characters.'),
-  description: z
-    .string()
-    .trim()
-    .min(1, 'Description is required.')
-    .max(5000, 'Description must be at most 5000 characters.'),
+  description: z.string().superRefine((value, context) => {
+    const message = validateDescriptionValue(value)
+    if (message) context.addIssue({ code: 'custom', message })
+  }),
   amount: z
     .number()
     .finite('Amount must be a valid number.')

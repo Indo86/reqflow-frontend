@@ -17,6 +17,7 @@ import { useRequestQuery } from '../hooks/use-request-query'
 import { RequestStatusBadge } from '../components/request-status-badge'
 import { RequestMetaChips } from '../components/request-meta-chips'
 import { RequestActions } from '../components/request-actions'
+import { RichTextRenderer } from '../components/rich-text-renderer'
 import { TERMINAL_REQUEST_STATUSES } from '../types/request'
 
 // Production Request Detail. Only real DTO fields are shown (requestNumber,
@@ -142,7 +143,7 @@ export function RequestDetailPage() {
       <div className="detail-columns">
         <div className="detail-main">
           <SectionCard title="Description">
-            <p className="body-text">{detail.description}</p>
+            <RichTextRenderer value={detail.description} />
           </SectionCard>
 
           <SectionCard title="Comments">
