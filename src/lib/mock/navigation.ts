@@ -4,6 +4,7 @@ import {
   ClipboardCheck,
   FileText,
   LayoutDashboard,
+  ListChecks,
   Users,
   KeyRound,
   type LucideIcon,
@@ -70,19 +71,19 @@ export const productionNavigationByRole: Record<Role, NavItemConfig[]> = {
   ],
   Manager: [
     { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { key: 'requests', label: 'My Requests', href: '/requests', icon: FileText },
+    { key: 'requests', label: 'Requests', href: '/requests', icon: FileText },
     { key: 'approvals', label: 'Approvals', href: '/approvals', icon: ClipboardCheck },
     { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
   ],
   Finance: [
     { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { key: 'requests', label: 'My Requests', href: '/requests', icon: FileText },
+    { key: 'requests', label: 'Requests', href: '/requests', icon: FileText },
     { key: 'approvals', label: 'Approvals', href: '/approvals', icon: ClipboardCheck },
     { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
   ],
   Director: [
     { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { key: 'requests', label: 'My Requests', href: '/requests', icon: FileText },
+    { key: 'requests', label: 'Requests', href: '/requests', icon: FileText },
     { key: 'approvals', label: 'Approvals', href: '/approvals', icon: ClipboardCheck },
     { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
   ],
@@ -95,6 +96,14 @@ export const productionNavigationByRole: Record<Role, NavItemConfig[]> = {
     { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
     { key: 'reports', label: 'Reports', href: '/reports', icon: BarChart3 },
   ],
+}
+
+// M4: any user can be assigned a fulfillment task, and Admin assigns them, so the
+// entry is for every role. The page shows only what the server returns for the
+// signed-in user. Inserted before Notifications to keep the work items together.
+for (const items of Object.values(productionNavigationByRole)) {
+  const at = items.findIndex((item) => item.key === 'notifications')
+  items.splice(at < 0 ? items.length : at, 0, { key: 'fulfillment', label: 'Fulfillment', href: '/fulfillment', icon: ListChecks })
 }
 
 for (const items of Object.values(productionNavigationByRole)) {

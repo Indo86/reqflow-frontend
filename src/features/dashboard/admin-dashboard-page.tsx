@@ -13,6 +13,7 @@ import { previewNavigationByRole, type NavItemConfig } from '@/lib/mock/navigati
 import { adminStats, recentActivity, requestsOverTimeSeries, statusBreakdown, typeBreakdown } from '@/lib/mock/dashboards'
 import { RealActivityItem } from './components/real-activity-item'
 import { SectionQueryState } from './components/section-query-state'
+import { FulfillmentOverview } from './components/fulfillment-overview'
 import { useDashboardSummaryQuery } from './hooks/use-dashboard-summary-query'
 import { useRequestsOverTimeQuery } from './hooks/use-requests-over-time-query'
 import { useRecentActivityQuery } from './hooks/use-recent-activity-query'
@@ -93,6 +94,8 @@ export function AdminDashboardPage({
           ))}
         </div>
       )}
+
+      {isProduction && summaryQuery.data?.fulfillment ? <FulfillmentOverview counts={summaryQuery.data.fulfillment} /> : null}
 
       <div className="dashboard-layout">
         <div className="dashboard-primary">

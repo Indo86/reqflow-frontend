@@ -12,6 +12,18 @@ export const dashboardSummarySchema = z.object({
       byStatus: z.record(backendRequestStatusSchema, z.number()),
       byType: z.record(backendRequestTypeSchema, z.number()),
     }),
+    // M5: approval and fulfillment are counted separately. Optional so an older server still parses.
+    fulfillment: z
+      .object({
+        awaitingOwner: z.number(),
+        notStarted: z.number(),
+        inProgress: z.number(),
+        completed: z.number(),
+        cancelled: z.number(),
+        approvedBeforeTracking: z.number(),
+        assignedToCurrentUser: z.number(),
+      })
+      .optional(),
     approvals: z.object({ pendingForCurrentUser: z.number() }),
     notifications: z.object({ unreadForCurrentUser: z.number() }),
     // Decimal, never a JS number — total is a string when count > 0, null

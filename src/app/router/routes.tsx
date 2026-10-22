@@ -8,6 +8,7 @@ import { DashboardRoute } from './dashboard-route'
 import { RequestsRoute } from './requests-route'
 import { ApprovalsRoute } from './approvals-route'
 import { NotificationsRoute } from './notifications-route'
+import { FulfillmentRoute } from './fulfillment-route'
 import { ReportsRoute } from './reports-route'
 import { RequestDetailRoute } from './request-detail-route'
 import { RequestFormRoute } from './request-form-route'
@@ -46,6 +47,7 @@ export const routes: RouteObject[] = [
           { path: 'requests/:requestId/edit', element: <RequestFormRoute /> },
           { path: 'approvals', element: <ApprovalsRoute /> },
           { path: 'approvals/:approvalId', element: <ApprovalReviewRoute /> },
+          { path: 'fulfillment', element: <FulfillmentRoute /> },
           { path: 'notifications', element: <NotificationsRoute /> },
           { path: 'reports', element: <ReportsRoute /> },
           { path: 'users', element: <UsersRoute /> },

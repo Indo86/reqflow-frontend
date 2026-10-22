@@ -13,6 +13,7 @@ import { useUpdateRequestMutation } from '../hooks/use-update-request-mutation'
 import { RequestForm } from '../components/request-form'
 import type { RequestFormValues } from '../schemas/request-form.schema'
 import { EDITABLE_STATUSES, requestStatusLabels } from '../types/request'
+import { requestTypeCarriesAmount } from '../lib/request-type-policy'
 
 // Handles both /requests/new and /requests/:requestId/edit — the same real
 // create/update contract, just with or without an existing request to
@@ -87,7 +88,10 @@ export function RequestFormPage() {
 
   async function handleSubmit(values: RequestFormValues) {
     if (isEdit && requestId) {
-      await updateMutation.mutateAsync(values)
+      // A type without money (EQUIPMENT, LEAVE, GENERAL) must not keep a stale amount: clear it explicitly.
+      await updateMutation.mutateAsync(
+        requestTypeCarriesAmount(values.type) ? values : { ...values, amount: null }
+      )
       navigate(`/requests/${requestId}`)
     } else {
       const created = await createMutation.mutateAsync(values)

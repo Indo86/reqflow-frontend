@@ -15,6 +15,7 @@ import { RecentRequestsTable } from './recent-requests-table'
 import { RealApprovalAttentionTable } from './components/real-approval-attention-table'
 import { RealRecentRequestsTable } from './components/real-recent-requests-table'
 import { SectionQueryState } from './components/section-query-state'
+import { FulfillmentOverview } from './components/fulfillment-overview'
 import { useDashboardSummaryQuery } from './hooks/use-dashboard-summary-query'
 import { buildApproverStats } from './lib/build-stat-cards'
 
@@ -47,7 +48,11 @@ export function ManagerDashboardPage({
     <AppShell user={user} navItems={navItems} activeKey="dashboard" onLogout={onLogout}>
       <PageHeader
         title="Dashboard"
-        subtitle="What needs your decision, and the status of your own requests"
+        subtitle={
+          user.role === 'Finance'
+            ? 'What needs your decision, and the purchase and reimbursement requests across the organization'
+            : 'What needs your decision, and the requests in your department'
+        }
         actions={
           <button type="button" className="btn btn-primary">
             <Plus className="icon" width={15} height={15} strokeWidth={2} />
@@ -73,6 +78,8 @@ export function ManagerDashboardPage({
           ))}
         </div>
       )}
+
+      {isProduction && summaryQuery.data?.fulfillment ? <FulfillmentOverview counts={summaryQuery.data.fulfillment} /> : null}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <SectionCard
@@ -101,7 +108,15 @@ export function ManagerDashboardPage({
             )
           ) : null}
         </SectionCard>
-        <SectionCard title="My Recent Requests" padded={false}>
+        <SectionCard
+          title="Recent Requests"
+          subtitle={
+            user.role === 'Finance'
+              ? 'Purchase and reimbursement requests you can inspect, and your own. Inspecting a request does not let you act on it.'
+              : 'Submitted requests from your department, and your own. Inspecting a request does not let you act on it.'
+          }
+          padded={false}
+        >
           {!isProduction ? (
             <RecentRequestsTable requests={managerRecentRequests} />
           ) : (
@@ -117,7 +132,7 @@ export function ManagerDashboardPage({
           )}
           {isProduction && recentQuery.data ? (
             recentQuery.data.items.length === 0 ? (
-              <EmptyState icon={FileText} title="No requests yet" body="Create your first request to get started." />
+              <EmptyState icon={FileText} title="No requests in your scope yet" body="Submitted requests you are allowed to read, and requests you create, will show up here." />
             ) : (
               <RealRecentRequestsTable requests={recentQuery.data.items} />
             )

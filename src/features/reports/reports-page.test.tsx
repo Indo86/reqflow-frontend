@@ -7,6 +7,7 @@ import { productionNavigationByRole } from '@/lib/mock/navigation'
 import { formatRequestAmount } from '@/features/requests/lib/format-request-amount'
 import { ReportsPage } from './reports-page'
 
+const XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 const shellUser = { name: 'Ava Admin', initials: 'AA', role: 'Admin', department: undefined }
 const navItems = productionNavigationByRole.Admin
 
@@ -162,7 +163,7 @@ describe('ReportsPage', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 
-  it('Export CSV sends the current filters, includes credentials, and triggers a download', async () => {
+  it('Export Excel sends the current filters, includes credentials, and triggers a download', async () => {
     // Patch just the two static methods onto the real URL constructor —
     // replacing the global URL itself (e.g. via vi.stubGlobal('URL', {...}))
     // would break every `new URL(...)` call the app makes internally
@@ -178,11 +179,11 @@ describe('ReportsPage', () => {
       if (url.pathname === '/reports/requests') return jsonResponse(200, { data: requestReportFixture })
       if (url.pathname === '/reports/workflow-duration') return jsonResponse(200, { data: workflowDurationFixture })
       if (url.pathname === '/departments') return jsonResponse(200, { data: departmentFixture })
-      if (url.pathname === '/reports/requests/export') {
+      if (url.pathname === '/reports/requests/export/xlsx') {
         exportInit = init
         return new Response('Request Number,Title\r\nREQ-1,Example\r\n', {
           status: 200,
-          headers: { 'Content-Type': 'text/csv', 'Content-Disposition': 'attachment; filename="reqflow-requests.csv"' },
+          headers: { 'Content-Type': XLSX_MIME, 'Content-Disposition': 'attachment; filename="reqflow-report.xlsx"' },
         })
       }
       return errorResponse(404, 'NOT_FOUND', 'not found')
@@ -192,7 +193,7 @@ describe('ReportsPage', () => {
     await screen.findByText('Total Requests')
     expect(router.state.location.search).toContain('status=APPROVED')
 
-    const exportButton = screen.getByRole('button', { name: 'Export CSV' })
+    const exportButton = screen.getByRole('button', { name: 'Export Excel' })
     fireEvent.click(exportButton)
 
     await waitFor(() => expect(clickSpy).toHaveBeenCalled())
@@ -203,7 +204,7 @@ describe('ReportsPage', () => {
     clickSpy.mockRestore()
   })
 
-  it('disables Export CSV while a previous export is still pending, so a duplicate click is prevented', async () => {
+  it('disables Export Excel while a previous export is still pending, so a duplicate click is prevented', async () => {
     let resolveExport: (() => void) | undefined
     const exportPromise = new Promise<void>((resolve) => {
       resolveExport = resolve
@@ -216,16 +217,16 @@ describe('ReportsPage', () => {
       if (url.pathname === '/reports/requests') return jsonResponse(200, { data: requestReportFixture })
       if (url.pathname === '/reports/workflow-duration') return jsonResponse(200, { data: workflowDurationFixture })
       if (url.pathname === '/departments') return jsonResponse(200, { data: departmentFixture })
-      if (url.pathname === '/reports/requests/export') {
+      if (url.pathname === '/reports/requests/export/xlsx') {
         await exportPromise
-        return new Response('Request Number,Title\r\n', { status: 200, headers: { 'Content-Type': 'text/csv' } })
+        return new Response('xlsx', { status: 200, headers: { 'Content-Type': XLSX_MIME } })
       }
       return errorResponse(404, 'NOT_FOUND', 'not found')
     })
     renderPage()
 
     await screen.findByText('Total Requests')
-    const exportButton = screen.getByRole('button', { name: 'Export CSV' })
+    const exportButton = screen.getByRole('button', { name: 'Export Excel' })
     fireEvent.click(exportButton)
 
     await waitFor(() => expect(screen.getByRole('button', { name: 'Exporting…' })).toBeDisabled())
@@ -240,14 +241,95 @@ describe('ReportsPage', () => {
       if (url.pathname === '/reports/requests') return jsonResponse(200, { data: requestReportFixture })
       if (url.pathname === '/reports/workflow-duration') return jsonResponse(200, { data: workflowDurationFixture })
       if (url.pathname === '/departments') return jsonResponse(200, { data: departmentFixture })
-      if (url.pathname === '/reports/requests/export') return errorResponse(413, 'EXPORT_TOO_LARGE', 'Too many rows.')
+      if (url.pathname === '/reports/requests/export/xlsx') return errorResponse(413, 'EXPORT_TOO_LARGE', 'Too many rows.')
       return errorResponse(404, 'NOT_FOUND', 'not found')
     })
     renderPage()
 
     await screen.findByText('Total Requests')
-    fireEvent.click(screen.getByRole('button', { name: 'Export CSV' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Export Excel' }))
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Too many rows.')
+  })
+
+  it('Export PDF sends the current filters to the PDF endpoint and triggers a download', async () => {
+    URL.createObjectURL = vi.fn(() => 'blob:mock-url')
+    URL.revokeObjectURL = vi.fn()
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
+
+    let pdfUrl: URL | undefined
+    let pdfInit: RequestInit | undefined
+    stubFetch((url, init) => {
+      if (url.pathname === '/reports/requests') return jsonResponse(200, { data: requestReportFixture })
+      if (url.pathname === '/reports/workflow-duration') return jsonResponse(200, { data: workflowDurationFixture })
+      if (url.pathname === '/departments') return jsonResponse(200, { data: departmentFixture })
+      if (url.pathname === '/reports/requests/export/pdf') {
+        pdfUrl = url
+        pdfInit = init
+        return new Response('%PDF-1.3', {
+          status: 200,
+          headers: { 'Content-Type': 'application/pdf', 'Content-Disposition': 'attachment; filename="reqflow-report.pdf"' },
+        })
+      }
+      return errorResponse(404, 'NOT_FOUND', 'not found')
+    })
+    renderPage(['/reports?status=APPROVED'])
+
+    await screen.findByText('Total Requests')
+    fireEvent.click(screen.getByRole('button', { name: 'Export PDF' }))
+
+    await waitFor(() => expect(clickSpy).toHaveBeenCalled())
+    expect(pdfUrl?.searchParams.get('status')).toBe('APPROVED')
+    expect(pdfInit).toMatchObject({ credentials: 'include' })
+
+    clickSpy.mockRestore()
+  })
+
+  it('disables both export buttons while a PDF is being generated', async () => {
+    let resolveExport: (() => void) | undefined
+    const exportPromise = new Promise<void>((resolve) => {
+      resolveExport = resolve
+    })
+    URL.createObjectURL = vi.fn(() => 'blob:mock-url')
+    URL.revokeObjectURL = vi.fn()
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
+
+    stubFetch(async (url) => {
+      if (url.pathname === '/reports/requests') return jsonResponse(200, { data: requestReportFixture })
+      if (url.pathname === '/reports/workflow-duration') return jsonResponse(200, { data: workflowDurationFixture })
+      if (url.pathname === '/departments') return jsonResponse(200, { data: departmentFixture })
+      if (url.pathname === '/reports/requests/export/pdf') {
+        await exportPromise
+        return new Response('%PDF-1.3', { status: 200, headers: { 'Content-Type': 'application/pdf' } })
+      }
+      return errorResponse(404, 'NOT_FOUND', 'not found')
+    })
+    renderPage()
+
+    await screen.findByText('Total Requests')
+    fireEvent.click(screen.getByRole('button', { name: 'Export PDF' }))
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Generating PDF…' })).toBeDisabled())
+    expect(screen.getByRole('button', { name: 'Export Excel' })).toBeDisabled()
+
+    resolveExport?.()
+    await waitFor(() => expect(clickSpy).toHaveBeenCalled())
+    clickSpy.mockRestore()
+  })
+
+  it('a failed PDF export renders a controlled error message', async () => {
+    stubFetch((url) => {
+      if (url.pathname === '/reports/requests') return jsonResponse(200, { data: requestReportFixture })
+      if (url.pathname === '/reports/workflow-duration') return jsonResponse(200, { data: workflowDurationFixture })
+      if (url.pathname === '/departments') return jsonResponse(200, { data: departmentFixture })
+      if (url.pathname === '/reports/requests/export/pdf') return errorResponse(413, 'EXPORT_TOO_LARGE', 'Too many requests for a PDF.')
+      return errorResponse(404, 'NOT_FOUND', 'not found')
+    })
+    renderPage()
+
+    await screen.findByText('Total Requests')
+    fireEvent.click(screen.getByRole('button', { name: 'Export PDF' }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Too many requests for a PDF.')
   })
 })

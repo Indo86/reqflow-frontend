@@ -28,3 +28,7 @@ dist-ssr
 *.sln
 *.sw?
 coverage
+
+# Local-only material (not published)
+e2e/
+docs/

@@ -10,6 +10,15 @@ export const notificationTypeSchema = z.enum([
   'REQUEST_REVISION_REQUIRED',
   'REQUEST_APPROVED',
   'REQUEST_REJECTED',
+  // M1
+  'REQUEST_WITHDRAWN',
+  'APPROVAL_REASSIGNED',
+  // M4
+  'FULFILLMENT_ASSIGNED',
+  'FULFILLMENT_REASSIGNED',
+  'FULFILLMENT_NEEDS_OWNER',
+  'FULFILLMENT_COMPLETED',
+  'FULFILLMENT_CANCELLED',
 ])
 
 export const notificationSchema = z.object({

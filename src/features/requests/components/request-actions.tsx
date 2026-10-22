@@ -7,6 +7,7 @@ import { useSubmitRequestMutation } from '../hooks/use-submit-request-mutation'
 import { useCancelRequestMutation } from '../hooks/use-cancel-request-mutation'
 import { useDeleteRequestMutation } from '../hooks/use-delete-request-mutation'
 import { requestKeys } from '../api/request-query-keys'
+import { ApprovalDecisionDialog } from '@/features/approvals/components/approval-decision-dialog'
 import { ConfirmDialog } from './confirm-dialog'
 import {
   CANCELLABLE_STATUSES,
@@ -30,7 +31,8 @@ interface RequestActionsProps {
 export function RequestActions({ request }: RequestActionsProps) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const [confirmAction, setConfirmAction] = useState<'cancel' | 'delete' | null>(null)
+  const [confirmAction, setConfirmAction] = useState<'cancel' | 'withdraw' | 'delete' | null>(null)
+  const [withdrawError, setWithdrawError] = useState<string | undefined>(undefined)
   const [conflictMessage, setConflictMessage] = useState<string | null>(null)
 
   const submitMutation = useSubmitRequestMutation(request.id)
@@ -49,6 +51,8 @@ export function RequestActions({ request }: RequestActionsProps) {
   const canEditOrSubmit = EDITABLE_STATUSES.includes(request.status)
   const canCancel = CANCELLABLE_STATUSES.includes(request.status)
   const canDelete = DELETABLE_STATUSES.includes(request.status)
+  // M1: an IN_REVIEW request is *withdrawn* (reason required), anything else is cancelled.
+  const isWithdrawal = request.status === 'IN_REVIEW'
 
   return (
     <>
@@ -73,11 +77,14 @@ export function RequestActions({ request }: RequestActionsProps) {
           <button
             type="button"
             className="btn btn-danger-ghost"
-            onClick={() => setConfirmAction('cancel')}
+            onClick={() => {
+              setWithdrawError(undefined)
+              setConfirmAction(isWithdrawal ? 'withdraw' : 'cancel')
+            }}
             disabled={cancelMutation.isPending}
           >
             <XCircle className="icon" width={15} height={15} strokeWidth={2} />
-            <span>Cancel</span>
+            <span>{isWithdrawal ? 'Withdraw' : 'Cancel'}</span>
           </button>
         ) : null}
         {canEditOrSubmit ? (
@@ -116,6 +123,28 @@ export function RequestActions({ request }: RequestActionsProps) {
             onError: (error) => {
               setConfirmAction(null)
               handleConflict(error)
+            },
+          })
+        }
+      />
+      <ApprovalDecisionDialog
+        open={confirmAction === 'withdraw'}
+        title="Withdraw this request?"
+        description="Pending approvals will be stopped and the request will be moved to Cancelled. Decisions already made stay in the history. This cannot be undone."
+        commentLabel="Reason for withdrawing"
+        commentRequired
+        confirmLabel="Withdraw request"
+        isSubmitting={cancelMutation.isPending}
+        errorMessage={withdrawError}
+        onCancel={() => setConfirmAction(null)}
+        onConfirm={(reason) =>
+          cancelMutation.mutate(reason, {
+            onSuccess: () => setConfirmAction(null),
+            onError: (error) => {
+              // A 409 means someone decided the request first; surface the
+              // backend's own message inside the dialog, then refetch.
+              setWithdrawError(error instanceof ApiError ? error.message : 'Could not withdraw this request.')
+              void queryClient.invalidateQueries({ queryKey: requestKeys.detail(request.id) })
             },
           })
         }

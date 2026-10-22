@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react'
 import { ChevronDown, Search } from 'lucide-react'
 
-export function FilterBar({ children }: { children: ReactNode }) {
-  return <div className="filter-bar">{children}</div>
+// alignEnd: bottom-aligns controls when some have a label above them (e.g.
+// the Reports date fields) so the label-less pills line up with the inputs.
+export function FilterBar({ children, alignEnd = false }: { children: ReactNode; alignEnd?: boolean }) {
+  return <div className={alignEnd ? 'filter-bar filter-bar-end' : 'filter-bar'}>{children}</div>
 }
 
 interface SearchFieldProps {

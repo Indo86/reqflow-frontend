@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { AppShell } from '@/app/layout/app-shell'
 import { PageHeader } from '@/components/shared/page-header'
@@ -9,15 +10,19 @@ import { toAppShellUser } from '@/features/auth/lib/to-app-shell-user'
 import { productionNavigationByRole } from '@/lib/mock/navigation'
 import { ApprovalActions } from '@/features/approvals/components/approval-actions'
 import { ApprovalHistory } from '@/features/approvals/components/approval-history'
-import { findPendingApproval } from '@/features/approvals/types/approval'
+import { ReassignApprovalDialog } from '@/features/approvals/components/reassign-approval-dialog'
+import { findPendingApproval, type ApprovalHistoryItem } from '@/features/approvals/types/approval'
 import { CommentSection } from '@/features/collaboration/comments/components/comment-section'
 import { AttachmentSection } from '@/features/collaboration/attachments/components/attachment-section'
 import { computeInitials } from '@/lib/utils/compute-initials'
 import { useRequestQuery } from '../hooks/use-request-query'
 import { RequestStatusBadge } from '../components/request-status-badge'
 import { RequestMetaChips } from '../components/request-meta-chips'
+import { AuditTimeline } from '../audit/audit-timeline'
 import { RequestActions } from '../components/request-actions'
 import { RichTextRenderer } from '../components/rich-text-renderer'
+import { FulfillmentSection } from '@/features/fulfillment/components/fulfillment-section'
+import { useFulfillmentQuery } from '@/features/fulfillment/hooks/use-fulfillment'
 import { TERMINAL_REQUEST_STATUSES } from '../types/request'
 
 // Production Request Detail. Only real DTO fields are shown (requestNumber,
@@ -34,6 +39,9 @@ export function RequestDetailPage() {
   const session = useSession()
   const onLogout = useLogout()
   const query = useRequestQuery(requestId)
+  // M4: execution permissions, asked only once the request is known to be APPROVED.
+  const fulfillmentQuery = useFulfillmentQuery(requestId, query.data?.status === 'APPROVED')
+  const [reassignStep, setReassignStep] = useState<ApprovalHistoryItem | null>(null)
 
   if (session.status !== 'authenticated') return null
 
@@ -103,6 +111,8 @@ export function RequestDetailPage() {
   // dead code, just currently unreachable-true. See F3 "known limitations".
   const pendingApproval = findPendingApproval(detail.approvalCycles)
   const isCurrentApprover = pendingApproval?.approver.id === user.id
+  // M1: Admin-only recovery action on open steps. Admin still gets no decision rights.
+  const canReassign = user.role === 'Admin' && detail.status === 'IN_REVIEW'
 
   // Collaboration write access (F4) mirrors collaboration.service.ts's
   // getWritableRequestForCollaboration exactly: owner, or the current
@@ -111,6 +121,16 @@ export function RequestDetailPage() {
   // broad read access never implies collaboration write access either, so
   // only `isOwner` ever makes this true in practice here.
   const canWriteCollaboration = (isOwner || isCurrentApprover) && !TERMINAL_REQUEST_STATUSES.includes(detail.status)
+  // M4: while an APPROVED request's fulfillment is open, the server also lets the
+  // owner and the assignee comment and the assignee attach evidence. It tells us
+  // so in `permissions`; nothing else about an approved request becomes editable.
+  const fulfillmentPermissions = fulfillmentQuery.data?.permissions
+  const canComment = canWriteCollaboration || Boolean(fulfillmentPermissions?.canComment)
+  const canAttach = canWriteCollaboration || Boolean(fulfillmentPermissions?.canAddEvidence)
+  // A DRAFT has no approval cycle yet, so the backend treats its comments and
+  // attachments as owner-only (getViewableRequestForCollaboration) — even an
+  // Admin who can read the request itself gets 404 there. Don't request them.
+  const canViewCollaboration = detail.status !== 'DRAFT' || isOwner
 
   return (
     <AppShell user={shellUser} navItems={navItems} activeKey="requests" onLogout={onLogout}>
@@ -140,32 +160,86 @@ export function RequestDetailPage() {
 
       <RequestMetaChips detail={detail} />
 
+      {detail.viewer && detail.viewer.relationship !== 'OWNER' && !(detail.viewer.approval === 'AWAITING_DECISION') ? (
+        <div role="note" className="body-text" style={{ margin: '0 0 12px' }}>
+          {detail.viewer.relationship === 'OVERSIGHT'
+            ? 'View only. You can see this request because of your role. Only its owner and the assigned approvers can act on it.'
+            : 'You were assigned an approval step on this request. It is shown for reference; there is nothing for you to decide right now.'}
+        </div>
+      ) : null}
+
+      {detail.type === 'EQUIPMENT' && detail.amount !== null ? (
+        <div role="note" className="body-text" style={{ margin: '0 0 12px' }}>
+          This equipment request carries an amount from before equipment was limited to assets the organization already
+          owns. Buying new goods is a Purchase request.
+        </div>
+      ) : null}
+
       <div className="detail-columns">
         <div className="detail-main">
           <SectionCard title="Description">
             <RichTextRenderer value={detail.description} />
           </SectionCard>
 
-          <SectionCard title="Comments">
-            <CommentSection
-              requestId={detail.id}
-              currentUserId={user.id}
-              currentUserInitials={computeInitials(user.name)}
-              canWrite={canWriteCollaboration}
-            />
-          </SectionCard>
+          {canViewCollaboration ? (
+            <>
+              <SectionCard title="Comments">
+                <CommentSection
+                  requestId={detail.id}
+                  currentUserId={user.id}
+                  currentUserInitials={computeInitials(user.name)}
+                  canWrite={canComment}
+                />
+              </SectionCard>
 
-          <SectionCard title="Attachments">
-            <AttachmentSection requestId={detail.id} currentUserId={user.id} canWrite={canWriteCollaboration} />
-          </SectionCard>
+              <SectionCard title="Attachments">
+                <AttachmentSection requestId={detail.id} currentUserId={user.id} canWrite={canAttach} />
+              </SectionCard>
+            </>
+          ) : null}
         </div>
 
         <div className="detail-side">
+          {detail.status === 'APPROVED' ? (
+            <SectionCard title="Fulfillment">
+              <FulfillmentSection requestId={detail.id} requestType={detail.type} />
+            </SectionCard>
+          ) : null}
           <SectionCard title="Approval Flow">
-            <ApprovalHistory cycles={detail.approvalCycles} />
+            <ApprovalHistory
+              cycles={detail.approvalCycles}
+              renderStepAction={
+                canReassign
+                  ? (step) =>
+                      step.status === 'PENDING' || step.status === 'WAITING' ? (
+                        <button
+                          type="button"
+                          className="btn btn-secondary btn-sm"
+                          style={{ marginTop: 6, alignSelf: 'flex-start' }}
+                          onClick={() => setReassignStep(step)}
+                        >
+                          Reassign
+                        </button>
+                      ) : null
+                  : undefined
+              }
+            />
+          </SectionCard>
+          <SectionCard title="History">
+            <AuditTimeline requestId={detail.id} />
           </SectionCard>
         </div>
       </div>
+
+      {canReassign ? (
+        <ReassignApprovalDialog
+          step={reassignStep}
+          requestId={detail.id}
+          ownerId={detail.createdBy.id}
+          departmentId={detail.department?.id ?? null}
+          onClose={() => setReassignStep(null)}
+        />
+      ) : null}
     </AppShell>
   )
 }

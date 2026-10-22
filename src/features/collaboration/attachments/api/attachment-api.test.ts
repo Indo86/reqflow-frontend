@@ -61,7 +61,8 @@ describe('attachment API layer', () => {
 
   it('downloadAttachment fetches GET /attachments/:id/download with credentials and returns a Blob', async () => {
     const fetchSpy = vi.fn(async () =>
-      new Response(new Blob(['file bytes']), {
+      // A byte body, not a jsdom Blob: Node's Response calls blob.stream(), which jsdom's Blob does not implement.
+      new Response(new TextEncoder().encode('file bytes'), {
         status: 200,
         headers: {
           'Content-Type': 'application/pdf',
@@ -77,7 +78,11 @@ describe('attachment API layer', () => {
       expect.objectContaining({ pathname: '/attachments/attachment-1/download' }),
       expect.objectContaining({ credentials: 'include' })
     )
-    expect(result.blob).toBeInstanceOf(Blob)
+    // Response.blob() returns Node's Blob, not jsdom's global Blob, so instanceof is not meaningful here;
+    // assert the observable contract (type, size, bytes) instead.
+    expect(result.blob.type).toBe('application/pdf')
+    expect(result.blob.size).toBe('file bytes'.length)
+    expect(new TextDecoder().decode(await result.blob.arrayBuffer())).toBe('file bytes')
     expect(result.filename).toBe('quote.pdf')
   })
 

@@ -35,11 +35,17 @@ const presentationByAction: Record<string, ActivityPresentation> = {
   APPROVAL_STEP_APPROVED: { label: 'Approval step approved', icon: CheckCircle2 },
   APPROVAL_STEP_REJECTED: { label: 'Approval step rejected', icon: XCircle },
   APPROVAL_STEP_REVISION_REQUESTED: { label: 'Revision requested', icon: RotateCcw },
+  APPROVAL_REASSIGNED: { label: 'Approval reassigned', icon: Send },
   COMMENT_CREATED: { label: 'Comment added', icon: MessageSquare },
   COMMENT_UPDATED: { label: 'Comment updated', icon: MessageSquare },
   COMMENT_DELETED: { label: 'Comment deleted', icon: Trash2 },
   ATTACHMENT_ADDED: { label: 'Attachment added', icon: Paperclip },
   ATTACHMENT_DELETED: { label: 'Attachment removed', icon: Trash2 },
+  FULFILLMENT_CREATED: { label: 'Fulfillment opened', icon: CheckCircle2 },
+  FULFILLMENT_ASSIGNED: { label: 'Fulfillment assigned', icon: Send },
+  FULFILLMENT_STARTED: { label: 'Fulfillment started', icon: Send },
+  FULFILLMENT_COMPLETED: { label: 'Fulfillment completed', icon: CheckCircle2 },
+  FULFILLMENT_CANCELLED: { label: 'Fulfillment cancelled', icon: XCircle },
 }
 
 const fallbackPresentation: ActivityPresentation = { label: 'Activity', icon: Activity }

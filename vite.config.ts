@@ -14,5 +14,8 @@ export default defineConfig({
     clearMocks: true,
     restoreMocks: true,
     unstubGlobals: true,
+    // Page-level tests mount whole screens in jsdom and routinely take 3-5s when
+    // files run in parallel; the 5s default made them load-dependent.
+    testTimeout: 20_000,
   },
 })

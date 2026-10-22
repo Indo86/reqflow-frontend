@@ -27,17 +27,18 @@ export function buildOwnerStats(summary: DashboardSummary): StatCardData[] {
   ]
 }
 
-// Manager/Finance/Director share this shape — M10 gives them exactly the
-// same own-requests-only scope as Owner (no department-wide broadening
-// exists anywhere in the backend), the only addition is their real assigned
-// approval count.
+// Manager/Finance/Director share this shape. Since M2 the counts cover
+// everything the role may READ (Manager: own department plus own requests;
+// Finance: purchase/reimbursement requests plus own; Director: organization),
+// so the labels no longer say "My". "Pending My Approval" is the one number
+// that is about the viewer's own decisions: their real assigned approval count.
 export function buildApproverStats(summary: DashboardSummary): StatCardData[] {
   const { byStatus } = summary.requests
   return [
     { label: 'Pending My Approval', value: String(summary.approvals.pendingForCurrentUser), icon: 'pendingApproval', tone: 'amber' },
-    { label: 'My Open Requests', value: String(sumStatuses(byStatus, OPEN_STATUSES)), icon: 'requests', tone: 'accent' },
-    { label: 'My Pending Requests', value: String(sumStatuses(byStatus, PENDING_STATUSES)), icon: 'pending', tone: 'amber' },
-    { label: 'My Approved Requests', value: String(byStatus.APPROVED ?? 0), icon: 'approved', tone: 'green' },
+    { label: 'Open Requests', value: String(sumStatuses(byStatus, OPEN_STATUSES)), icon: 'requests', tone: 'accent' },
+    { label: 'Pending Requests', value: String(sumStatuses(byStatus, PENDING_STATUSES)), icon: 'pending', tone: 'amber' },
+    { label: 'Approved Requests', value: String(byStatus.APPROVED ?? 0), icon: 'approved', tone: 'green' },
   ]
 }
 

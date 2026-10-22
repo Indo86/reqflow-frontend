@@ -75,7 +75,6 @@ export function AppShell({ user, navItems, activeKey, children, onLogout }: AppS
           <div className="brand-mark">
             <Workflow className="icon" width={15} height={15} strokeWidth={2} />
           </div>
-          <span className="brand-name">ReqFlow</span>
         </div>
       </div>
       {navigationOpen ? (

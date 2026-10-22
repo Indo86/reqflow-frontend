@@ -9,7 +9,7 @@ import type {
 
 export type NotificationType = z.infer<typeof notificationTypeSchema>
 
-// Exactly the 4 values notification.service.ts's notify* functions actually
+// Exactly the values notification.service.ts's notify* functions actually
 // create — do not add REQUEST_SUBMITTED, COMMENT_ADDED, or any other
 // invented type (see F5 "backend contract").
 export const notificationTypeLabels: Record<NotificationType, string> = {
@@ -17,6 +17,13 @@ export const notificationTypeLabels: Record<NotificationType, string> = {
   REQUEST_REVISION_REQUIRED: 'Revision requested',
   REQUEST_APPROVED: 'Request approved',
   REQUEST_REJECTED: 'Request rejected',
+  REQUEST_WITHDRAWN: 'Request withdrawn',
+  APPROVAL_REASSIGNED: 'Approval reassigned',
+  FULFILLMENT_ASSIGNED: 'Fulfillment assigned',
+  FULFILLMENT_REASSIGNED: 'Fulfillment reassigned',
+  FULFILLMENT_NEEDS_OWNER: 'Fulfillment needs an owner',
+  FULFILLMENT_COMPLETED: 'Request fulfilled',
+  FULFILLMENT_CANCELLED: 'Fulfillment cancelled',
 }
 
 export interface Notification {

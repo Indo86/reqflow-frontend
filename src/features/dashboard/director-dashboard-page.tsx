@@ -16,6 +16,7 @@ import { RecentRequestsTable } from './recent-requests-table'
 import { RealApprovalAttentionTable } from './components/real-approval-attention-table'
 import { RealRecentRequestsTable } from './components/real-recent-requests-table'
 import { SectionQueryState } from './components/section-query-state'
+import { FulfillmentOverview } from './components/fulfillment-overview'
 import { useDashboardSummaryQuery } from './hooks/use-dashboard-summary-query'
 import { buildApproverStats } from './lib/build-stat-cards'
 import { formatRupiah } from '@/lib/utils/format-currency'
@@ -64,7 +65,7 @@ export function DirectorDashboardPage({
     <AppShell user={user} navItems={navItems} activeKey="dashboard" onLogout={onLogout}>
       <PageHeader
         title="Dashboard"
-        subtitle="Decisions requiring your attention, and the status of your own requests"
+        subtitle="Decisions requiring your attention, and requests across the organization"
         actions={
           <button type="button" className="btn btn-primary">
             <Plus className="icon" width={15} height={15} strokeWidth={2} />
@@ -90,6 +91,8 @@ export function DirectorDashboardPage({
           ))}
         </div>
       )}
+
+      {isProduction && summaryQuery.data?.fulfillment ? <FulfillmentOverview counts={summaryQuery.data.fulfillment} /> : null}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <SectionCard
@@ -118,7 +121,11 @@ export function DirectorDashboardPage({
             )
           ) : null}
         </SectionCard>
-        <SectionCard title="My Recent Requests" padded={false}>
+        <SectionCard
+          title="Recent Requests"
+          subtitle="Submitted requests across the organization, and your own. Inspecting a request does not let you act on it."
+          padded={false}
+        >
           {!isProduction ? (
             <RecentRequestsTable requests={directorRecentRequests} />
           ) : (
@@ -134,7 +141,7 @@ export function DirectorDashboardPage({
           )}
           {isProduction && recentQuery.data ? (
             recentQuery.data.items.length === 0 ? (
-              <EmptyState icon={FileText} title="No requests yet" body="Create your first request to get started." />
+              <EmptyState icon={FileText} title="No requests yet" body="Submitted requests across the organization, and requests you create, will show up here." />
             ) : (
               <RealRecentRequestsTable requests={recentQuery.data.items} />
             )

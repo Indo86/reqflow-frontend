@@ -11,7 +11,8 @@ export interface UpdateRequestInput {
   type?: RequestType
   title?: string
   description?: string
-  amount?: number
+  // null clears the amount (needed when a draft is switched to a type that carries none).
+  amount?: number | null
 }
 
 export async function updateRequest(id: string, input: UpdateRequestInput): Promise<Request> {

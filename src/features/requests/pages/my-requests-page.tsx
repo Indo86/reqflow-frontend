@@ -9,6 +9,7 @@ import { RequestFilters } from '../components/request-filters'
 import { RequestPagination } from '../components/request-pagination'
 import { RequestTableStatus } from '../components/request-table-status'
 import { RequestStatusBadge } from '../components/request-status-badge'
+import { FulfillmentBadge } from '@/features/fulfillment/components/fulfillment-badge'
 import { formatRequestAmount } from '../lib/format-request-amount'
 import { requestTypeLabels } from '../types/request'
 import { parseRequestListParams } from '../lib/parse-request-list-params'
@@ -88,6 +89,7 @@ export function MyRequestsPage({ user, navItems, onLogout }: MyRequestsPageProps
               <td className="cell-primary" data-label="Amount">{formatRequestAmount(request.amount)}</td>
               <td data-label="Status">
                 <RequestStatusBadge status={request.status} />
+                <FulfillmentBadge summary={request.fulfillment} />
               </td>
               <td className="cell-secondary" data-label="Created">{new Date(request.createdAt).toLocaleDateString()}</td>
             </tr>

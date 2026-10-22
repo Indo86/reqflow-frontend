@@ -2,20 +2,24 @@ import { ApiError, normalizeHttpError } from '@/lib/api'
 import { env } from '@/lib/env'
 import type { RequestReportFilters } from '../types/report'
 
-export interface DownloadedCsvExport {
+export interface DownloadedReportFile {
   blob: Blob
   filename: string
 }
 
-// GET /reports/requests/export — same filters as GET /reports/requests,
-// same visibility/authorization (report.service.ts's exportRequestReportCsv
-// reuses the identical predicate). Deliberately does NOT go through
-// apiClient: apiClient always calls response.text() and JSON.parses it,
-// which would corrupt this endpoint's text/csv body — same reasoning as F4's
-// downloadAttachment. credentials are still explicitly included, and
-// non-OK responses are normalized through the same ApiError/
-// normalizeHttpError used everywhere else.
-export async function exportRequestReportCsv(filters: RequestReportFilters): Promise<DownloadedCsvExport> {
+// Shared by the Excel and PDF exports — both are the same filtered,
+// authorized read as GET /reports/requests, just a different representation,
+// so they take the same query string and the same visibility. Deliberately
+// does NOT go through apiClient: apiClient always calls response.text() and
+// JSON.parses it, which would corrupt a binary body — same reasoning as F4's
+// downloadAttachment. credentials are still explicitly included, and non-OK
+// responses are normalized through the same ApiError/normalizeHttpError used
+// everywhere else.
+export async function downloadReportFile(
+  path: string,
+  filters: RequestReportFilters,
+  fallbackFilename: string
+): Promise<DownloadedReportFile> {
   const params = new URLSearchParams()
   if (filters.status) params.set('status', filters.status)
   if (filters.type) params.set('type', filters.type)
@@ -25,7 +29,7 @@ export async function exportRequestReportCsv(filters: RequestReportFilters): Pro
   if (filters.to) params.set('to', filters.to)
 
   const base = new URL(`${env.apiBaseUrl}/`)
-  const url = new URL(`reports/requests/export?${params.toString()}`, base)
+  const url = new URL(`${path}?${params.toString()}`, base)
 
   let response: Response
   try {
@@ -49,7 +53,7 @@ export async function exportRequestReportCsv(filters: RequestReportFilters): Pro
   }
 
   const blob = await response.blob()
-  const filename = parseFilenameFromContentDisposition(response.headers.get('Content-Disposition')) ?? 'reqflow-requests.csv'
+  const filename = parseFilenameFromContentDisposition(response.headers.get('Content-Disposition')) ?? fallbackFilename
   return { blob, filename }
 }
 

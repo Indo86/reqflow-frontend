@@ -28,5 +28,18 @@ export function getNotificationLink(
     return notification.requestId ? '/approvals' : undefined
   }
 
+  // M1: both are sent to an approver, never the owner, so /requests/:id would
+  // 404 for them. A withdrawn request's approval stays readable to its assigned
+  // approver; a reassigned-away approver can no longer open anything.
+  if (notification.type === 'REQUEST_WITHDRAWN') {
+    return notification.approvalId ? `/approvals/${notification.approvalId}` : undefined
+  }
+  if (notification.type === 'APPROVAL_REASSIGNED') return undefined
+
+  // M4. The assignee, the Admins and the requester can all read the request
+  // (the read policy admits an executor), so each opens the request itself.
+  // The previous assignee loses access on reassignment, so theirs has no link.
+  if (notification.type === 'FULFILLMENT_REASSIGNED') return undefined
+
   return notification.requestId ? `/requests/${notification.requestId}` : undefined
 }

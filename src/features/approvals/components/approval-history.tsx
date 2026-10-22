@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Check, CircleSlash, Clock, RotateCcw, X } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type { ApprovalCycleHistoryItem, ApprovalHistoryItem, ApprovalStatus } from '../types/approval'
@@ -21,7 +22,7 @@ function stepMeta(step: ApprovalHistoryItem): string {
   return date ? `${step.approver.name} · ${date}` : step.approver.name
 }
 
-function ApprovalStep({ step, isLast }: { step: ApprovalHistoryItem; isLast: boolean }) {
+function ApprovalStep({ step, isLast, action }: { step: ApprovalHistoryItem; isLast: boolean; action?: ReactNode }) {
   const { icon: Icon, background, color } = STATUS_STYLE[step.status]
 
   return (
@@ -36,6 +37,7 @@ function ApprovalStep({ step, isLast }: { step: ApprovalHistoryItem; isLast: boo
         <span className="approval-step-role">{approvalStepTypeLabels[step.stepType]}</span>
         <span className="approval-step-meta">{stepMeta(step)}</span>
         {step.decisionComment ? <p className="body-text" style={{ marginTop: 2 }}>{step.decisionComment}</p> : null}
+        {action}
       </div>
     </div>
   )
@@ -46,7 +48,14 @@ function ApprovalStep({ step, isLast }: { step: ApprovalHistoryItem; isLast: boo
 // array (already ordered by stepOrder by the backend) is rendered exactly
 // as returned. A Request only ever has more than one cycle after a
 // revision-requested resubmission, so most requests show a single cycle.
-export function ApprovalHistory({ cycles }: { cycles: ApprovalCycleHistoryItem[] }) {
+export function ApprovalHistory({
+  cycles,
+  renderStepAction,
+}: {
+  cycles: ApprovalCycleHistoryItem[]
+  // Optional per-step slot (e.g. the Admin-only Reassign button); absent for every other viewer.
+  renderStepAction?: (step: ApprovalHistoryItem) => ReactNode
+}) {
   if (cycles.length === 0) {
     return <p className="body-text">This request has not entered an approval cycle yet.</p>
   }
@@ -62,7 +71,12 @@ export function ApprovalHistory({ cycles }: { cycles: ApprovalCycleHistoryItem[]
           ) : null}
           <div>
             {cycle.approvals.map((step, index) => (
-              <ApprovalStep key={step.id} step={step} isLast={index === cycle.approvals.length - 1} />
+              <ApprovalStep
+                key={step.id}
+                step={step}
+                isLast={index === cycle.approvals.length - 1}
+                action={renderStepAction?.(step)}
+              />
             ))}
           </div>
         </div>

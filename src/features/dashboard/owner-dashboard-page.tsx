@@ -13,6 +13,7 @@ import { useRequestsQuery } from '@/features/requests/hooks/use-requests-query'
 import { RecentRequestsTable } from './recent-requests-table'
 import { RealRecentRequestsTable } from './components/real-recent-requests-table'
 import { SectionQueryState } from './components/section-query-state'
+import { FulfillmentOverview } from './components/fulfillment-overview'
 import { useDashboardSummaryQuery } from './hooks/use-dashboard-summary-query'
 import { buildOwnerStats } from './lib/build-stat-cards'
 import { requestStatusBreakdownRows } from './lib/request-status-presentation'
@@ -78,6 +79,8 @@ export function OwnerDashboardPage({
           ))}
         </div>
       )}
+
+      {isProduction && summaryQuery.data?.fulfillment ? <FulfillmentOverview counts={summaryQuery.data.fulfillment} /> : null}
 
       <div className="dashboard-layout">
         <div className="dashboard-primary">

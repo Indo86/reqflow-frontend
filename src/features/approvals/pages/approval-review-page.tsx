@@ -14,17 +14,20 @@ import { RequestStatusBadge } from '@/features/requests/components/request-statu
 import { CommentSection } from '@/features/collaboration/comments/components/comment-section'
 import { AttachmentSection } from '@/features/collaboration/attachments/components/attachment-section'
 import { computeInitials } from '@/lib/utils/compute-initials'
+import { useRequestQuery } from '@/features/requests/hooks/use-request-query'
+import { RichTextRenderer } from '@/features/requests/components/rich-text-renderer'
+import { AuditTimeline } from '@/features/requests/audit/audit-timeline'
 import { useApprovalDetailQuery } from '../hooks/use-approval-detail-query'
+import { ApprovalHistory } from '../components/approval-history'
 import { ApprovalActions } from '../components/approval-actions'
 import { approvalStepTypeLabels } from '../types/approval'
 
-// Where an assigned approver reviews a request and decides — backed by
-// GET /approvals/:id, NOT GET /requests/:id. The latter is owner/admin-only
-// server-side (request.service.ts getRequestDetail scopes to createdById
-// for every non-admin role), so a Manager/Finance/Director reviewing
-// someone else's request would get 404 there. getApprovalDetail instead
-// authorizes the assigned approver, the request's owner, or an org admin
-// (read only) — so this page can be opened by any of those three, but
+// Where an assigned approver reviews a request and decides. The step itself
+// comes from GET /approvals/:id; since M2 the request's description, full
+// approval flow and audit history come from the ordinary request read
+// endpoints, which now authorize any user who was assigned a step. This
+// page can be opened by the assigned approver, the request's owner, or an
+// org admin (read only), but
 // Approve/Reject/Request Revision only ever render when *this* signed-in
 // user is *this* approval's own `approver` — never from role, and never
 // just because the page loaded successfully (F3 "Approval authority
@@ -36,6 +39,11 @@ export function ApprovalReviewPage() {
   const session = useSession()
   const onLogout = useLogout()
   const query = useApprovalDetailQuery(approvalId)
+  // M2: an assigned approver may read the request itself (business context,
+  // description, and every previous decision), not only their own step. This
+  // is read access; the Approve/Reject buttons below still depend solely on
+  // being this step's assigned approver.
+  const requestQuery = useRequestQuery(query.data?.request.id)
 
   if (session.status !== 'authenticated') return null
 
@@ -111,7 +119,7 @@ export function ApprovalReviewPage() {
 
       <SectionCard
         title={`Your step: ${approvalStepTypeLabels[detail.stepType]}`}
-        subtitle="Only your review step is shown here — the full approval history is visible to the request owner and organization admins on the Request page."
+        subtitle="Your step in this request's approval flow. Earlier and later steps are shown below."
       >
         <KeyValueGrid
           items={[
@@ -126,6 +134,33 @@ export function ApprovalReviewPage() {
             },
           ]}
         />
+      </SectionCard>
+
+      <SectionCard title="Request details">
+        {requestQuery.isPending ? (
+          <p className="body-text">Loading request details…</p>
+        ) : requestQuery.isError ? (
+          <p className="body-text">The full request details could not be loaded.</p>
+        ) : (
+          <RichTextRenderer value={requestQuery.data.description} />
+        )}
+      </SectionCard>
+
+      <SectionCard
+        title="Approval flow"
+        subtitle="Previous decisions with comments, the pending step, and steps still to come."
+      >
+        {requestQuery.isPending ? (
+          <p className="body-text">Loading approval flow…</p>
+        ) : requestQuery.isError ? (
+          <p className="body-text">The approval flow could not be loaded.</p>
+        ) : (
+          <ApprovalHistory cycles={requestQuery.data.approvalCycles} />
+        )}
+      </SectionCard>
+
+      <SectionCard title="History">
+        <AuditTimeline requestId={detail.request.id} />
       </SectionCard>
 
       <SectionCard title="Comments">

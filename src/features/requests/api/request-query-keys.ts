@@ -6,6 +6,8 @@ export interface RequestListFilters {
   type?: RequestType
   status?: RequestStatus
   q?: string
+  // M2: narrows within the caller's authorized set; the server never widens it.
+  view?: 'all' | 'mine' | 'assigned'
 }
 
 // Feature-owned query keys (never a single global registry) — filters are
@@ -17,4 +19,7 @@ export const requestKeys = {
   list: (filters: RequestListFilters) => [...requestKeys.lists(), filters] as const,
   details: () => [...requestKeys.all, 'detail'] as const,
   detail: (id: string) => [...requestKeys.details(), id] as const,
+  // Child of detail(id): invalidating a request's detail (submit, cancel,
+  // reassign, ...) refreshes its audit timeline too, with no per-mutation bookkeeping.
+  audit: (id: string) => [...requestKeys.details(), id, 'audit'] as const,
 }

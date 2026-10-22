@@ -16,6 +16,15 @@ export interface DashboardSummary {
     byStatus: Record<RequestStatus, number>
     byType: Record<RequestType, number>
   }
+  fulfillment?: {
+    awaitingOwner: number
+    notStarted: number
+    inProgress: number
+    completed: number
+    cancelled: number
+    approvedBeforeTracking: number
+    assignedToCurrentUser: number
+  }
   approvals: { pendingForCurrentUser: number }
   notifications: { unreadForCurrentUser: number }
   amounts: { count: number; total: string | null }

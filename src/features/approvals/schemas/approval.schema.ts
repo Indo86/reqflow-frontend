@@ -16,7 +16,8 @@ export const approvalStatusSchema = z.enum([
   'REVISION_REQUESTED',
   'SKIPPED',
 ])
-export const approvalCycleStatusSchema = z.enum(['ACTIVE', 'APPROVED', 'REJECTED', 'REVISION_REQUESTED'])
+// CANCELLED (M1): the owner withdrew the request while this cycle was ACTIVE.
+export const approvalCycleStatusSchema = z.enum(['ACTIVE', 'APPROVED', 'REJECTED', 'REVISION_REQUESTED', 'CANCELLED'])
 export const approvalPolicySchema = z.enum(['MANAGER_ONLY', 'MANAGER_FINANCE', 'MANAGER_FINANCE_DIRECTOR'])
 
 const approverSchema = z.object({ id: z.string(), name: z.string() })

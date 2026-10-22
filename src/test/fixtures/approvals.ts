@@ -51,6 +51,8 @@ const baseRequest = {
   updatedAt: '2026-09-01T00:00:00.000Z',
   createdBy: { id: 'user-employee', name: 'Eddie Employee' },
   department: { id: 'dept-eng', name: 'Engineering' },
+  // M2: how the signed-in user relates to the request (tests override per viewer).
+  viewer: { relationship: 'OWNER', approval: null },
   commentsCount: 0,
   attachmentsCount: 0,
 }

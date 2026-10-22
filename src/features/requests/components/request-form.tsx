@@ -1,7 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { ApiError } from '@/lib/api'
-import { requestFormSchema, type RequestFormValues } from '../schemas/request-form.schema'
+import { requestFormSchema, type RequestFormInput, type RequestFormValues } from '../schemas/request-form.schema'
+import {
+  AMOUNT_NOT_APPLICABLE_NOTICE,
+  previewApprovalRoute,
+  requestTypeCarriesAmount,
+  requestTypeDescriptions,
+} from '../lib/request-type-policy'
 import { requestTypeLabels, type RequestType } from '../types/request'
 import { RichTextEditor } from './rich-text-editor'
 
@@ -11,7 +17,7 @@ interface RequestFormProps {
   // resolved value, so it never has to juggle loading state itself, and
   // RHF's defaultValues (applied once at mount) never gets clobbered by a
   // background refetch of the same request.
-  defaultValues?: RequestFormValues
+  defaultValues?: RequestFormInput
   onSubmit: (values: RequestFormValues) => Promise<void>
   isSubmitting: boolean
   submitError?: unknown
@@ -36,10 +42,18 @@ export function RequestForm({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<RequestFormValues>({
+  } = useForm<RequestFormInput, unknown, RequestFormValues>({
     resolver: zodResolver(requestFormSchema),
     defaultValues: defaultValues ?? { type: 'GENERAL', title: '', description: '', amount: undefined },
   })
+
+  const selectedType = useWatch({ control, name: 'type' })
+  const watchedAmount = useWatch({ control, name: 'amount' })
+  const carriesAmount = requestTypeCarriesAmount(selectedType)
+  const route = previewApprovalRoute(selectedType, typeof watchedAmount === 'number' ? watchedAmount : undefined)
+  // A legacy draft (created before M3) may still hold an amount on a type that
+  // cannot carry one; tell the user it will be removed instead of failing silently.
+  const hasLegacyAmount = !carriesAmount && defaultValues?.amount !== undefined
 
   const safeMessage =
     submitError instanceof ApiError
@@ -85,7 +99,13 @@ export function RequestForm({
             </option>
           ))}
         </select>
+        <span id="request-type-hint" className="field-hint">
+          {requestTypeDescriptions[selectedType]}
+        </span>
         {errors.type ? <span style={{ fontSize: 11.5, color: 'var(--red-text)' }}>{errors.type.message}</span> : null}
+        <span id="request-route-preview" className="field-hint" data-testid="approval-route-preview">
+          Approval route: {route.join(' → ')}
+        </span>
       </div>
 
       <div className="field">
@@ -132,27 +152,35 @@ export function RequestForm({
         ) : null}
       </div>
 
-      <div className="field">
-        <label className="field-label" htmlFor="request-amount">
-          Amount (IDR)
-        </label>
-        <input
-          id="request-amount"
-          type="number"
-          step="0.01"
-          min="0"
-          className="text-input"
-          aria-invalid={errors.amount ? true : undefined}
-          aria-describedby="request-amount-hint"
-          {...register('amount', { setValueAs: (value) => (value === '' ? undefined : Number(value)) })}
-        />
-        <span id="request-amount-hint" className="field-hint">
-          Required before submitting a Purchase request.
-        </span>
-        {errors.amount ? (
-          <span style={{ fontSize: 11.5, color: 'var(--red-text)' }}>{errors.amount.message}</span>
-        ) : null}
-      </div>
+      {carriesAmount ? (
+        <div className="field">
+          <label className="field-label" htmlFor="request-amount">
+            Amount (IDR)
+          </label>
+          <input
+            id="request-amount"
+            type="number"
+            step="0.01"
+            min="0"
+            className="text-input"
+            aria-invalid={errors.amount ? true : undefined}
+            aria-describedby="request-amount-hint"
+            {...register('amount', { setValueAs: (value) => (value === '' || value == null ? undefined : Number(value)) })}
+          />
+          <span id="request-amount-hint" className="field-hint">
+            Required for {selectedType === 'PURCHASE' ? 'Purchase' : 'Reimbursement'} requests.
+          </span>
+          {errors.amount ? (
+            <span role="alert" style={{ fontSize: 11.5, color: 'var(--red-text)' }}>
+              {errors.amount.message}
+            </span>
+          ) : null}
+        </div>
+      ) : hasLegacyAmount ? (
+        <div className="field" role="note">
+          <span className="field-hint">{AMOUNT_NOT_APPLICABLE_NOTICE}</span>
+        </div>
+      ) : null}
 
       <div className="form-actions">
         <button type="button" className="btn btn-secondary" onClick={onCancel} disabled={isSubmitting}>

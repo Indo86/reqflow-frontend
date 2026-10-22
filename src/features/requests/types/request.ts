@@ -2,13 +2,16 @@ import type { z } from 'zod'
 import type {
   backendRequestStatusSchema,
   backendRequestTypeSchema,
+  requestViewerSchema,
   RequestResponse,
 } from '../schemas/request.schema'
 import type { ApprovalCycleHistoryItem } from '@/features/approvals/types/approval'
+import type { FulfillmentBadgeSummary } from '@/features/fulfillment/components/fulfillment-badge'
 import { mapApprovalCycleHistoryItem } from '@/features/approvals/types/approval'
 
 export type RequestType = z.infer<typeof backendRequestTypeSchema>
 export type RequestStatus = z.infer<typeof backendRequestStatusSchema>
+export type RequestViewer = z.infer<typeof requestViewerSchema>
 
 // Backend enum values are the only values ever sent to/received from the
 // API — these maps exist purely for display, so a label change here can
@@ -47,9 +50,13 @@ export interface Request {
   updatedAt: string
   createdBy: { id: string; name: string }
   department: { id: string; name: string } | null
+  // Present on list/detail responses; absent on create/update responses.
+  viewer?: RequestViewer
+  // M4/M5: what happened after approval. Optional so an older server response still parses.
+  fulfillment?: FulfillmentBadgeSummary
 }
 
-export function mapRequestResponse(dto: RequestResponse): Request {
+export function mapRequestResponse(dto: RequestResponse & { viewer?: RequestViewer; fulfillment?: FulfillmentBadgeSummary }): Request {
   return {
     id: dto.id,
     requestNumber: dto.requestNumber,
@@ -62,6 +69,8 @@ export function mapRequestResponse(dto: RequestResponse): Request {
     updatedAt: dto.updatedAt,
     createdBy: dto.createdBy,
     department: dto.department,
+    viewer: dto.viewer,
+    fulfillment: dto.fulfillment,
   }
 }
 
@@ -73,6 +82,8 @@ export interface RequestDetail extends Request {
 
 export function mapRequestDetailResponse(
   dto: RequestResponse & {
+    viewer?: RequestViewer
+    fulfillment?: FulfillmentBadgeSummary
     approvalCycles: Parameters<typeof mapApprovalCycleHistoryItem>[0][]
     commentsCount: number
     attachmentsCount: number
@@ -112,7 +123,8 @@ export interface RequestTransitionResult {
 // which buttons are reasonable to render.
 export const EDITABLE_STATUSES: RequestStatus[] = ['DRAFT', 'REVISION_REQUIRED']
 export const DELETABLE_STATUSES: RequestStatus[] = ['DRAFT']
-export const CANCELLABLE_STATUSES: RequestStatus[] = ['DRAFT', 'SUBMITTED', 'REVISION_REQUIRED']
+// IN_REVIEW (M1) is a withdrawal and requires a reason; the others do not.
+export const CANCELLABLE_STATUSES: RequestStatus[] = ['DRAFT', 'SUBMITTED', 'IN_REVIEW', 'REVISION_REQUIRED']
 
 // Mirrors collaboration.service.ts's TERMINAL_REQUEST_STATUSES exactly — a
 // terminal request is frozen for new comments/attachments for everyone,

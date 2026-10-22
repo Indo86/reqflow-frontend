@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { approvalCycleHistoryItemSchema } from '@/features/approvals/schemas/approval.schema'
+import { fulfillmentSummarySchema } from '@/features/fulfillment/schemas/fulfillment.schema'
 
 // Mirrors reqFlow-backend's RequestType/RequestStatus enums (prisma/schema.prisma)
 // and RequestResponse/PaginatedRequests shapes (src/services/request.service.ts,
@@ -52,8 +53,21 @@ export const requestResponseSchema = z.object({
 
 export type RequestResponse = z.infer<typeof requestResponseSchema>
 
+// M2: how the signed-in user relates to a request they can read. Sent on
+// list/detail responses only. OVERSIGHT means "you may read this request" and
+// nothing more; it never implies any action right.
+export const requestViewerSchema = z.object({
+  relationship: z.enum(['OWNER', 'APPROVER', 'EXECUTOR', 'OVERSIGHT']),
+  approval: z.enum(['AWAITING_DECISION', 'DECIDED']).nullable(),
+})
+export const scopedRequestResponseSchema = requestResponseSchema.extend({
+  viewer: requestViewerSchema,
+  // M4: short fulfillment summary. Optional so an older server response still parses.
+  fulfillment: fulfillmentSummarySchema.optional(),
+})
+
 export const requestListResponseSchema = z.object({
-  data: z.array(requestResponseSchema),
+  data: z.array(scopedRequestResponseSchema),
   meta: z.object({
     page: z.number(),
     pageSize: z.number(),
@@ -67,7 +81,7 @@ export const requestListResponseSchema = z.object({
 // for that shape) plus comment/attachment counts (F4 still renders those as
 // a placeholder; only the counts are validated here).
 export const requestDetailResponseSchema = z.object({
-  data: requestResponseSchema.extend({
+  data: scopedRequestResponseSchema.extend({
     approvalCycles: z.array(approvalCycleHistoryItemSchema),
     commentsCount: z.number(),
     attachmentsCount: z.number(),

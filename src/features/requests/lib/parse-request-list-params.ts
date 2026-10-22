@@ -27,5 +27,8 @@ export function parseRequestListParams(searchParams: URLSearchParams): RequestLi
   const rawQ = searchParams.get('q')?.trim()
   const q = rawQ ? rawQ : undefined
 
-  return { page, pageSize: DEFAULT_PAGE_SIZE, status, type, q }
+  const rawView = searchParams.get('view')
+  const view = rawView === 'mine' || rawView === 'assigned' ? rawView : undefined
+
+  return { page, pageSize: DEFAULT_PAGE_SIZE, status, type, q, view }
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Calendar, Download } from 'lucide-react'
+import { Calendar, Download, FileText } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { AppShell, type AppShellUser } from '@/app/layout/app-shell'
 import { PageHeader } from '@/components/shared/page-header'
@@ -27,7 +27,8 @@ import { SectionQueryState } from '@/features/dashboard/components/section-query
 import { useRequestReportQuery } from './hooks/use-request-report-query'
 import { useWorkflowDurationQuery } from './hooks/use-workflow-duration-query'
 import { useDepartmentsQuery } from './hooks/use-departments-query'
-import { useExportRequestReportCsv } from './hooks/use-export-request-report-csv'
+import { useExportRequestReportXlsx } from './hooks/use-export-request-report-xlsx'
+import { useExportRequestReportPdf } from './hooks/use-export-request-report-pdf'
 import { parseReportUrlFilters, toRequestReportFilters } from './lib/parse-report-filters'
 import { departmentBreakdownRows } from './lib/department-presentation'
 import { buildWorkflowDurationRows } from './lib/workflow-duration-presentation'
@@ -43,8 +44,9 @@ const statusOptions = Object.entries(requestStatusLabels).map(([value, label]) =
 const typeOptions = Object.entries(requestTypeLabels).map(([value, label]) => ({ value, label }))
 
 // See owner-dashboard-page.tsx for the onLogout-gated real/preview pattern.
-// Export CSV and the Department filter are both real in production, backed
-// by GET /reports/requests/export and GET /departments respectively (see
+// Export Excel, Export PDF and the Department filter are all real in production,
+// backed by GET /reports/requests/export/xlsx, GET /reports/requests/export/pdf and
+// GET /departments respectively (see
 // F6-contract-completion). No "Requests Over Time" chart here: that data
 // lives on /dashboard/requests-over-time, a dashboard-scoped snapshot with
 // different (unfiltered) semantics from Reports' filtered aggregates —
@@ -63,7 +65,9 @@ export function ReportsPage({
   const reportQuery = useRequestReportQuery(reportFilters, { enabled: isProduction })
   const durationQuery = useWorkflowDurationQuery({ from: reportFilters.from, to: reportFilters.to }, { enabled: isProduction })
   const departmentsQuery = useDepartmentsQuery({ enabled: isProduction })
-  const exportMutation = useExportRequestReportCsv()
+  const exportMutation = useExportRequestReportXlsx()
+  const pdfExportMutation = useExportRequestReportPdf()
+  const isExporting = exportMutation.isPending || pdfExportMutation.isPending
   const [exportError, setExportError] = useState<string | null>(null)
 
   function updateParam(key: string, value: string) {
@@ -75,9 +79,9 @@ export function ReportsPage({
     })
   }
 
-  function handleExport() {
+  function handleExport(mutation: typeof exportMutation | typeof pdfExportMutation) {
     setExportError(null)
-    exportMutation.mutate(reportFilters, {
+    mutation.mutate(reportFilters, {
       onError: (error) => setExportError(error instanceof ApiError ? error.message : 'The export could not be completed. Please try again.'),
     })
   }
@@ -190,10 +194,16 @@ export function ReportsPage({
         title="Reports"
         subtitle="Insights into request volume, approvals, and workflow performance"
         actions={
-          <button type="button" className="btn btn-primary" disabled={exportMutation.isPending} onClick={handleExport}>
-            <Download className="icon" width={15} height={15} strokeWidth={2} />
-            <span>{exportMutation.isPending ? 'Exporting…' : 'Export CSV'}</span>
-          </button>
+          <div className="action-group">
+            <button type="button" className="btn btn-secondary" disabled={isExporting} onClick={() => handleExport(exportMutation)}>
+              <Download className="icon" width={15} height={15} strokeWidth={2} />
+              <span>{exportMutation.isPending ? 'Exporting…' : 'Export Excel'}</span>
+            </button>
+            <button type="button" className="btn btn-primary" disabled={isExporting} onClick={() => handleExport(pdfExportMutation)}>
+              <FileText className="icon" width={15} height={15} strokeWidth={2} />
+              <span>{pdfExportMutation.isPending ? 'Generating PDF…' : 'Export PDF'}</span>
+            </button>
+          </div>
         }
       />
 
@@ -204,7 +214,7 @@ export function ReportsPage({
       ) : null}
 
       <div className="card" style={{ padding: '14px 18px' }}>
-        <FilterBar>
+        <FilterBar alignEnd>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <label htmlFor="report-from" style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
               From

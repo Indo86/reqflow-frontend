@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { cleanup } from '@testing-library/react'
+import { cleanup, configure } from '@testing-library/react'
 import { afterEach } from 'vitest'
 
 // jsdom does not implement the native <dialog> element's modal behavior.
@@ -15,5 +15,10 @@ if (!HTMLDialogElement.prototype.close) {
     this.removeAttribute('open')
   }
 }
+
+// findBy*/waitFor default to 1s, which a loaded machine exceeds while a whole page
+// (request + approvals + audit queries) renders in jsdom. Slower, not looser:
+// the assertions are unchanged.
+configure({ asyncUtilTimeout: 5000 })
 
 afterEach(() => cleanup())
