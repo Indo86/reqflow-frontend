@@ -72,7 +72,7 @@ describe('AdminDashboardPage', () => {
     stubAdminEndpoints()
     renderWithProviders(<AdminDashboardPage user={shellUser} navItems={navItems} onLogout={vi.fn()} />)
 
-    // Real month labels derived from the fixture's periodStart values.
+    // Menyiapkan data tiruan untuk skenario pengujian ini.
     expect(await screen.findByText('Jul')).toBeInTheDocument()
     expect(screen.getByText('Aug')).toBeInTheDocument()
     expect(screen.getByText('Sep')).toBeInTheDocument()

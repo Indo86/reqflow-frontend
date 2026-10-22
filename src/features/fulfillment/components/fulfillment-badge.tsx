@@ -12,9 +12,7 @@ interface Presentation {
   hint: string
 }
 
-// What the list says about an APPROVED request. Approval and fulfillment are different facts, so an approved
-// request is never presented as finished: it is awaiting fulfillment, in progress, recorded as fulfilled by its
-// executor, cancelled, or approved before fulfillment was tracked at all.
+// Menangani proses pemenuhan request.
 function describeFulfillment(summary: FulfillmentBadgeSummary | undefined): Presentation | null {
   if (!summary) return null
   switch (summary.applicability) {

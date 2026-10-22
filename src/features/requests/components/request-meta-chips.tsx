@@ -2,8 +2,7 @@ import { Building2, Calendar, FileText, User, Wallet } from 'lucide-react'
 import { formatRequestAmount } from '../lib/format-request-amount'
 import { requestTypeLabels, type RequestDetail } from '../types/request'
 
-// Real-data equivalent of components/shared/request-meta-chips.tsx, which is
-// typed to F0.5's mock RequestDetail and must not be reused/modified here.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function RequestMetaChips({ detail }: { detail: RequestDetail }) {
   const chips = [
     { icon: FileText, label: 'Type', value: requestTypeLabels[detail.type] },

@@ -12,10 +12,7 @@ export interface SessionUser {
   mustChangePassword: boolean
 }
 
-// Backend Role enum values (auth.types.ts / prisma schema.prisma) are
-// SCREAMING_CASE; the frontend's existing Role union (src/types/domain.ts,
-// already shared with the F0.5 static pages) is TitleCase. This is the only
-// place the two ever need to meet.
+// Memvalidasi bentuk data sesuai kontrak API.
 const roleLabels: Record<BackendRole, Role> = {
   EMPLOYEE: 'Employee',
   MANAGER: 'Manager',

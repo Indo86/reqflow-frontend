@@ -2,8 +2,7 @@ import type { AdminUserResponse } from '../schemas/user.schema'
 
 export type BackendRole = AdminUserResponse['role']
 
-// Backend enum values only ever sent to/received from the API — this map
-// exists purely for display.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export const roleLabels: Record<BackendRole, string> = {
   EMPLOYEE: 'Employee',
   MANAGER: 'Manager',

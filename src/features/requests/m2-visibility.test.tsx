@@ -98,7 +98,7 @@ describe('M2 scoped requests list', () => {
     renderList(managerProfile)
     expect(await screen.findByText('Team laptops')).toBeInTheDocument()
     expect(screen.getByText(/Submitted requests from your department/)).toBeInTheDocument()
-    // oversight vs actionable rows are distinguishable
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(screen.getByText('View only')).toBeInTheDocument()
     expect(screen.getByText('Needs your decision')).toBeInTheDocument()
     expect(screen.getByText('Eddie Employee')).toBeInTheDocument()
@@ -193,9 +193,9 @@ describe('M2 approval review shows previous decisions', () => {
       routes: [{ path: '/approvals/:approvalId', element: <ApprovalReviewPage /> }],
     })
 
-    expect(await screen.findByText('Looks good.')).toBeInTheDocument() // the Manager's decision comment
-    expect(screen.getByText('Awaiting decision')).toBeInTheDocument() // the step still to be decided
-    expect(screen.getByRole('button', { name: 'Approve' })).toBeInTheDocument() // assigned approver keeps the action
+    expect(await screen.findByText('Looks good.')).toBeInTheDocument() // Komentar keputusan Manager.
+    expect(screen.getByText('Awaiting decision')).toBeInTheDocument() // Tahap masih menunggu keputusan.
+    expect(screen.getByRole('button', { name: 'Approve' })).toBeInTheDocument() // Approver yang ditugaskan tetap dapat bertindak.
   })
 
   it('is just a read-only view for someone who is not the assigned approver', async () => {

@@ -22,27 +22,13 @@ import { ApprovalHistory } from '../components/approval-history'
 import { ApprovalActions } from '../components/approval-actions'
 import { approvalStepTypeLabels } from '../types/approval'
 
-// Where an assigned approver reviews a request and decides. The step itself
-// comes from GET /approvals/:id; since M2 the request's description, full
-// approval flow and audit history come from the ordinary request read
-// endpoints, which now authorize any user who was assigned a step. This
-// page can be opened by the assigned approver, the request's owner, or an
-// org admin (read only), but
-// Approve/Reject/Request Revision only ever render when *this* signed-in
-// user is *this* approval's own `approver` — never from role, and never
-// just because the page loaded successfully (F3 "Approval authority
-// principle"). This only ever shows what getApprovalDetail returns: the
-// request's summary fields (no description, no other cycle steps) plus
-// this one approval step — see F3 "known limitations".
+// Mengambil data dari /approvals/:id.
 export function ApprovalReviewPage() {
   const { approvalId } = useParams<{ approvalId: string }>()
   const session = useSession()
   const onLogout = useLogout()
   const query = useApprovalDetailQuery(approvalId)
-  // M2: an assigned approver may read the request itself (business context,
-  // description, and every previous decision), not only their own step. This
-  // is read access; the Approve/Reject buttons below still depend solely on
-  // being this step's assigned approver.
+  // Aksi hanya tersedia untuk approver yang sedang bertugas.
   const requestQuery = useRequestQuery(query.data?.request.id)
 
   if (session.status !== 'authenticated') return null
@@ -90,11 +76,7 @@ export function ApprovalReviewPage() {
   const detail = query.data
   const isCurrentApprover = detail.status === 'PENDING' && detail.approver.id === user.id
 
-  // F4 collaboration: view is always allowed here (getApprovalDetail's own
-  // authorization already gated the page load — isAssignedApprover ||
-  // isOwner || isAdmin, regardless of this step's status), but *write*
-  // mirrors getWritableRequestForCollaboration exactly: only the current
-  // active approver, and never on a terminal request.
+  // Aksi hanya tersedia untuk approver yang sedang bertugas.
   const canWriteCollaboration = isCurrentApprover && !TERMINAL_REQUEST_STATUSES.includes(detail.request.status)
 
   return (

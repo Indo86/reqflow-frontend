@@ -5,11 +5,7 @@ import { productionNavigationByRole } from '@/lib/mock/navigation'
 import { MyRequestsPage } from '@/features/requests/pages/my-requests-page'
 import { ScopedRequestsPage } from '@/features/requests/pages/scoped-requests-page'
 
-// Employee gets "My Requests"; Manager, Finance, Director and Admin get the
-// scoped list (M2: department / financial / organization read scope). Both are real-data (F2) — see
-// src/features/requests/pages/. The F0.5 mock components of the same name
-// under src/features/requests/ (no /pages/ prefix) are untouched and still
-// serve /preview/* routes only.
+// Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
 export function RequestsRoute() {
   const session = useSession()
   const onLogout = useLogout()

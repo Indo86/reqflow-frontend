@@ -34,7 +34,7 @@ describe('ApprovalInboxPage', () => {
     expect(await screen.findByText('REQ-2026-000001')).toBeInTheDocument()
     expect(screen.getByText('New laptops')).toBeInTheDocument()
     expect(screen.getByText('Eddie Employee')).toBeInTheDocument()
-    // Real Pending count from meta.total, not a client-computed number.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(screen.getByText('1')).toBeInTheDocument()
   })
 

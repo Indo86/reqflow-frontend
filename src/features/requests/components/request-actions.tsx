@@ -20,14 +20,7 @@ interface RequestActionsProps {
   request: RequestDetail
 }
 
-// Decides which controls are *reasonable* to show from the request's
-// current status — every action still calls the backend directly, which
-// remains the sole authority. A 409 here means another actor (or another
-// tab) already moved the request; the response is to refetch the detail
-// query and surface the backend's own message, never to assume the click
-// was valid. Submit dispatches to either /submit or /resubmit depending on
-// status (see api/submit-request.ts) — presented as one action since that
-// distinction is purely a backend implementation detail.
+// Hak akses tetap divalidasi oleh backend.
 export function RequestActions({ request }: RequestActionsProps) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -51,7 +44,7 @@ export function RequestActions({ request }: RequestActionsProps) {
   const canEditOrSubmit = EDITABLE_STATUSES.includes(request.status)
   const canCancel = CANCELLABLE_STATUSES.includes(request.status)
   const canDelete = DELETABLE_STATUSES.includes(request.status)
-  // M1: an IN_REVIEW request is *withdrawn* (reason required), anything else is cancelled.
+  // Request yang sedang ditinjau ditarik, sedangkan status lain dibatalkan.
   const isWithdrawal = request.status === 'IN_REVIEW'
 
   return (
@@ -141,8 +134,7 @@ export function RequestActions({ request }: RequestActionsProps) {
           cancelMutation.mutate(reason, {
             onSuccess: () => setConfirmAction(null),
             onError: (error) => {
-              // A 409 means someone decided the request first; surface the
-              // backend's own message inside the dialog, then refetch.
+              // Menampilkan konflik dari backend lalu memuat ulang detail request.
               setWithdrawError(error instanceof ApiError ? error.message : 'Could not withdraw this request.')
               void queryClient.invalidateQueries({ queryKey: requestKeys.detail(request.id) })
             },

@@ -11,7 +11,7 @@ import {
 } from '../api/fulfillment-api'
 import { fulfillmentKeys, type FulfillmentListFilters } from '../api/fulfillment-query-keys'
 
-// `enabled` lets the request detail page ask only once it knows the request is APPROVED.
+// Menyediakan hook useFulfillmentQuery.
 export function useFulfillmentQuery(requestId: string | undefined, enabled = true) {
   return useQuery({
     queryKey: fulfillmentKeys.forRequest(requestId ?? ''),
@@ -32,9 +32,7 @@ export function useFulfillmentsQuery(filters: FulfillmentListFilters) {
   return useQuery({ queryKey: fulfillmentKeys.list(filters), queryFn: () => getFulfillments(filters) })
 }
 
-// After any change, refresh this request's fulfillment, the task lists, and the
-// request detail (its audit timeline is a child of it) so every view agrees. A
-// failed action refreshes too: the usual reason is that someone else changed it.
+// Menampilkan riwayat perubahan request.
 function useInvalidateAfterChange(requestId: string) {
   const queryClient = useQueryClient()
   return () => {

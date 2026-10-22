@@ -20,11 +20,7 @@ export type SessionState =
   | { status: 'unauthenticated' }
   | { status: 'authenticated'; user: SessionUser }
 
-// Normalizes the session query into the four states F1 cares about —
-// components branch on `status` instead of juggling isPending/isError/data
-// themselves. See F1 "Session query error semantics": a plain 401 resolves
-// to `data: null` (unauthenticated) inside getSession(), never `isError`,
-// so `error` here only ever means "couldn't reach/parse the backend."
+// Menyediakan hook useSession.
 export function useSession(): SessionState {
   const query = useSessionQuery()
 
@@ -34,13 +30,7 @@ export function useSession(): SessionState {
   return { status: 'unauthenticated' }
 }
 
-// Exported for future (F2+) feature query hooks to call from their own
-// `onError` — a protected API call that comes back 401 mid-session (expiry,
-// revocation) should mark the session unauthenticated so the next render
-// redirects to /login, without every feature re-implementing that check or
-// apiClient globally redirecting on every 401 (which would break login's
-// own 401-for-bad-credentials semantics). See F1 "Session expiry
-// foundation".
+// Menjalankan proses invalidateSessionOn401.
 export function invalidateSessionOn401(queryClient: QueryClient, error: unknown): void {
   if (error instanceof ApiError && error.status === 401) {
     queryClient.setQueryData(authKeys.session(), null)

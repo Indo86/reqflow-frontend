@@ -7,9 +7,7 @@ import { ManagerDashboardPage } from '@/features/dashboard/manager-dashboard-pag
 import { DirectorDashboardPage } from '@/features/dashboard/director-dashboard-page'
 import { AdminDashboardPage } from '@/features/dashboard/admin-dashboard-page'
 
-// Only ever rendered under ProtectedRoute, so session is always
-// 'authenticated' here in practice; the fallback below is just type-safety
-// belt-and-braces, never expected to actually render.
+// Menyediakan nilai cadangan untuk menjaga keamanan tipe.
 export function DashboardRoute() {
   const session = useSession()
   const onLogout = useLogout()
@@ -19,10 +17,7 @@ export function DashboardRoute() {
   const shellUser = toAppShellUser(user)
   const navItems = productionNavigationByRole[user.role]
 
-  // Dashboard body content stays the static F0.5 mock data per role — only
-  // the AppShell identity (name/role) and nav are real. No distinct Finance
-  // dashboard exists in the design, so Finance reuses Manager's shape (both
-  // are "approver" dashboards with the same stat/table layout).
+  // Memilih tampilan dan navigasi sesuai peran pengguna.
   switch (user.role) {
     case 'Manager':
     case 'Finance':

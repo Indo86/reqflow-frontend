@@ -1,7 +1,4 @@
-// Sample Notification DTOs matching notification.service.ts's
-// NotificationResponse shape exactly (id, type, title, message, requestId,
-// approvalId, readAt, createdAt — no isRead boolean). See F5/F6-contract-
-// completion "backend contract".
+// Memvalidasi bentuk data sesuai kontrak API.
 export const unreadApprovalAssignedNotification = {
   id: 'notif-1',
   type: 'APPROVAL_ASSIGNED',
@@ -13,9 +10,7 @@ export const unreadApprovalAssignedNotification = {
   createdAt: '2026-09-24T08:00:00.000Z',
 }
 
-// A notification created before the approvalId field existed (or any other
-// APPROVAL_ASSIGNED row that somehow never got one) — approvalId stays
-// null forever; never backfilled.
+// Menyiapkan data notifikasi untuk pengguna.
 export const unreadApprovalAssignedNotificationLegacy = {
   id: 'notif-1-legacy',
   type: 'APPROVAL_ASSIGNED',

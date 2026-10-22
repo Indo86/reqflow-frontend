@@ -11,10 +11,7 @@ const reassignApprovalResponseSchema = z.object({
   }),
 })
 
-// POST /approvals/:id/reassign — Admin-only (M1). Moves a PENDING/WAITING
-// step to another eligible approver; the reason is mandatory and is stored
-// in the audit log. The backend re-validates eligibility (active, role,
-// department, not the request owner), so the UI list is only a convenience.
+// Mengirim data ke /approvals/:id/reassign.
 export async function reassignApproval(
   approvalId: string,
   input: { approverId: string; reason: string }

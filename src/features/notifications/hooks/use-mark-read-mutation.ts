@@ -2,9 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { markNotificationRead } from '../api/mark-notification-read'
 import { notificationKeys } from '../api/notification-query-keys'
 
-// Marking a notification read is delivery-state, not business-state — it
-// only ever invalidates the notification feature's own queries, never
-// Request/Approval queries (F5 "cache invalidation").
+// Menandai notifikasi telah dibaca lalu menyegarkan cache.
 export function useMarkReadMutation() {
   const queryClient = useQueryClient()
 

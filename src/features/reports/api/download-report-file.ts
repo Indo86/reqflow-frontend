@@ -7,14 +7,7 @@ export interface DownloadedReportFile {
   filename: string
 }
 
-// Shared by the Excel and PDF exports — both are the same filtered,
-// authorized read as GET /reports/requests, just a different representation,
-// so they take the same query string and the same visibility. Deliberately
-// does NOT go through apiClient: apiClient always calls response.text() and
-// JSON.parses it, which would corrupt a binary body — same reasoning as F4's
-// downloadAttachment. credentials are still explicitly included, and non-OK
-// responses are normalized through the same ApiError/normalizeHttpError used
-// everywhere else.
+// Mengambil data dari /reports/requests.
 export async function downloadReportFile(
   path: string,
   filters: RequestReportFilters,
@@ -57,9 +50,7 @@ export async function downloadReportFile(
   return { blob, filename }
 }
 
-// Same parsing as F4's downloadAttachment (duplicated rather than shared —
-// this is the only other Content-Disposition-driven download in the app,
-// and the two call sites are otherwise unrelated features).
+// Mengambil nama berkas UTF-8 dari header respons jika tersedia.
 function parseFilenameFromContentDisposition(header: string | null): string | undefined {
   if (!header) return undefined
   const utf8Match = /filename\*=UTF-8''([^;]+)/i.exec(header)
@@ -67,7 +58,7 @@ function parseFilenameFromContentDisposition(header: string | null): string | un
     try {
       return decodeURIComponent(utf8Match[1])
     } catch {
-      // fall through to the ASCII fallback below
+      // Menyediakan nilai cadangan untuk menjaga keamanan tipe.
     }
   }
   const asciiMatch = /filename="([^"]*)"/i.exec(header)

@@ -6,10 +6,7 @@ import { UserAvatar } from '@/components/shared/user-avatar'
 import { NotificationBell } from '@/features/notifications/components/notification-bell'
 import { cn } from '@/lib/utils'
 
-// Loose display-only shape so both mock personas (MockUser, a closed set of
-// literal unions) and the real authenticated session user (arbitrary backend
-// strings) satisfy it without a cast — see F1 "AppShell real-user
-// integration".
+// Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
 export interface AppShellUser {
   name: string
   initials: string
@@ -22,9 +19,7 @@ interface AppShellProps {
   navItems: NavItemConfig[]
   activeKey: string
   children: ReactNode
-  // Omitted entirely on the /preview/* mock-persona pages — there is no
-  // real session to sign out of there. Real authenticated routes pass a
-  // real handler (see F1 useLogout()).
+  // Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
   onLogout?: () => void
 }
 

@@ -28,11 +28,7 @@ interface FulfillmentSectionProps {
 
 const messageOf = (error: unknown, fallback: string) => (error instanceof ApiError ? error.message : fallback)
 
-// Execution after approval. Approval says a request is permitted; this says
-// whether someone carried it out. Everything shown comes from the server,
-// including which controls the signed-in user may use: the UI never decides
-// authority itself, and the server re-checks every action. Completion is an
-// internal record written by the executor; it is never described as verified.
+// Hak akses tetap divalidasi oleh backend.
 export function FulfillmentSection({ requestId, requestType }: FulfillmentSectionProps) {
   const query = useFulfillmentQuery(requestId)
   const startMutation = useStartFulfillmentMutation(requestId)
@@ -173,8 +169,7 @@ export function FulfillmentSection({ requestId, requestType }: FulfillmentSectio
 
       <FulfillmentHistory requestId={requestId} />
 
-      {/* Mounted only while open: the shared decision dialog uses fixed element ids and a closed
-          dialog stays in the DOM, so two always-mounted copies would share one textarea id. */}
+      {/* Dialog hanya dipasang ketika sedang dibuka. */}
       {dialog === 'complete' ? (
         <ApprovalDecisionDialog
           open
@@ -218,8 +213,7 @@ function assigneeSentence(fulfillment: FulfillmentRecord): string {
   return fulfillment.status === 'CANCELLED' || fulfillment.status === 'COMPLETED' ? 'No assignee recorded' : 'Unassigned'
 }
 
-// Read-only, from the append-only audit log: who did what and why. Visible to
-// anyone who can read the request; the server decides what each reader receives.
+// Menampilkan riwayat perubahan request.
 function FulfillmentHistory({ requestId }: { requestId: string }) {
   const query = useRequestAuditLogQuery(requestId)
   if (query.isPending || query.isError) return null

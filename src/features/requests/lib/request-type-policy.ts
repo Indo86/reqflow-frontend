@@ -1,14 +1,10 @@
 import type { RequestType } from '../types/request'
 
-// Display-only mirror of reqFlow-backend's M3 routing matrix
-// (src/services/approval-policy.service.ts). The backend decides the real
-// route at submit time and snapshots it on the approval cycle; this helper only
-// lets the form tell the user, before submitting, what to expect. Thresholds
-// are compared as plain numbers purely for that preview.
+// Menyimpan aturan nominal untuk setiap tipe request.
 export const PURCHASE_FINANCE_THRESHOLD = 5_000_000
 export const PURCHASE_DIRECTOR_THRESHOLD = 20_000_000
 
-/** Only these types carry money. The backend rejects an amount on every other type. */
+/* Memeriksa apakah tipe request membutuhkan nominal. */
 export function requestTypeCarriesAmount(type: RequestType): boolean {
   return type === 'PURCHASE' || type === 'REIMBURSEMENT'
 }

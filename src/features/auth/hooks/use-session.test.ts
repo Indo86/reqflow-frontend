@@ -3,10 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { ApiError } from '@/lib/api'
 import { authKeys, invalidateSessionOn401 } from './use-session'
 
-// F1 "session expiry foundation": a future protected query's 401 should
-// mark the session unauthenticated without needing apiClient to globally
-// redirect on every 401 (which would break login's own 401-for-bad-
-// credentials semantics — see F1 section 25).
+// Menjelaskan kondisi yang diuji pada skenario ini.
 describe('invalidateSessionOn401', () => {
   it('marks the session unauthenticated when given a 401 ApiError', () => {
     const queryClient = new QueryClient()

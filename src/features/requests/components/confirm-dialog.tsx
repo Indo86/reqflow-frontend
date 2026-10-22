@@ -10,9 +10,7 @@ interface ConfirmDialogProps {
   isConfirming?: boolean
 }
 
-// A native <dialog> instead of a hand-rolled modal — no dialog/modal
-// dependency exists in this project yet, and <dialog>.showModal() already
-// provides focus trapping, Escape-to-close, and a backdrop.
+// Menjalankan proses ConfirmDialog.
 export function ConfirmDialog({
   open,
   title,

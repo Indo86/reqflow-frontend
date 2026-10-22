@@ -31,21 +31,12 @@ const RECENT_PAGE_SIZE = 5
 const ATTENTION_PAGE_SIZE = 10
 const HIGH_VALUE_COUNT = 3
 
-// Sort-only: comparing two Decimal(14,2) amounts converted to Number is safe
-// for ordering (they provably fit the safe-integer range — same guarantee
-// format-request-amount.ts documents for display), but the values
-// themselves are never summed or otherwise used arithmetically. See F6
-// "Decimal / amount handling".
+// Menyiapkan data untuk ditampilkan di antarmuka.
 function byAmountDescending(a: { amount: string | null }, b: { amount: string | null }): number {
   return Number(b.amount ?? '0') - Number(a.amount ?? '0')
 }
 
-// See owner-dashboard-page.tsx for the onLogout-gated real/preview pattern.
-// "High-value Requests Assigned to You" has no dedicated backend concept
-// (no configurable threshold exists anywhere in M10) — real mode reuses the
-// same approval-inbox data as "Decisions Requiring My Attention", sorted by
-// amount, rather than fabricating a threshold-based endpoint (F6 "No fake
-// dashboard calculations").
+// Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
 export function DirectorDashboardPage({
   user = andiPratama,
   navItems = previewNavigationByRole.Director,

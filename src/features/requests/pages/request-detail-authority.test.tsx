@@ -36,10 +36,7 @@ describe('RequestDetailPage approval authority', () => {
   })
 
   it('does not show approval actions to a role user who is not the current approver', async () => {
-    // Mona Manager's own step is already APPROVED on this request — Finance
-    // is now the actionable step. A Manager viewing it (e.g. via a stale
-    // link) must not see Approve/Reject even though Manager IS an approver
-    // role in general.
+    // Memastikan hasil sesuai dengan perilaku yang diharapkan.
     renderDetail(managerProfile, requestPendingOnFinance)
     await screen.findByText('REQ-2026-000002')
     expect(screen.queryByRole('button', { name: 'Approve' })).not.toBeInTheDocument()
@@ -47,7 +44,7 @@ describe('RequestDetailPage approval authority', () => {
   })
 
   it('does not grant approval actions from Manager role alone', async () => {
-    // Same request, different Manager (not the assigned approver at all).
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     const otherManager = { ...managerProfile, id: 'user-manager-2', name: 'Mike Manager' }
     renderDetail(otherManager, requestPendingOnManager)
     await screen.findByText('REQ-2026-000001')
@@ -72,9 +69,7 @@ describe('RequestDetailPage approval authority', () => {
     renderDetail(employeeProfile, requestPendingOnManager)
     await screen.findByText('REQ-2026-000001')
     expect(screen.queryByRole('button', { name: 'Approve' })).not.toBeInTheDocument()
-    // Owner sees no write actions once IN_REVIEW (not editable/cancellable
-    // from that status per EDITABLE/CANCELLABLE_STATUSES) — just confirms
-    // no approval action leaks through for the owner either.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
   })
 })
 
@@ -124,8 +119,7 @@ describe('RequestDetailPage approval decisions', () => {
 
     const approveButton = await screen.findByRole('button', { name: 'Approve' })
     fireEvent.click(approveButton)
-    // A second click while pending must not be able to fire a duplicate
-    // request — the button is already disabled, not just relabeled.
+    // Memastikan aksi ganda tidak terkirim saat proses berlangsung.
     expect(await screen.findByRole('button', { name: 'Approving…' })).toBeDisabled()
 
     decided = true
@@ -156,8 +150,7 @@ describe('RequestDetailPage approval decisions', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Approve' }))
 
     expect(await screen.findByText('This approval has already been decided.')).toBeInTheDocument()
-    // The attempted decision is never assumed to have succeeded — the
-    // approval step still renders as PENDING/awaiting after the conflict.
+    // Memastikan kondisi gagal ditangani sesuai kontrak.
     expect(screen.getByText('Awaiting decision')).toBeInTheDocument()
   })
 })

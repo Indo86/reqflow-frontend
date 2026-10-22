@@ -19,11 +19,11 @@ describe('RequestFilters', () => {
     const { router } = renderFilters('/requests?page=3')
 
     fireEvent.change(screen.getByPlaceholderText('Search requests...'), { target: { value: 'chair' } })
-    // Not committed yet — still mid-debounce.
+    // Menunda pencarian hingga pengguna selesai mengetik.
     expect(router.state.location.search).not.toContain('q=chair')
 
     await waitFor(() => expect(router.state.location.search).toContain('q=chair'), { timeout: 1000 })
-    // Any filter change resets pagination back to page 1.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(router.state.location.search).not.toContain('page=3')
   })
 

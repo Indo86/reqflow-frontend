@@ -25,21 +25,13 @@ import { FulfillmentSection } from '@/features/fulfillment/components/fulfillmen
 import { useFulfillmentQuery } from '@/features/fulfillment/hooks/use-fulfillment'
 import { TERMINAL_REQUEST_STATUSES } from '../types/request'
 
-// Production Request Detail. Only real DTO fields are shown (requestNumber,
-// title, type, status, amount, requester, department, description,
-// timestamps, approval cycles, comments, attachments) — the F0.5 mock
-// detail page additionally rendered vendor/costCenter/priority/
-// requestedDelivery/budgetLine/quantity, none of which exist on the real
-// backend response. Approval history/actions are real as of F3; Comments
-// and Attachments are real as of F4. See
-// src/features/requests/request-detail-page.tsx (unmodified) for the
-// mock/preview variant.
+// Menampilkan detail request dari API.
 export function RequestDetailPage() {
   const { requestId } = useParams<{ requestId: string }>()
   const session = useSession()
   const onLogout = useLogout()
   const query = useRequestQuery(requestId)
-  // M4: execution permissions, asked only once the request is known to be APPROVED.
+  // Hak akses tetap divalidasi oleh backend.
   const fulfillmentQuery = useFulfillmentQuery(requestId, query.data?.status === 'APPROVED')
   const [reassignStep, setReassignStep] = useState<ApprovalHistoryItem | null>(null)
 
@@ -87,49 +79,22 @@ export function RequestDetailPage() {
   }
 
   const detail = query.data
-  // Write access (edit/submit/cancel/delete) is creator-only regardless of
-  // role, even for Admin — mirrors the backend exactly (findOwnedRequest in
-  // request.service.ts). Admin's org-wide read access never implies write
-  // access here.
+  // Aksi tulis hanya tersedia untuk pemilik data.
   const isOwner = detail.createdBy.id === user.id
 
-  // Authority principle (F3): NOT role === MANAGER/FINANCE/DIRECTOR. The
-  // only question is whether *this* backend-returned PENDING step's
-  // approver is *this* signed-in user — a Manager who isn't assigned this
-  // step, or an Admin viewing for visibility, both see no actions, exactly
-  // like the backend's own decide()/getApprovalDetail() authorization.
-  //
-  // In practice this can only ever be reached by the owner or an Admin:
-  // getRequestDetail() is owner/admin-only server-side (createdById-scoped
-  // for every non-admin role), so a Manager/Finance/Director who is NOT the
-  // owner 404s here before ever reaching this check — they review and
-  // decide via /approvals/:approvalId instead (see
-  // features/approvals/pages/approval-review-page.tsx). Kept here anyway
-  // because it is still the behaviorally correct rule for whoever *can*
-  // load this page, and because an owner is never their own approver, this
-  // branch is intentionally always false in the current contract — not
-  // dead code, just currently unreachable-true. See F3 "known limitations".
+  // Aksi hanya tersedia untuk approver yang sedang bertugas.
   const pendingApproval = findPendingApproval(detail.approvalCycles)
   const isCurrentApprover = pendingApproval?.approver.id === user.id
-  // M1: Admin-only recovery action on open steps. Admin still gets no decision rights.
+  // Admin dapat mengganti approver selama request masih ditinjau.
   const canReassign = user.role === 'Admin' && detail.status === 'IN_REVIEW'
 
-  // Collaboration write access (F4) mirrors collaboration.service.ts's
-  // getWritableRequestForCollaboration exactly: owner, or the current
-  // active approver, and never on a terminal request. On this page the
-  // viewer is always the owner or an Admin (see the note above) — Admin's
-  // broad read access never implies collaboration write access either, so
-  // only `isOwner` ever makes this true in practice here.
+  // Aksi hanya tersedia untuk approver yang sedang bertugas.
   const canWriteCollaboration = (isOwner || isCurrentApprover) && !TERMINAL_REQUEST_STATUSES.includes(detail.status)
-  // M4: while an APPROVED request's fulfillment is open, the server also lets the
-  // owner and the assignee comment and the assignee attach evidence. It tells us
-  // so in `permissions`; nothing else about an approved request becomes editable.
+  // Aksi tulis hanya tersedia untuk pemilik data.
   const fulfillmentPermissions = fulfillmentQuery.data?.permissions
   const canComment = canWriteCollaboration || Boolean(fulfillmentPermissions?.canComment)
   const canAttach = canWriteCollaboration || Boolean(fulfillmentPermissions?.canAddEvidence)
-  // A DRAFT has no approval cycle yet, so the backend treats its comments and
-  // attachments as owner-only (getViewableRequestForCollaboration) — even an
-  // Admin who can read the request itself gets 404 there. Don't request them.
+  // Memuat data kolaborasi draft hanya untuk pemilik request.
   const canViewCollaboration = detail.status !== 'DRAFT' || isOwner
 
   return (

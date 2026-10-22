@@ -2,9 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useSession } from '../hooks/use-session'
 import { SessionBootstrapFallback, SessionErrorFallback } from './session-boundary'
 
-// Layout route: never renders protected content before the session check
-// resolves (no flicker), and never treats "backend unreachable" as "log the
-// user out" (F1 sections 8 and 24).
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function ProtectedRoute() {
   const session = useSession()
   const location = useLocation()

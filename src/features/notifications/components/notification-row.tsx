@@ -11,10 +11,7 @@ interface NotificationRowProps {
   onMarkRead: (notificationId: string) => void
 }
 
-// Title/message are server-originated business text — rendered through
-// normal React interpolation only, never dangerouslySetInnerHTML, so any
-// markup-like content in them shows up as plain text rather than executing
-// (F5 "HTML / XSS safety").
+// Menjalankan proses NotificationRow.
 export function NotificationRow({ notification, onOpen, onMarkRead }: NotificationRowProps) {
   const { icon: Icon, background, color } = getNotificationPresentation(notification.type)
   const unread = notification.readAt === null

@@ -1,9 +1,7 @@
 import { describeAuditEntry } from './describe-audit-entry'
 import { useRequestAuditLogQuery } from './use-request-audit-log-query'
 
-// Read-only history of one request, straight from the append-only audit log.
-// Authorization is server-side: a user who cannot read the request is refused
-// by the endpoint, and that is shown as an error, never as an empty history.
+// Hak akses tetap divalidasi oleh backend.
 export function AuditTimeline({ requestId }: { requestId: string }) {
   const query = useRequestAuditLogQuery(requestId)
 

@@ -2,11 +2,7 @@ import { z } from 'zod'
 import { approvalCycleHistoryItemSchema } from '@/features/approvals/schemas/approval.schema'
 import { fulfillmentSummarySchema } from '@/features/fulfillment/schemas/fulfillment.schema'
 
-// Mirrors reqFlow-backend's RequestType/RequestStatus enums (prisma/schema.prisma)
-// and RequestResponse/PaginatedRequests shapes (src/services/request.service.ts,
-// src/controllers/request.controller.ts) — verified by direct backend inspection,
-// not assumed. `amount` is a decimal STRING here (Prisma Decimal.toString()),
-// never a JS number — see types/request.ts for why it must stay a string end to end.
+// Memvalidasi bentuk data sesuai kontrak API.
 export const backendRequestTypeSchema = z.enum([
   'PURCHASE',
   'EQUIPMENT',
@@ -53,16 +49,14 @@ export const requestResponseSchema = z.object({
 
 export type RequestResponse = z.infer<typeof requestResponseSchema>
 
-// M2: how the signed-in user relates to a request they can read. Sent on
-// list/detail responses only. OVERSIGHT means "you may read this request" and
-// nothing more; it never implies any action right.
+// Memvalidasi hubungan pengguna dengan request.
 export const requestViewerSchema = z.object({
   relationship: z.enum(['OWNER', 'APPROVER', 'EXECUTOR', 'OVERSIGHT']),
   approval: z.enum(['AWAITING_DECISION', 'DECIDED']).nullable(),
 })
 export const scopedRequestResponseSchema = requestResponseSchema.extend({
   viewer: requestViewerSchema,
-  // M4: short fulfillment summary. Optional so an older server response still parses.
+  // Properti ini opsional agar penggunaan sebelumnya tetap didukung.
   fulfillment: fulfillmentSummarySchema.optional(),
 })
 
@@ -76,10 +70,7 @@ export const requestListResponseSchema = z.object({
   }),
 })
 
-// Detail adds approval history (real as of F3 — see
-// features/approvals/schemas/approval.schema.ts, the single source of truth
-// for that shape) plus comment/attachment counts (F4 still renders those as
-// a placeholder; only the counts are validated here).
+// Memvalidasi bentuk data sesuai kontrak API.
 export const requestDetailResponseSchema = z.object({
   data: scopedRequestResponseSchema.extend({
     approvalCycles: z.array(approvalCycleHistoryItemSchema),
@@ -92,9 +83,7 @@ export const requestSingleResponseSchema = z.object({
   data: requestResponseSchema,
 })
 
-// POST/PATCH /requests/:id/submit|resubmit|cancel response — deliberately
-// separate from RequestResponse: the backend's RequestTransitionResult only
-// ever carries {id, requestNumber, status}, never the full request.
+// Memperbarui data melalui /requests/:id/submit|resubmit|cancel.
 export const requestTransitionResponseSchema = z.object({
   data: z.object({
     id: z.string(),

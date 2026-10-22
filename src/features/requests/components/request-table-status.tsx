@@ -17,10 +17,7 @@ interface RequestTableStatusProps {
   genericErrorMessage?: string
 }
 
-// Replaces the table body with a loading / error / empty row — used by
-// MyRequestsPage, AdminRequestsPage, and the Approval Inbox (F3) so their
-// loading/error/empty presentation stays identical rather than each
-// reimplementing it. Returns null once real rows should render.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function RequestTableStatus({
   colSpan,
   isLoading,
@@ -51,9 +48,7 @@ export function RequestTableStatus({
   }
 
   if (isError) {
-    // Never renders the raw error/JSON — only ApiError's already-sanitized
-    // message (see api-error.ts normalizeHttpError), plus the requestId when
-    // the backend provided one, so a real support ticket can reference it.
+    // Menyiapkan data untuk ditampilkan di antarmuka.
     const requestId = error instanceof ApiError ? error.requestId : undefined
     const message = error instanceof ApiError ? error.message : genericErrorMessage
     return (

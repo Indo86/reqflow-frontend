@@ -1,20 +1,14 @@
 import { z } from 'zod'
 
-// Mirrors reqFlow-backend's fulfillment.service.ts responses (M4), verified by
-// direct inspection of that file. Fulfillment is separate from approval: a
-// request stays APPROVED while its fulfillment moves through these states.
+// Menangani proses pemenuhan request.
 export const fulfillmentStatusSchema = z.enum(['NOT_STARTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'])
 
-// NOT_TRACKED = approved before fulfillment tracking existed (no record, never
-// backfilled). It must never be presented as completed or cancelled.
+// Menangani proses pemenuhan request.
 export const fulfillmentApplicabilitySchema = z.enum(['NOT_APPROVED', 'NOT_REQUIRED', 'TRACKED', 'NOT_TRACKED'])
 
 const personSchema = z.object({ id: z.string(), name: z.string() })
 
-// Same values as the request feature's backendRequestTypeSchema. Declared here, not
-// imported, because request.schema.ts imports this file (for the list/detail summary)
-// and an import back would be circular: whichever module loaded first would see the
-// other's schema as undefined while defining its own.
+// Memvalidasi bentuk data sesuai kontrak API.
 const requestTypeSchema = z.enum(['PURCHASE', 'EQUIPMENT', 'REIMBURSEMENT', 'LEAVE', 'GENERAL'])
 
 export const fulfillmentRecordSchema = z.object({
@@ -29,8 +23,7 @@ export const fulfillmentRecordSchema = z.object({
   updatedAt: z.string(),
 })
 
-// Computed by the server for the signed-in user. The UI only ever shows a
-// control when the server says it is allowed; the server re-checks every action.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export const fulfillmentPermissionsSchema = z.object({
   canStart: z.boolean(),
   canComplete: z.boolean(),
@@ -76,7 +69,7 @@ export const fulfillmentListResponseSchema = z.object({
   meta: z.object({ page: z.number(), pageSize: z.number(), total: z.number(), totalPages: z.number() }),
 })
 
-// The short summary the request list/detail responses carry.
+// Memvalidasi ringkasan data fulfillment.
 export const fulfillmentSummarySchema = z.object({
   applicability: fulfillmentApplicabilitySchema,
   status: fulfillmentStatusSchema.nullable(),

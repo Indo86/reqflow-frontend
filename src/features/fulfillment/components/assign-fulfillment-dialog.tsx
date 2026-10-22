@@ -5,16 +5,12 @@ import { useAssignFulfillmentMutation, useAssignmentCandidatesQuery } from '../h
 interface AssignFulfillmentDialogProps {
   open: boolean
   requestId: string
-  // null when nobody is assigned yet (a first assignment needs no reason).
+  // Nama pelaksana saat ini ditampilkan ketika melakukan penugasan ulang.
   currentAssigneeName: string | null
   onClose: () => void
 }
 
-// Admin-only. The candidate list comes from the server (active, same
-// organization, not the requester, Finance-only for reimbursements), so it is
-// already the eligible set; the server still re-validates on submit and answers
-// 409 ASSIGNEE_NOT_ELIGIBLE for anyone who cannot hold the task. Same native
-// <dialog> pattern as the approval reassignment dialog.
+// Memvalidasi bentuk data sesuai kontrak API.
 export function AssignFulfillmentDialog({ open, requestId, currentAssigneeName, onClose }: AssignFulfillmentDialogProps) {
   const ref = useRef<HTMLDialogElement>(null)
   const [assigneeId, setAssigneeId] = useState('')

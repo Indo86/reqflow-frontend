@@ -32,7 +32,7 @@ interface Recorded {
   body: unknown
 }
 
-// Serves GET /requests/req-1/fulfillment from `state.current` and records every write.
+// Mengambil data dari /requests/req-1/fulfillment.
 function setup(state: { current: ReturnType<typeof view> }, type: 'PURCHASE' | 'REIMBURSEMENT' | 'EQUIPMENT' = 'PURCHASE') {
   const calls: Recorded[] = []
   const writes: Record<string, (body: unknown) => Response> = {}
@@ -191,7 +191,7 @@ describe('FulfillmentSection controls come from server permissions', () => {
   it('requires a meaningful completion note before anything is sent', async () => {
     const { calls } = setup({ current: view('TRACKED', record({ status: 'IN_PROGRESS', startedAt: '2026-10-22T09:00:00.000Z' }), { canComplete: true }) }, 'REIMBURSEMENT')
     fireEvent.click(await screen.findByRole('button', { name: 'Complete' }))
-    // The prompt is specific to the request type and never claims external verification.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(screen.getByLabelText('Internal payment confirmation')).toBeInTheDocument()
     expect(screen.getByText(/not bank verification/)).toBeInTheDocument()
 

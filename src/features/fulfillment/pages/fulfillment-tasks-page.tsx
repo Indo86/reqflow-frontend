@@ -28,10 +28,7 @@ const TABS: Record<TabKey, { label: string; filters: Pick<FulfillmentListFilters
   'all-open': { label: 'All open', filters: { view: 'all', state: 'open' }, adminOnly: true },
 }
 
-// Work waiting to be carried out after approval. Everyone sees their own tasks;
-// an Admin additionally sees what has no owner yet and everything still open.
-// The tab choice is only navigation: the server refuses the Admin views to
-// anyone else, so a hand-edited URL shows an error, never someone else's tasks.
+// Menampilkan tugas fulfillment yang diberikan kepada pengguna.
 export function FulfillmentTasksPage({ user, navItems, onLogout }: FulfillmentTasksPageProps) {
   const isAdmin = user.role === 'Admin'
   const [searchParams, setSearchParams] = useSearchParams()

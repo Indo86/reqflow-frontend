@@ -9,8 +9,7 @@ import { SectionCard } from '@/components/shared/section-card'
 import { ApiError } from '@/lib/api'
 import type { NavItemConfig } from '@/lib/mock/navigation'
 import { useSession } from '@/features/auth/hooks/use-session'
-// Generic, not Request-specific — reused rather than duplicated (see F6.5
-// "Users page").
+// Menggunakan dialog konfirmasi bersama untuk aksi sensitif.
 import { ConfirmDialog } from '@/features/requests/components/confirm-dialog'
 import { useUserQuery } from '../hooks/use-user-query'
 import { useUpdateUserMutation } from '../hooks/use-update-user-mutation'
@@ -56,12 +55,7 @@ function ErrorBanner({ error }: { error: unknown }) {
   )
 }
 
-// Deliberately separates profile changes (name/email) from security-
-// sensitive changes (role, department, active status) into their own
-// sections, each with its own save action and its own backend call — see
-// F6.5 "User detail / edit". Every action still calls the backend
-// directly; this page never decides on its own whether a change is safe,
-// it only renders the backend's own accepted/refused outcome.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function UserDetailPage({ user: shellUser, navItems, onLogout }: UserDetailPageProps) {
   const { userId } = useParams<{ userId: string }>()
   const session = useSession()
@@ -277,8 +271,7 @@ export function UserDetailPage({ user: shellUser, navItems, onLogout }: UserDeta
   )
 }
 
-// Kept as a small local component (not extracted to its own file) purely to
-// avoid re-declaring useForm's generic wiring inline in the page body.
+// Menjalankan proses ProfileForm.
 function ProfileForm({
   defaultValues,
   register,
@@ -333,10 +326,7 @@ function ProfileForm({
   )
 }
 
-// Initializes the form exactly once per mount (the page wraps this in
-// key={target.id}, so a genuinely different user remounts it) — never on
-// every render, so it never clobbers an in-progress edit when the detail
-// query silently refetches in the background.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 function useInitializeOnce(defaultValues: ProfileFormValues, reset: (values: ProfileFormValues) => void) {
   const [initialized, setInitialized] = useState(false)
   if (!initialized) {

@@ -9,13 +9,7 @@ interface NotificationBellProps {
   onNavigate?: () => void
 }
 
-// Self-contained: owns its own unread-count query so no other page or
-// AppShell caller needs to know Notifications exists as a domain — nothing
-// threads a notificationCount prop through Dashboard/Requests/Approvals/
-// Reports (see F5 "Global notification badge architecture"). A failed or
-// still-loading count degrades to "no badge" rather than blocking
-// navigation or the rest of AppShell (F5 "Query failure must not break
-// AppShell").
+// Menyiapkan data notifikasi untuk pengguna.
 export function NotificationBell({ item, active, onNavigate }: NotificationBellProps) {
   const query = useUnreadCountQuery()
   const count = query.data?.count

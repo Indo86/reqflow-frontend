@@ -147,10 +147,7 @@ describe('logout', () => {
       expect.objectContaining({ href: expect.stringContaining('/auth/logout') }),
       expect.objectContaining({ method: 'POST' })
     )
-    // queryClient.clear() wipes the previous user's cached profile immediately;
-    // GuestOnlyRoute then legitimately re-queries for /login and caches the
-    // fresh (now unauthenticated) result — so the assertion is "not the old
-    // signed-in profile anymore", not "nothing was ever cached again".
+    // Memastikan hasil sesuai dengan perilaku yang diharapkan.
     await waitFor(() => expect(client.getQueryData(authKeys.session())).not.toEqual(employeeProfile))
   })
 })

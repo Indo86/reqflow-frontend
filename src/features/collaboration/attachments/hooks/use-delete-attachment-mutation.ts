@@ -7,10 +7,7 @@ export function useDeleteAttachmentMutation(requestId: string) {
 
   return useMutation({
     mutationFn: (attachmentId: string) => deleteAttachment(attachmentId),
-    // On failure, the attachment is left in place until an authoritative
-    // refetch — invalidate here regardless of outcome so a genuine
-    // conflict (e.g. request became terminal mid-click) is reflected
-    // immediately rather than trusting the optimistic "it's still there".
+    // Menyegarkan daftar lampiran setelah penghapusan berhasil.
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: attachmentKeys.request(requestId) })
     },

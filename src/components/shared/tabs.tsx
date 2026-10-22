@@ -8,7 +8,7 @@ interface TabsProps {
   activeIndex?: number
 }
 
-// Presentational only — switching tabs is out of scope for this static milestone.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function Tabs({ tabs, activeIndex = 0 }: TabsProps) {
   return (
     <div className="tabs">

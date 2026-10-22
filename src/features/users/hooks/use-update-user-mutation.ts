@@ -3,10 +3,7 @@ import { updateUser, type UpdateUserInput } from '../api/update-user'
 import { userKeys } from '../api/user-query-keys'
 import { authKeys, useSession } from '@/features/auth/hooks/use-session'
 
-// If the Admin edits their OWN profile, F1's session query is invalidated
-// too — TanStack Query's session cache stays the single source of truth
-// for "who am I" rather than a second, independently-updated copy. See F6.5
-// "Auth session interaction".
+// Memperbarui profil pengguna lalu menyegarkan cache.
 export function useUpdateUserMutation(id: string) {
   const queryClient = useQueryClient()
   const session = useSession()

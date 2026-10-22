@@ -27,8 +27,7 @@ export interface RequestReport {
     to: string | null
   }
   totals: { requests: number; withAmount: number; amountTotal: string | null }
-  // Zero-filled by the backend — every enum key is always present, unlike
-  // workflow-duration's byStatus below, which is genuinely sparse.
+  // Menyiapkan data untuk ditampilkan di antarmuka.
   byStatus: Record<RequestStatus, number>
   byType: Record<RequestType, number>
   byDepartment: DepartmentBreakdownRow[]

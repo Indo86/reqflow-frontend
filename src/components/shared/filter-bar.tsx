@@ -1,18 +1,14 @@
 import type { ReactNode } from 'react'
 import { ChevronDown, Search } from 'lucide-react'
 
-// alignEnd: bottom-aligns controls when some have a label above them (e.g.
-// the Reports date fields) so the label-less pills line up with the inputs.
+// Menjalankan proses FilterBar.
 export function FilterBar({ children, alignEnd = false }: { children: ReactNode; alignEnd?: boolean }) {
   return <div className={alignEnd ? 'filter-bar filter-bar-end' : 'filter-bar'}>{children}</div>
 }
 
 interface SearchFieldProps {
   placeholder: string
-  // Omitted entirely: renders the original F0.5 static/decorative markup
-  // (admin-dashboard-page.tsx, reports-page.tsx still call it this way).
-  // Provided: becomes a real controlled search input — see F2's
-  // request-filters.tsx for the live caller.
+  // Menyiapkan data untuk ditampilkan di antarmuka.
   value?: string
   onChange?: (value: string) => void
 }
@@ -56,10 +52,7 @@ export interface FilterPillOption {
 
 interface FilterPillProps {
   label: string
-  // Omitted entirely: renders the original F0.5 static/decorative pill.
-  // Provided together: becomes a real (visually identical) native <select>
-  // overlaid on the pill, so it keeps full keyboard/screen-reader semantics
-  // without a custom popover implementation.
+  // Menyiapkan data untuk ditampilkan di antarmuka.
   value?: string
   options?: FilterPillOption[]
   onChange?: (value: string) => void

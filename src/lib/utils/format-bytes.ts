@@ -1,5 +1,4 @@
-// Presentation only — never used for the backend's own size validation
-// (MAX_ATTACHMENT_SIZE_BYTES), which the backend re-checks authoritatively.
+// Memformat ukuran berkas untuk ditampilkan.
 export function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
   const units = ['KB', 'MB', 'GB']

@@ -23,11 +23,7 @@ const STATUS_COLORS: Record<WorkflowDurationStatus, string> = {
   CANCELLED: '#8A93A6',
 }
 
-// byStatus is sparse by design (report.service.ts) — only outcomes with at
-// least one measured row appear. Percent here is relative to the longest
-// average among the outcomes actually present, a presentation-only scaling
-// so the bars stay comparable; it never changes the reported averages
-// themselves (F6 "Workflow duration handling").
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function buildWorkflowDurationRows(report: WorkflowDurationReport): DurationRow[] {
   const entries = STATUS_ORDER.flatMap((status) => {
     const bucket = report.byStatus[status]

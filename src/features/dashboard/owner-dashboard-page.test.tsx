@@ -26,7 +26,7 @@ describe('OwnerDashboardPage', () => {
 
     renderWithProviders(<OwnerDashboardPage user={shellUser} navItems={navItems} onLogout={vi.fn()} />)
 
-    // Real Approved count (2) from the fixture's byStatus, not the mock's "12".
+    // Menyiapkan data tiruan untuk skenario pengujian ini.
     expect(await screen.findByText('Approved Requests')).toBeInTheDocument()
     const approvedCard = screen.getByText('Approved Requests').closest('.stat-card')
     expect(approvedCard).toHaveTextContent('2')

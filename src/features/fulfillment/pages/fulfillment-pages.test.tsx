@@ -83,14 +83,12 @@ describe('FulfillmentTasksPage', () => {
       initialEntries: ['/fulfillment?tab=all-open'],
       routes: [{ path: '/fulfillment', element: <FulfillmentRoute /> }],
     })
-    // The tab falls back to "My tasks" for a non-Admin, so no admin list is requested at all.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(await screen.findByText("Couldn't load fulfillment tasks")).toBeInTheDocument()
   })
 })
 
-// ---------------------------------------------------------------------------
-// Request detail integration
-// ---------------------------------------------------------------------------
+// Menjelaskan kondisi yang diuji pada skenario ini.
 
 const approvedRequest = { ...requestPendingOnManager, status: 'APPROVED' }
 
@@ -133,7 +131,7 @@ const open = (permissions: Record<string, boolean>, status = 'IN_PROGRESS') => (
 describe('RequestDetailPage fulfillment integration', () => {
   it('shows the Fulfillment section on an approved request', async () => {
     renderDetail(employeeProfile, approvedRequest, open({}))
-    // "Fulfillment" is also a navigation entry, so anchor on the section's own content.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(await screen.findByText('In progress')).toBeInTheDocument()
     expect(screen.getByText('Assigned to Eddie Employee')).toBeInTheDocument()
   })

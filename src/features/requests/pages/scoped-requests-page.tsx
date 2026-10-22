@@ -24,8 +24,7 @@ interface ScopedRequestsPageProps {
 
 const COLUMN_COUNT = 8
 
-// What each oversight role can read (mirrors the backend policy in
-// request-access.service.ts; the backend is the authority, this is copy only).
+// Hak akses tetap divalidasi oleh backend.
 const SCOPE_SUBTITLE: Record<ScopedRequestsPageProps['role'], string> = {
   Manager: 'Submitted requests from your department, plus your own requests',
   Finance: 'Purchase and reimbursement requests across the organization, plus your own requests',
@@ -39,11 +38,7 @@ const VIEW_TABS = [
   { value: 'assigned', label: 'Assigned to me' },
 ] as const
 
-// Requests list for the roles with read scope beyond their own requests.
-// Visibility is entirely server-side (GET /requests); the tabs only narrow it.
-// "View only" rows are readable, not actionable: opening one never shows
-// edit/cancel/approve unless the backend says the viewer is the owner or the
-// assigned approver.
+// Mengambil data dari /requests.
 export function ScopedRequestsPage({ role, user, navItems, onLogout }: ScopedRequestsPageProps) {
   const [searchParams] = useSearchParams()
   const filters = parseRequestListParams(searchParams)

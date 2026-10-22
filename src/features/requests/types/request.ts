@@ -13,9 +13,7 @@ export type RequestType = z.infer<typeof backendRequestTypeSchema>
 export type RequestStatus = z.infer<typeof backendRequestStatusSchema>
 export type RequestViewer = z.infer<typeof requestViewerSchema>
 
-// Backend enum values are the only values ever sent to/received from the
-// API — these maps exist purely for display, so a label change here can
-// never accidentally change what gets sent in a request body.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export const requestTypeLabels: Record<RequestType, string> = {
   PURCHASE: 'Purchase',
   EQUIPMENT: 'Equipment',
@@ -40,19 +38,16 @@ export interface Request {
   type: RequestType
   title: string
   description: string
-  // Decimal string exactly as the backend serialized it (Prisma Decimal
-  // .toString()) — never converted to a JS number here. Number(...) is only
-  // ever safe at the final presentation call site (formatRupiah), never for
-  // storage or comparison. See README "Money Handling".
+  // Menyiapkan data untuk ditampilkan di antarmuka.
   amount: string | null
   status: RequestStatus
   createdAt: string
   updatedAt: string
   createdBy: { id: string; name: string }
   department: { id: string; name: string } | null
-  // Present on list/detail responses; absent on create/update responses.
+  // Informasi viewer hanya tersedia pada detail request.
   viewer?: RequestViewer
-  // M4/M5: what happened after approval. Optional so an older server response still parses.
+  // Properti ini opsional agar penggunaan sebelumnya tetap didukung.
   fulfillment?: FulfillmentBadgeSummary
 }
 
@@ -109,25 +104,18 @@ export interface RequestListResult {
   meta: RequestListMeta
 }
 
-// The shared result of submit/resubmit/cancel — the backend never returns
-// the full Request from these endpoints, only this transition summary.
+// Mendefinisikan struktur data RequestTransitionResult.
 export interface RequestTransitionResult {
   id: string
   requestNumber: string
   status: RequestStatus
 }
 
-// Backend-confirmed lifecycle facts (request-transition.service.ts) — kept
-// here as UI-presentation hints only. The backend remains the sole authority
-// for whether a transition actually succeeds; these constants only decide
-// which buttons are reasonable to render.
+// Hak akses tetap divalidasi oleh backend.
 export const EDITABLE_STATUSES: RequestStatus[] = ['DRAFT', 'REVISION_REQUIRED']
 export const DELETABLE_STATUSES: RequestStatus[] = ['DRAFT']
-// IN_REVIEW (M1) is a withdrawal and requires a reason; the others do not.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export const CANCELLABLE_STATUSES: RequestStatus[] = ['DRAFT', 'SUBMITTED', 'IN_REVIEW', 'REVISION_REQUIRED']
 
-// Mirrors collaboration.service.ts's TERMINAL_REQUEST_STATUSES exactly — a
-// terminal request is frozen for new comments/attachments for everyone,
-// including the owner (F4). UI hint only; the backend's own 409
-// REQUEST_COLLABORATION_CLOSED remains authoritative.
+// Backend tetap menjadi sumber data dan aturan utama.
 export const TERMINAL_REQUEST_STATUSES: RequestStatus[] = ['APPROVED', 'REJECTED', 'CANCELLED']

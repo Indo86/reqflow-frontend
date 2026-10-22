@@ -7,8 +7,7 @@ export const reportKeys = {
     [...reportKeys.all, 'workflow-duration', filters] as const,
 }
 
-// Reference data (GET /departments), not a report filter result — no
-// per-filter variants, just the caller's own organization's list.
+// Mengambil data dari /departments.
 export const departmentKeys = {
   all: ['departments'] as const,
   list: () => [...departmentKeys.all, 'list'] as const,

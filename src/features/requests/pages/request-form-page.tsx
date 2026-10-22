@@ -15,11 +15,7 @@ import type { RequestFormValues } from '../schemas/request-form.schema'
 import { EDITABLE_STATUSES, requestStatusLabels } from '../types/request'
 import { requestTypeCarriesAmount } from '../lib/request-type-policy'
 
-// Handles both /requests/new and /requests/:requestId/edit — the same real
-// create/update contract, just with or without an existing request to
-// initialize from. Edit is only offered for DRAFT/REVISION_REQUIRED (UI
-// presentation only; the backend's conditional update remains the actual
-// authority and returns 409 REQUEST_NOT_EDITABLE otherwise).
+// Hak akses tetap divalidasi oleh backend.
 export function RequestFormPage() {
   const { requestId } = useParams<{ requestId: string }>()
   const isEdit = requestId !== undefined
@@ -88,7 +84,7 @@ export function RequestFormPage() {
 
   async function handleSubmit(values: RequestFormValues) {
     if (isEdit && requestId) {
-      // A type without money (EQUIPMENT, LEAVE, GENERAL) must not keep a stale amount: clear it explicitly.
+      // Menghapus nominal ketika tipe request tidak menggunakannya.
       await updateMutation.mutateAsync(
         requestTypeCarriesAmount(values.type) ? values : { ...values, amount: null }
       )

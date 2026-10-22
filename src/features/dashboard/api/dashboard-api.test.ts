@@ -19,7 +19,7 @@ describe('dashboard API layer', () => {
       expect.objectContaining({ pathname: '/dashboard/summary', search: '' }),
       expect.objectContaining({ credentials: 'include' })
     )
-    // Decimal total stays a string end to end — never Number(...)'d here.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(result.amounts.total).toBe('48000000.50')
     expect(typeof result.amounts.total).toBe('string')
     expect(result.requests.byStatus.DRAFT).toBe(0)
@@ -39,8 +39,7 @@ describe('dashboard API layer', () => {
       }),
       expect.anything()
     )
-    // Real points preserved in the backend-returned order — never
-    // reordered or zero-filled by this layer.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(result.points.map((point) => point.count)).toEqual([4, 7, 3])
   })
 

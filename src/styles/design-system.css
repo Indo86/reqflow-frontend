@@ -1,4 +1,4 @@
-/* ReqFlow — shared application shell styles (translated from the F0 design reference) */
+/* Gaya utama aplikasi ReqFlow. */
 
 :root {
   --bg: #F4F6F9;
@@ -47,7 +47,7 @@ html, body, #root { max-width: 100%; }
 
 svg.icon { display: block; flex-shrink: 0; }
 
-/* ---------- App shell ---------- */
+/* Kerangka aplikasi. */
 
 .app-shell {
   display: flex;
@@ -190,7 +190,7 @@ svg.icon { display: block; flex-shrink: 0; }
   margin: 0 auto;
 }
 
-/* ---------- Page header ---------- */
+/* Kepala halaman. */
 
 .page-header {
   display: flex;
@@ -222,7 +222,7 @@ svg.icon { display: block; flex-shrink: 0; }
 }
 .back-link svg { color: var(--text-secondary); }
 
-/* ---------- Buttons ---------- */
+/* Tombol. */
 
 .btn {
   display: inline-flex;
@@ -267,7 +267,7 @@ svg.icon { display: block; flex-shrink: 0; }
 
 .btn-sm { height: 28px; padding: 0 10px; font-size: 12.5px; }
 
-/* ---------- Cards / surfaces ---------- */
+/* Kartu dan permukaan. */
 
 .card {
   background: var(--surface);
@@ -289,7 +289,7 @@ svg.icon { display: block; flex-shrink: 0; }
 .card-title-sub { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
 .card-body { padding: 18px; }
 
-/* ---------- Stat cards ---------- */
+/* Kartu statistik. */
 
 .stat-grid {
   display: grid;
@@ -324,7 +324,7 @@ svg.icon { display: block; flex-shrink: 0; }
 .stat-delta.down { color: var(--red-text); }
 .stat-delta.flat { color: var(--text-tertiary); }
 
-/* ---------- Badges ---------- */
+/* Badge status. */
 
 .badge {
   display: inline-flex;
@@ -355,7 +355,7 @@ svg.icon { display: block; flex-shrink: 0; }
 .badge-accent { background: var(--rf-accent-subtle); color: var(--rf-accent); }
 .badge-accent .dot { background: var(--rf-accent); }
 
-/* ---------- Filter bar / inputs ---------- */
+/* Filter dan input. */
 
 .filter-bar {
   display: flex;
@@ -417,7 +417,7 @@ svg.icon { display: block; flex-shrink: 0; }
 .text-input.with-icon { display: flex; align-items: center; gap: 8px; color: var(--text-tertiary); }
 .text-input.with-icon svg { color: var(--text-tertiary); }
 
-/* ---------- Tabs ---------- */
+/* Tab navigasi. */
 
 .tabs {
   display: flex;
@@ -453,7 +453,7 @@ svg.icon { display: block; flex-shrink: 0; }
 }
 .tab.active .tab-count { background: var(--rf-accent-subtle); color: var(--rf-accent); }
 
-/* ---------- Table ---------- */
+/* Tabel data. */
 
 .data-table { width: 100%; border-collapse: collapse; }
 .data-table thead th {
@@ -485,7 +485,7 @@ svg.icon { display: block; flex-shrink: 0; }
 .row-action { display: flex; align-items: center; gap: 6px; }
 .table-scroll { overflow-x: auto; }
 
-/* ---------- Responsive layout primitives ---------- */
+/* Tata letak responsif. */
 
 .dashboard-layout { display: flex; gap: 20px; align-items: flex-start; min-width: 0; }
 .dashboard-primary { display: flex; flex-direction: column; gap: 20px; flex: 1 1 auto; min-width: 0; }
@@ -499,8 +499,7 @@ svg.icon { display: block; flex-shrink: 0; }
 .pagination-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .pagination-actions, .form-actions, .dialog-actions, .action-group { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 .form-actions { margin-top: 4px; }
-/* Login: form on the left, office photo on the right. The photo is decoration only
-   (aria-hidden); everything needed to sign in lives in the form column. */
+/* Tata letak halaman login. */
 .login-split { min-height: 100svh; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); background: #fff; }
 .login-form-side { display: flex; flex-direction: column; padding: 32px 48px 28px; min-width: 0; }
 .login-brand { display: flex; align-items: center; gap: 10px; }
@@ -696,7 +695,7 @@ svg.icon { display: block; flex-shrink: 0; }
   .sidebar { transition: none; }
 }
 
-/* ---------- Empty state ---------- */
+/* Tampilan data kosong. */
 
 .empty-state {
   display: flex;
@@ -715,7 +714,7 @@ svg.icon { display: block; flex-shrink: 0; }
 .empty-state-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
 .empty-state-body { font-size: 12.5px; color: var(--text-secondary); max-width: 280px; }
 
-/* ---------- Timeline / activity ---------- */
+/* Linimasa aktivitas. */
 
 .timeline { display: flex; flex-direction: column; }
 .timeline-item { display: flex; gap: 12px; position: relative; padding-bottom: 18px; }
@@ -733,7 +732,7 @@ svg.icon { display: block; flex-shrink: 0; }
 .timeline-desc { font-size: 12.5px; color: var(--text-secondary); }
 .timeline-time { font-size: 11.5px; color: var(--text-tertiary); margin-top: 2px; }
 
-/* ---------- Approval flow (vertical steps) ---------- */
+/* Tahapan persetujuan. */
 
 .approval-step { display: flex; gap: 12px; position: relative; }
 .approval-step-rail { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
@@ -746,7 +745,7 @@ svg.icon { display: block; flex-shrink: 0; }
 .approval-step-role { font-size: 13.5px; font-weight: 700; color: var(--text-primary); }
 .approval-step-meta { font-size: 12px; color: var(--text-tertiary); }
 
-/* ---------- Notification item ---------- */
+/* Menyiapkan data notifikasi untuk pengguna. */
 
 .notif-item {
   display: flex;
@@ -786,7 +785,7 @@ a.notif-item:hover { background: var(--surface-alt); }
 .notif-time { font-size: 11.5px; color: var(--text-tertiary); white-space: nowrap; flex-shrink: 0; }
 .unread-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--rf-accent); flex-shrink: 0; margin-top: 5px; }
 
-/* ---------- Comment ---------- */
+/* Menangani komentar pada request. */
 
 .comment-item { display: flex; gap: 10px; }
 .comment-body { flex-grow: 1; }
@@ -795,7 +794,7 @@ a.notif-item:hover { background: var(--surface-alt); }
 .comment-time { font-size: 11.5px; color: var(--text-tertiary); }
 .comment-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-top: 3px; }
 
-/* ---------- Misc ---------- */
+/* Elemen pendukung umum. */
 
 .divider { height: 1px; background: var(--rf-border); border: none; margin: 0; }
 .kv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; }
@@ -807,7 +806,7 @@ a.notif-item:hover { background: var(--surface-alt); }
 .kv-value { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
 .body-text { font-size: 13.5px; line-height: 1.65; color: var(--text-secondary); }
 
-/* ---------- Request rich text ---------- */
+/* Editor teks request. */
 
 .rich-text-editor { border: 1px solid var(--rf-border-strong); border-radius: var(--rf-radius-sm); overflow: hidden; background: var(--surface); }
 .rich-text-editor:focus-within { border-color: var(--rf-accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--rf-accent) 18%, transparent); }
@@ -855,9 +854,6 @@ a.notif-item:hover { background: var(--surface-alt); }
   .detail-side { width: 100%; }
 }
 
-/* Native <dialog>-based confirmation prompts (Request cancel/delete) — no
-   dialog/modal dependency exists in this project, and the browser's own
-   <dialog> element already gives focus trapping, Escape-to-close, and a
-   backdrop for free. */
+/* Dialog konfirmasi berbasis elemen dialog native. */
 dialog.confirm-dialog { border: none; border-radius: 12px; padding: 0; max-width: 360px; width: calc(100% - 32px); }
 dialog.confirm-dialog::backdrop { background: rgba(15, 23, 42, 0.45); }

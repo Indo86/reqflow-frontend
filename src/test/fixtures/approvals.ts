@@ -51,15 +51,13 @@ const baseRequest = {
   updatedAt: '2026-09-01T00:00:00.000Z',
   createdBy: { id: 'user-employee', name: 'Eddie Employee' },
   department: { id: 'dept-eng', name: 'Engineering' },
-  // M2: how the signed-in user relates to the request (tests override per viewer).
+  // Menjelaskan bagian penting pada proses ini.
   viewer: { relationship: 'OWNER', approval: null },
   commentsCount: 0,
   attachmentsCount: 0,
 }
 
-// A request IN_REVIEW with a single active MANAGER_ONLY cycle, currently
-// PENDING on Mona Manager — the shape GET /requests/:id actually returns
-// (request.service.ts requestDetailSelect), not a fabrication.
+// Mengambil data dari /requests/:id.
 export const requestPendingOnManager = {
   ...baseRequest,
   status: 'IN_REVIEW',
@@ -86,8 +84,7 @@ export const requestPendingOnManager = {
   ],
 }
 
-// Two-step MANAGER_FINANCE cycle: Manager already approved, Finance is now
-// the PENDING (actionable) step.
+// Menyimpan nilai requestPendingOnFinance yang digunakan pada proses ini.
 export const requestPendingOnFinance = {
   ...baseRequest,
   id: 'req-2',

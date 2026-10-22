@@ -9,11 +9,7 @@ interface GuestOnlyRouteProps {
   children: ReactNode
 }
 
-// Wraps /login: an already-authenticated visitor is bounced straight to
-// their landing route instead of seeing the sign-in form again (F1 "Guest-
-// only login route"). On a session-check failure we still render the form —
-// the user may want to try signing in anyway, and a failed login attempt
-// will itself surface a clear "unable to connect" error.
+// Menjalankan proses GuestOnlyRoute.
 export function GuestOnlyRoute({ children }: GuestOnlyRouteProps) {
   const session = useSession()
 

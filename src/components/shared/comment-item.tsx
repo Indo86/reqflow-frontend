@@ -3,8 +3,7 @@ import type { CommentEntry } from '@/types/domain'
 import { UserAvatar } from './user-avatar'
 
 interface CommentItemProps extends CommentEntry {
-  // Optional so the F0.5 mock/preview usage (no delete affordance) is
-  // unaffected — only real (F4) comment lists pass this.
+  // Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
   actions?: ReactNode
 }
 

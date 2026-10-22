@@ -5,8 +5,7 @@ export interface FulfillmentListFilters {
   state: 'open' | 'closed' | 'all'
 }
 
-// Feature-owned keys. Per-request keys are invalidated together with the request
-// detail after any change (see hooks/use-fulfillment.ts) so every view agrees.
+// Menyusun kunci cache untuk data fulfillment.
 export const fulfillmentKeys = {
   all: ['fulfillment'] as const,
   lists: () => [...fulfillmentKeys.all, 'list'] as const,

@@ -17,7 +17,7 @@ function stepMeta(step: ApprovalHistoryItem): string {
   if (step.status === 'WAITING') return 'Not started'
   if (step.status === 'PENDING') return 'Awaiting decision'
   if (step.status === 'SKIPPED') return 'Skipped'
-  // APPROVED / REJECTED / REVISION_REQUESTED all carry a real decision + date.
+  // Memformat tanggal keputusan jika tersedia.
   const date = step.decidedAt ? new Date(step.decidedAt).toLocaleDateString() : ''
   return date ? `${step.approver.name} · ${date}` : step.approver.name
 }
@@ -43,17 +43,13 @@ function ApprovalStep({ step, isLast, action }: { step: ApprovalHistoryItem; isL
   )
 }
 
-// Renders every real approval cycle for a Request (real data, F3) — never
-// hardcodes Manager -> Finance -> Director; each cycle's own `approvals`
-// array (already ordered by stepOrder by the backend) is rendered exactly
-// as returned. A Request only ever has more than one cycle after a
-// revision-requested resubmission, so most requests show a single cycle.
+// Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
 export function ApprovalHistory({
   cycles,
   renderStepAction,
 }: {
   cycles: ApprovalCycleHistoryItem[]
-  // Optional per-step slot (e.g. the Admin-only Reassign button); absent for every other viewer.
+  // Properti ini opsional agar penggunaan sebelumnya tetap didukung.
   renderStepAction?: (step: ApprovalHistoryItem) => ReactNode
 }) {
   if (cycles.length === 0) {

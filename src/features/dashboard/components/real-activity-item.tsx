@@ -9,12 +9,7 @@ interface RealActivityItemProps {
   isLast?: boolean
 }
 
-// Real-data counterpart to components/shared/activity-item.tsx. No actor
-// name is shown — the backend only exposes actorId, never a resolved name
-// (see F6 "Recent activity"). A requestId link is always safe: recent
-// activity is already scoped to requests this viewer can read (their own,
-// or org-wide for Admin — the same rule GET /requests itself uses), unlike
-// Notifications' APPROVAL_ASSIGNED case which has no such guarantee.
+// Mengambil data dari /requests.
 export function RealActivityItem({ entry, isLast }: RealActivityItemProps) {
   const { icon: Icon, label } = getActivityPresentation(entry.action)
   const absoluteTime = formatDateTime(entry.createdAt)

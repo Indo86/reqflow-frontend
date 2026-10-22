@@ -2,16 +2,12 @@ import { apiClient } from '@/lib/api'
 import { requestSingleResponseSchema } from '../schemas/request.schema'
 import { mapRequestResponse, type Request, type RequestType } from '../types/request'
 
-// PATCH /requests/:id — PATCH semantics, every field optional; only rejected
-// by the backend (409 REQUEST_NOT_EDITABLE) once the request has left
-// DRAFT/REVISION_REQUIRED. The frontend uses EDITABLE_STATUSES only to
-// decide whether to show the Edit control — this call is the actual
-// authority.
+// Memperbarui data melalui /requests/:id.
 export interface UpdateRequestInput {
   type?: RequestType
   title?: string
   description?: string
-  // null clears the amount (needed when a draft is switched to a type that carries none).
+  // Nilai null menghapus nominal yang tersimpan.
   amount?: number | null
 }
 

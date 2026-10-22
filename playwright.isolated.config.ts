@@ -1,15 +1,6 @@
 import { defineConfig } from '@playwright/test'
 
-// Browser E2E against a DISPOSABLE database, on separate ports, so the
-// state-changing journeys (reassign, withdraw) can never touch development
-// data. It never reuses running servers and refuses to start unless
-// DATABASE_URL names a database containing "e2e".
-//
-// Prepare once (reqFlow-backend), with DATABASE_URL pointing at an empty local
-// database such as reqflow_e2e:
-//   npm run prisma:deploy && npm run seed:demo -- --yes
-// Then run (same DATABASE_URL in the environment):
-//   npx playwright test -c playwright.isolated.config.ts
+// Menjalankan E2E dengan basis data terpisah agar data pengembangan tetap aman.
 const databaseUrl = process.env.DATABASE_URL
 if (!databaseUrl) throw new Error('DATABASE_URL must point at the disposable e2e database.')
 const database = decodeURIComponent(new URL(databaseUrl).pathname.replace(/^\//, ''))

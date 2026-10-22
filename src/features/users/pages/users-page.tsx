@@ -4,8 +4,7 @@ import { AppShell, type AppShellUser } from '@/app/layout/app-shell'
 import { PageHeader } from '@/components/shared/page-header'
 import { DataTableShell } from '@/components/shared/data-table-shell'
 import type { NavItemConfig } from '@/lib/mock/navigation'
-// Reused across features — both are generic (no Request-specific props) —
-// rather than duplicating an identical table-status/pagination footer here.
+// Menggunakan status tabel dan paginasi yang dipakai bersama.
 import { RequestTableStatus } from '@/features/requests/components/request-table-status'
 import { RequestPagination } from '@/features/requests/components/request-pagination'
 import { useUsersQuery } from '../hooks/use-users-query'
@@ -22,8 +21,7 @@ interface UsersPageProps {
 
 const COLUMN_COUNT = 5
 
-// Admin-only User Management list — GET /users, Admin-only + organization-
-// scoped server-side. Never fetches org-wide and filters client-side.
+// Mengambil data dari /users.
 export function UsersPage({ user, navItems, onLogout }: UsersPageProps) {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()

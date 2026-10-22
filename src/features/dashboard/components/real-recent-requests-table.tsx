@@ -8,12 +8,7 @@ interface RealRecentRequestsTableProps {
   requests: Request[]
 }
 
-// Real-data counterpart to recent-requests-table.tsx (kept for preview
-// personas). There is no dashboard-only list endpoint, so this reuses the
-// real GET /requests — the same access policy the dashboard summary itself
-// uses (M2: request-access.service.ts) — rather than fabricating a feed.
-// "Your role" tells the viewer whether a row is theirs, needs their decision,
-// or is view-only, so oversight never reads as permission to act.
+// Mengambil data dari /requests.
 export function RealRecentRequestsTable({ requests }: RealRecentRequestsTableProps) {
   return (
     <div className="table-scroll">

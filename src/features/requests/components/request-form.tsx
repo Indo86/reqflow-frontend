@@ -12,11 +12,7 @@ import { requestTypeLabels, type RequestType } from '../types/request'
 import { RichTextEditor } from './rich-text-editor'
 
 interface RequestFormProps {
-  // Present only in edit mode, computed once by the caller from already-
-  // fetched Request detail data — this component only ever sees a fully
-  // resolved value, so it never has to juggle loading state itself, and
-  // RHF's defaultValues (applied once at mount) never gets clobbered by a
-  // background refetch of the same request.
+  // Nilai awal hanya diberikan saat mengedit request.
   defaultValues?: RequestFormInput
   onSubmit: (values: RequestFormValues) => Promise<void>
   isSubmitting: boolean
@@ -26,10 +22,7 @@ interface RequestFormProps {
 
 const typeOptions = Object.entries(requestTypeLabels) as [RequestType, string][]
 
-// Shared by both /requests/new and /requests/:requestId/edit — fields come
-// only from the backend's real create/update schema (type, title,
-// description, amount). Status is never a form field: it is entirely
-// domain-controlled (always DRAFT on create; unaffected by edit).
+// Menampilkan formulir untuk membuat atau mengedit request.
 export function RequestForm({
   defaultValues,
   onSubmit,
@@ -51,8 +44,7 @@ export function RequestForm({
   const watchedAmount = useWatch({ control, name: 'amount' })
   const carriesAmount = requestTypeCarriesAmount(selectedType)
   const route = previewApprovalRoute(selectedType, typeof watchedAmount === 'number' ? watchedAmount : undefined)
-  // A legacy draft (created before M3) may still hold an amount on a type that
-  // cannot carry one; tell the user it will be removed instead of failing silently.
+  // Menandai nominal lama yang tidak lagi sesuai dengan tipe request.
   const hasLegacyAmount = !carriesAmount && defaultValues?.amount !== undefined
 
   const safeMessage =

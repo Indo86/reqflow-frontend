@@ -22,16 +22,11 @@ interface CommentSectionProps {
   requestId: string
   currentUserId: string
   currentUserInitials: string
-  // Whether the signed-in user is currently allowed to *write* a new
-  // comment (owner, or the request's current active approver — see
-  // collaboration.service.ts getWritableRequestForCollaboration). This is
-  // UX only: the backend re-checks on every submit and is the actual
-  // authority, including the "request just became terminal" race.
+  // Aksi hanya tersedia untuk approver yang sedang bertugas.
   canWrite: boolean
 }
 
-// Real Request Comments (F4) — distinct from an Approval's own
-// decisionComment (F3), which belongs to the approval history, not here.
+// Menangani komentar pada request.
 export function CommentSection({ requestId, currentUserId, currentUserInitials, canWrite }: CommentSectionProps) {
   const query = useCommentsQuery(requestId)
   const createMutation = useCreateCommentMutation(requestId)
@@ -54,9 +49,7 @@ export function CommentSection({ requestId, currentUserId, currentUserInitials, 
       await createMutation.mutateAsync(values.content)
       reset()
     } catch {
-      // Surfaced below via createMutation.error; the draft is intentionally
-      // NOT cleared (reset() only runs on success) so a failed submit never
-      // loses what the user typed.
+      // Error ditampilkan oleh status mutation tanpa menghapus isi komentar.
     }
   })
 

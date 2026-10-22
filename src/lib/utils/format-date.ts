@@ -1,7 +1,4 @@
-// Thin wrappers over the platform Intl-backed formatters already used
-// elsewhere in the app (e.g. MyRequestsPage's inline
-// `toLocaleDateString()`) — no date library added. Backend timestamps
-// (ISO strings) remain authoritative; these are presentation only.
+// Backend tetap menjadi sumber data dan aturan utama.
 export function formatDate(isoString: string): string {
   return new Date(isoString).toLocaleDateString()
 }

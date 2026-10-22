@@ -9,9 +9,7 @@ import type {
 
 export type NotificationType = z.infer<typeof notificationTypeSchema>
 
-// Exactly the values notification.service.ts's notify* functions actually
-// create — do not add REQUEST_SUBMITTED, COMMENT_ADDED, or any other
-// invented type (see F5 "backend contract").
+// Menyiapkan data notifikasi untuk pengguna.
 export const notificationTypeLabels: Record<NotificationType, string> = {
   APPROVAL_ASSIGNED: 'Approval assigned',
   REQUEST_REVISION_REQUIRED: 'Revision requested',

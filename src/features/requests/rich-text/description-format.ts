@@ -22,8 +22,7 @@ export function parseStoredDescription(value: string): JSONContent {
       return sanitizeLinks(parsed as JSONContent)
     }
   } catch {
-    // A corrupt prefixed value is displayed inertly as legacy text instead
-    // of being interpreted as HTML or crashing Request Detail.
+    // Menyiapkan data untuk ditampilkan di antarmuka.
   }
   return legacyTextToDocument(value)
 }

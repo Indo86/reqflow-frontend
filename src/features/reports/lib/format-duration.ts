@@ -1,6 +1,4 @@
-// Backend unit is always seconds (report.service.ts, unit: 'seconds') — this
-// only ever formats that value; it never recomputes a duration from
-// Request timestamps itself (F6 "Workflow duration handling").
+// Memformat nilai untuk ditampilkan.
 export function formatDurationSeconds(seconds: number): string {
   const totalMinutes = Math.round(seconds / 60)
 

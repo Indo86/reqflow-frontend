@@ -8,7 +8,7 @@ interface ApprovalAttentionTableProps {
   reviewHref: string
 }
 
-// Shared by the Manager and Director dashboards — same shape, different rows.
+// Menjalankan proses ApprovalAttentionTable.
 export function ApprovalAttentionTable({ rows, reviewHref }: ApprovalAttentionTableProps) {
   return (
     <div className="table-scroll">

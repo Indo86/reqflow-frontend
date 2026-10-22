@@ -5,10 +5,7 @@ import { toAppShellUser } from '@/features/auth/lib/to-app-shell-user'
 import { productionNavigationByRole } from '@/lib/mock/navigation'
 import { UsersPage } from '@/features/users/pages/users-page'
 
-// UX-only gate (mirrors ApprovalsRoute's redirect pattern) — the backend
-// remains the sole authority (every /users endpoint is
-// requireRole(Role.ADMIN)); this only avoids showing a page that would
-// just 403 for a non-Admin who navigates here directly.
+// Hak akses tetap divalidasi oleh backend.
 export function UsersRoute() {
   const session = useSession()
   const onLogout = useLogout()

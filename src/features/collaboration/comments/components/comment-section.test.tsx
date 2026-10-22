@@ -93,9 +93,7 @@ describe('CommentSection', () => {
     renderSection()
 
     await screen.findByText(sampleComment.content)
-    // Only one delete button — for ownCommentByEmployee (author id matches
-    // currentUserId="user-employee"), not for sampleComment (a different
-    // author). Never inferred from role.
+    // Menyiapkan data tiruan untuk skenario pengujian ini.
     expect(screen.getAllByRole('button', { name: 'Delete comment' })).toHaveLength(1)
   })
 

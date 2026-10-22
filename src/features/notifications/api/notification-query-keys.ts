@@ -4,9 +4,7 @@ export interface NotificationListFilters {
   unreadOnly: boolean
 }
 
-// Feature-owned query keys — no global registry (see F3
-// approval-query-keys.ts for the established pattern). Filters are part of
-// the list key so All and Unread never collide in the cache.
+// Menyusun kunci cache untuk kueri ini.
 export const notificationKeys = {
   all: ['notifications'] as const,
   lists: () => [...notificationKeys.all, 'list'] as const,

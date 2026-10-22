@@ -17,13 +17,7 @@ interface ActivityPresentation {
   icon: LucideIcon
 }
 
-// Every AuditAction value that exists today (prisma/schema.prisma enum
-// AuditAction, verified by direct backend inspection) — see F6 "Recent
-// activity". recent-activity entries carry no actor name (only actorId) and
-// no human sentence (dashboard.service.ts: "structured, presentation-neutral
-// — never formatted into a UI sentence... that is the frontend's job"), so
-// this only labels the action itself; it never fabricates a "who did it"
-// clause the backend doesn't provide.
+// Memvalidasi bentuk data sesuai kontrak API.
 const presentationByAction: Record<string, ActivityPresentation> = {
   REQUEST_CREATED: { label: 'Request created', icon: FilePlus },
   REQUEST_UPDATED: { label: 'Request updated', icon: FilePlus },
@@ -50,15 +44,12 @@ const presentationByAction: Record<string, ActivityPresentation> = {
 
 const fallbackPresentation: ActivityPresentation = { label: 'Activity', icon: Activity }
 
-// A future backend action this build doesn't know about renders a safe,
-// generic fallback rather than crashing — never a lookup-map KeyError.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function getActivityPresentation(action: string): ActivityPresentation {
   return presentationByAction[action] ?? fallbackPresentation
 }
 
-// Generic, not a lookup map — safe for any current or future
-// AuditEntityType value without needing to enumerate them (REQUEST,
-// APPROVAL_CYCLE, APPROVAL, COMMENT, ATTACHMENT today).
+// Menampilkan riwayat perubahan request.
 export function humanizeEntityType(entityType: string): string {
   return entityType
     .toLowerCase()

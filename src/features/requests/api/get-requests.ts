@@ -3,8 +3,7 @@ import { requestListResponseSchema } from '../schemas/request.schema'
 import { mapRequestResponse, type RequestListResult } from '../types/request'
 import type { RequestListFilters } from './request-query-keys'
 
-// GET /requests — visibility (M2 role scopes) and filtering (type, status,
-// q, view) are entirely server-side; this just forwards the backend-supported query params as-is.
+// Mengambil data dari /requests.
 export async function getRequests(filters: RequestListFilters): Promise<RequestListResult> {
   const params = new URLSearchParams()
   params.set('page', String(filters.page))

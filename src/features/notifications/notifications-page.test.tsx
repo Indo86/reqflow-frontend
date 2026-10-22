@@ -51,7 +51,7 @@ describe('NotificationsPage', () => {
     expect(await screen.findByText('Approval required')).toBeInTheDocument()
     expect(screen.getByText('REQ-2026-000124 requires your approval.')).toBeInTheDocument()
     expect(screen.getByText('Request approved')).toBeInTheDocument()
-    // Real unread count from the dedicated endpoint, not a client-guessed number.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(screen.getAllByText('1').length).toBeGreaterThan(0)
   })
 

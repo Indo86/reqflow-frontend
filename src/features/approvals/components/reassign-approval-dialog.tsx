@@ -20,10 +20,7 @@ interface ReassignApprovalDialogProps {
   onClose: () => void
 }
 
-// Admin-only recovery action for a PENDING/WAITING step (e.g. its approver was
-// deactivated). The candidate list is a convenience filter; the backend is the
-// authority and returns 409 APPROVER_NOT_ELIGIBLE for anyone who cannot hold
-// the step. Same native <dialog> pattern as the other dialogs in this app.
+// Aksi hanya tersedia untuk approver yang sedang bertugas.
 export function ReassignApprovalDialog({ step, requestId, ownerId, departmentId, onClose }: ReassignApprovalDialogProps) {
   const ref = useRef<HTMLDialogElement>(null)
   const [approverId, setApproverId] = useState('')
@@ -35,7 +32,7 @@ export function ReassignApprovalDialog({ step, requestId, ownerId, departmentId,
     page: 1,
     pageSize: 100,
     role: step ? ROLE_BY_STEP[step.stepType] : undefined,
-    // Managers are department-scoped; Finance/Director are organization-wide.
+    // Manager hanya dipilih dari departemen request.
     departmentId: step?.stepType === 'MANAGER' ? (departmentId ?? undefined) : undefined,
     isActive: true,
   })

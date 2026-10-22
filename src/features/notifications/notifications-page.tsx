@@ -21,11 +21,7 @@ const PAGE_SIZE = 20
 
 type Filter = 'all' | 'unread'
 
-// Production Notifications page — real data via GET /notifications, scoped
-// server-side to the signed-in user (notification.service.ts
-// listNotifications). unreadOnly is sent as an explicit 'true'/'false'
-// string (never inferred from JS truthiness) so switching tabs can't
-// silently request the wrong scope. See F5 "All / Unread tabs".
+// Mengambil data dari /notifications.
 export function NotificationsPage({ user, navItems, onLogout }: NotificationsPageProps) {
   const [searchParams] = useSearchParams()
   const filter: Filter = searchParams.get('filter') === 'unread' ? 'unread' : 'all'

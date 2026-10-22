@@ -1,19 +1,15 @@
 import { z } from 'zod'
 
-// Mirrors reqFlow-backend's Notification model and NotificationType enum
-// (prisma/schema.prisma) and notification.service.ts's NotificationResponse
-// shape — verified by direct backend inspection. There is no separate
-// boolean isRead field: readAt (null = unread) is the single source of
-// truth. See F5 "backend contract".
+// Memvalidasi bentuk data sesuai kontrak API.
 export const notificationTypeSchema = z.enum([
   'APPROVAL_ASSIGNED',
   'REQUEST_REVISION_REQUIRED',
   'REQUEST_APPROVED',
   'REQUEST_REJECTED',
-  // M1
+  // Notifikasi perubahan alur request.
   'REQUEST_WITHDRAWN',
   'APPROVAL_REASSIGNED',
-  // M4
+  // Notifikasi proses fulfillment.
   'FULFILLMENT_ASSIGNED',
   'FULFILLMENT_REASSIGNED',
   'FULFILLMENT_NEEDS_OWNER',
@@ -27,19 +23,13 @@ export const notificationSchema = z.object({
   title: z.string(),
   message: z.string(),
   requestId: z.string().nullable(),
-  // Only ever populated for APPROVAL_ASSIGNED — every other notification
-  // type always sends null (post-F6-contract-completion; a notification
-  // created before this field existed also serializes as null, the same
-  // as any other legacy row). See F6-contract-completion "Notification
-  // approvalId".
+  // Menyiapkan data notifikasi untuk pengguna.
   approvalId: z.string().nullable(),
   readAt: z.string().nullable(),
   createdAt: z.string(),
 })
 
-// GET /notifications — recipient scope comes entirely from the session
-// cookie server-side (notification.service.ts listNotifications); there is
-// no recipientId/organizationId field on the request or the response.
+// Mengambil data dari /notifications.
 export const notificationListResponseSchema = z.object({
   data: z.array(notificationSchema),
   meta: z.object({
@@ -50,19 +40,17 @@ export const notificationListResponseSchema = z.object({
   }),
 })
 
-// GET /notifications/unread-count
+// Mengambil data dari /notifications/unread-count.
 export const unreadCountResponseSchema = z.object({
   data: z.object({ count: z.number() }),
 })
 
-// PATCH /notifications/:id/read — idempotent on the backend: an
-// already-read notification returns the same row unchanged rather than
-// erroring (notification.service.ts markNotificationAsRead).
+// Memperbarui data melalui /notifications/:id/read.
 export const markNotificationReadResponseSchema = z.object({
   data: notificationSchema,
 })
 
-// POST /notifications/read-all
+// Mengirim data ke /notifications/read-all.
 export const markAllReadResponseSchema = z.object({
   data: z.object({ updated: z.number() }),
 })

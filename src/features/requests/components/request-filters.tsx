@@ -10,21 +10,7 @@ interface RequestFiltersProps {
   searchPlaceholder: string
 }
 
-// Drives the list query entirely through URL search params (?q=&status=&type=&page=),
-// limited strictly to what GET /requests actually supports — no date/department/
-// createdBy control exists here because the backend has no such filter. Free-text
-// search is debounced locally (plain setTimeout, no new dependency) so typing
-// doesn't fire one request per keystroke; status/type commit immediately since
-// they're discrete choices. Any filter change resets page back to 1.
-//
-// The URL's `q` is the single source of truth; `searchDraft` only exists to
-// buffer keystrokes before the debounce commits them. When `q` changes from
-// outside this component (browser back/forward, a link, initial load), the
-// draft is reset to match it — adjusted during render (comparing against the
-// last-seen URL value), not via a `useEffect` that calls setState, per
-// https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes.
-// That avoids the extra commit+effect+re-render an effect-based sync would
-// cost, and avoids duplicating URL state into React state.
+// Mengambil data dari /requests.
 export function RequestFilters({ searchPlaceholder }: RequestFiltersProps) {
   const [searchParams, setSearchParams] = useSearchParams()
   const urlSearch = searchParams.get('q') ?? ''

@@ -3,10 +3,7 @@ export interface ApprovalInboxFilters {
   pageSize: number
 }
 
-// Feature-owned query keys — no global registry. There is no separate
-// "approval context" key: that data lives on the Request detail response
-// and is invalidated through requestKeys (features/requests/api) instead,
-// per F3 "Request cache coordination".
+// Menyusun kunci cache untuk kueri ini.
 export const approvalKeys = {
   all: ['approvals'] as const,
   inboxes: () => [...approvalKeys.all, 'inbox'] as const,

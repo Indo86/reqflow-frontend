@@ -3,17 +3,7 @@ import { backendRequestTypeSchema } from './request.schema'
 import { validateDescriptionValue } from '../rich-text/description-format'
 import { requestTypeCarriesAmount } from '../lib/request-type-policy'
 
-// Mirrors reqFlow-backend's createRequestSchema (src/schemas/request.schema.ts)
-// for client-side UX validation only — the backend re-validates and remains
-// authoritative. `amount` stays a plain number here because that is exactly
-// what the backend's create/update request BODY expects — never a string,
-// never parsed with parseFloat from a formatted display value.
-//
-// M3: only PURCHASE and REIMBURSEMENT carry money. For those two the form
-// requires a valid amount (the backend would otherwise refuse to submit the
-// draft); for every other type the amount field is not shown and any leftover
-// value is dropped, so a priced EQUIPMENT/LEAVE/GENERAL request cannot be
-// produced from this form.
+// Memvalidasi bentuk data sesuai kontrak API.
 const MAX_AMOUNT = 999_999_999_999.99
 
 export const requestFormSchema = z

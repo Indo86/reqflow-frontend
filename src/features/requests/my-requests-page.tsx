@@ -15,8 +15,7 @@ interface MyRequestsPageProps {
   onLogout?: () => void
 }
 
-// Request rows stay the static F0.5 mock dataset regardless of which real
-// user is signed in — real Request data belongs to F2, not F1.
+// Menjalankan proses MyRequestsPage.
 export function MyRequestsPage({
   user = deniZaky,
   navItems = previewNavigationByRole.Employee,

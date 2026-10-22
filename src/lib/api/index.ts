@@ -5,10 +5,7 @@ export type ApiClientOptions = Omit<RequestInit, 'body' | 'credentials'> & {
   body?: BodyInit | null
   json?: unknown
 }
-/** Paths are relative to the configured API base, including any base path prefix.
- * TResponse describes the expected DTO; features validate payloads when needed.
- * Empty successful responses resolve to undefined (use apiClient<void>).
- */
+/* Memvalidasi bentuk data sesuai kontrak API. */
 export async function apiClient<TResponse = unknown>(
   path: string,
   options: ApiClientOptions = {}

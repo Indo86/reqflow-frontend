@@ -14,13 +14,20 @@ Submit a request, route it through the right approvers, track it to completion.
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-5-6E9F18?logo=vitest&logoColor=white)
 
+<a href="#screenshots">Screenshots</a> ·
+<a href="#key-features">Key Features</a> ·
+<a href="#tech-stack">Tech Stack</a> ·
+<a href="#getting-started">Getting Started</a> ·
+<a href="#project-structure">Project Structure</a> ·
+<a href="#project-context">Project Context</a>
+
 </div>
 
 ReqFlow is a web-based system for managing internal organizational requests through structured approval workflows. Employees submit purchases, reimbursements, leave, and other requests; each one moves through a policy-based chain of Manager, Finance, and Director approvals, and approved work is tracked through fulfillment. It also provides request tracking, role-based dashboards, and reporting.
 
 This repository is the **frontend**. It is a full-stack portfolio project: the REST API lives in a separate repository, `reqFlow-backend`.
 
-## 📸 Screenshots
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4f8/512.gif" alt="📸" width="32" height="32"> Screenshots
 
 <p align="center">
   <img src="public/screenshots/login.png" alt="ReqFlow login page" width="820">
@@ -38,7 +45,7 @@ This repository is the **frontend**. It is a full-stack portfolio project: the R
 | --- | --- |
 | <img src="public/screenshots/notifications.png" alt="Notifications inbox"> | <img src="public/screenshots/users.png" alt="User management with role, department, and status filters"> |
 
-## ✨ Key Features
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2728/512.gif" alt="✨" width="32" height="32"> Key Features
 
 - 📝 **Requests**: create, edit, submit, withdraw, and track requests with a rich-text description; search and filter by status and type.
 - ✅ **Multi-level approvals**: Manager, Finance, and Director steps depending on request type and amount, with an approval inbox, review page, and per-step history.
@@ -49,7 +56,7 @@ This repository is the **frontend**. It is a full-stack portfolio project: the R
 - 💬 **Comments & attachments** on requests.
 - 👥 **User management** (Admin): create users, change role and department, activate or deactivate accounts, and reassign a stuck approval step.
 
-## 🧰 Tech Stack
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4bb/512.gif" alt="💻" width="32" height="32"> Tech Stack
 
 | Area | Technologies |
 | --- | --- |
@@ -60,7 +67,7 @@ This repository is the **frontend**. It is a full-stack portfolio project: the R
 | API integration | Fetch-based client with cookie sessions (`credentials: 'include'`) against `reqFlow-backend` |
 | Testing & tooling | Vitest, React Testing Library, jsdom, ESLint, Prettier |
 
-## 🚀 Getting Started
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f680/512.gif" alt="🚀" width="32" height="32"> Getting Started
 
 **Prerequisites**
 
@@ -90,7 +97,7 @@ Sessions use cookies, so the backend's CORS origin must match the frontend origi
 | `npm run typecheck` | Run the strict TypeScript check |
 | `npm run test:run` | Run unit and component tests once (`npm test` for watch mode) |
 
-## 🗂️ Project Structure
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4e6/512.gif" alt="📦" width="32" height="32"> Project Structure
 
 ```text
 src/
@@ -106,6 +113,6 @@ public/         static assets (favicon, README screenshots)
 
 Each feature module owns its API functions, hooks, Zod schemas, and components.
 
-## 🎯 Project Context
+## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f3af/512.gif" alt="🎯" width="32" height="32"> Project Context
 
 ReqFlow demonstrates frontend development for a real-world organizational workflow: complex application states (draft, in review, approved, fulfilled), role-based interfaces, typed API integration, URL-driven filtering, and responsive layouts. It is a portfolio project, not a deployed product.

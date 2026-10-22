@@ -15,9 +15,7 @@ import {
   ownerDraftDetail,
 } from '@/lib/mock/request-details'
 
-// Design-preview-only routes: reachable at /preview/... so every role and
-// relationship variant from the reference design can be inspected directly,
-// without needing real authentication or role-switching.
+// Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
 export const previewRoutes: RouteObject[] = [
   { path: 'preview/owner/dashboard', element: <OwnerDashboardPage /> },
   { path: 'preview/owner/requests', element: <MyRequestsPage /> },

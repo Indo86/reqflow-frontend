@@ -2,14 +2,7 @@ import type { StatCardData } from '@/lib/mock/dashboards'
 import type { RequestStatus } from '@/features/requests/types/request'
 import type { DashboardSummary } from '../types/dashboard'
 
-// "Open" = not yet in a terminal state — the complement of F2's own
-// TERMINAL_REQUEST_STATUSES (APPROVED/REJECTED/CANCELLED,
-// features/requests/types/request.ts). "Pending" = actually awaiting an
-// approval decision (SUBMITTED/IN_REVIEW) — narrower than "Open", which also
-// includes DRAFT (not yet submitted) and REVISION_REQUIRED (kicked back,
-// shown as its own card). These are the only combinations used below, and
-// every one is a plain sum of real, zero-filled backend counts — never a
-// client-fetched-and-reduced list (F6 "No fake dashboard calculations").
+// Menyimpan status request yang dianggap selesai.
 const OPEN_STATUSES: RequestStatus[] = ['DRAFT', 'SUBMITTED', 'IN_REVIEW', 'REVISION_REQUIRED']
 const PENDING_STATUSES: RequestStatus[] = ['SUBMITTED', 'IN_REVIEW']
 
@@ -27,11 +20,7 @@ export function buildOwnerStats(summary: DashboardSummary): StatCardData[] {
   ]
 }
 
-// Manager/Finance/Director share this shape. Since M2 the counts cover
-// everything the role may READ (Manager: own department plus own requests;
-// Finance: purchase/reimbursement requests plus own; Director: organization),
-// so the labels no longer say "My". "Pending My Approval" is the one number
-// that is about the viewer's own decisions: their real assigned approval count.
+// Membuat data melalui buildApproverStats.
 export function buildApproverStats(summary: DashboardSummary): StatCardData[] {
   const { byStatus } = summary.requests
   return [

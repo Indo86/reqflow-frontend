@@ -26,7 +26,7 @@ describe('export-request-report-xlsx API layer', () => {
     expect((urlArg as URL).search).toBe('')
     expect(initArg).toMatchObject({ credentials: 'include' })
     expect(result.filename).toBe('reqflow-report-2026-09-24.xlsx')
-    // Binary body must round-trip byte for byte — never decoded as text or JSON.
+    // Memproses isi respons sebagai data biner.
     expect(new Uint8Array(await result.blob.arrayBuffer())).toEqual(XLSX_BYTES)
   })
 

@@ -55,9 +55,7 @@ export const routes: RouteObject[] = [
           { path: 'users/:userId', element: <UserDetailRoute /> },
         ],
       },
-      // Design-preview routes are intentionally outside the auth boundary —
-      // they render fixed mock personas for design QA and never touch real
-      // session state. See src/app/router/preview-routes.tsx.
+      // Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
       ...previewRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],

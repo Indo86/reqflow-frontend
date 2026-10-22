@@ -20,8 +20,7 @@ interface UserFormPageProps {
 
 const roleOptions = Object.entries(roleLabels) as [BackendRole, string][]
 
-// POST /users accepts profile fields only. The server generates and hashes a
-// temporary password, then returns the plaintext value once in this response.
+// Mengirim data ke /users.
 export function UserFormPage({ user, navItems, onLogout }: UserFormPageProps) {
   const navigate = useNavigate()
   const createMutation = useCreateUserMutation()

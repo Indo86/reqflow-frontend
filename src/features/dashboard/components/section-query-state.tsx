@@ -11,12 +11,7 @@ interface SectionQueryStateProps {
   genericErrorMessage?: string
 }
 
-// A non-table counterpart to features/requests/components/request-table-status.tsx
-// — same loading/error presentation, for dashboard/report sections that
-// aren't a <table>. Lets each section fail/load independently rather than
-// blanking the whole page when one secondary query fails (F6 "Loading
-// states" / "Error states"). Renders null once the caller should render its
-// real content.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function SectionQueryState({
   isPending,
   isError,

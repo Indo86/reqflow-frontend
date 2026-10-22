@@ -1,6 +1,4 @@
-// Presentation only — the backend never returns initials for a comment
-// author or attachment uploader (only {id, name}), so this derives them
-// client-side rather than inventing an avatar field the DTO doesn't have.
+// Membuat inisial pengguna dari nama lengkap.
 export function computeInitials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean)
   if (parts.length === 0) return '?'

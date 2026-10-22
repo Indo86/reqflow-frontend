@@ -14,18 +14,7 @@ interface ApprovalActionsProps {
   requestId: string
 }
 
-// Rendered by the caller (RequestDetailPage) only when the signed-in user is
-// the approver on the current PENDING step — see
-// findPendingApproval()/isCurrentApprover in that page. This component
-// itself never re-derives or re-checks authority from role; by the time it
-// renders, that decision has already been made from backend-authoritative
-// data (F3 "Approval authority principle").
-//
-// Approve has no confirmation dialog (comment is optional, and F0.5's
-// design treated it as a single click); Reject and Request Revision both
-// require a comment on the backend (decisionWithRequiredCommentSchema), so
-// they use a dialog. Replaces the F0.5 mock's decorative "..." overflow
-// button, which never did anything.
+// Menampilkan aksi keputusan untuk approval yang aktif.
 export function ApprovalActions({ approvalId, requestId }: ApprovalActionsProps) {
   const queryClient = useQueryClient()
   const [decisionDialog, setDecisionDialog] = useState<'reject' | 'revision' | null>(null)
@@ -35,10 +24,7 @@ export function ApprovalActions({ approvalId, requestId }: ApprovalActionsProps)
   const rejectMutation = useRejectMutation(approvalId, requestId)
   const revisionMutation = useRequestRevisionMutation(approvalId, requestId)
 
-  // A 404/409 here means the approval is no longer what the UI thought it
-  // was (already decided by a race, no longer active, etc.) — refetch and
-  // show the backend's own message rather than trusting the click (F3
-  // "Concurrency / race conditions"). Never retried automatically.
+  // Menyiapkan data untuk ditampilkan di antarmuka.
   function handleConflict(error: unknown) {
     void queryClient.invalidateQueries({ queryKey: requestKeys.detail(requestId) })
     void queryClient.invalidateQueries({ queryKey: approvalKeys.inboxes() })

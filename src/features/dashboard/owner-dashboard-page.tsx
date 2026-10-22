@@ -26,14 +26,7 @@ interface OwnerDashboardPageProps {
 
 const RECENT_PAGE_SIZE = 5
 
-// user/navItems default to the F0.5 mock persona so /preview/owner/dashboard
-// keeps working unchanged; the real /dashboard route passes the actual
-// signed-in user and role-aware nav (see F1 dashboard-route.tsx). onLogout
-// is the same "real vs preview" signal F1/F5 already use elsewhere (only
-// ever passed on a real authenticated route) — it gates whether this page
-// queries the real backend or keeps rendering the frozen preview mock data,
-// so /preview/owner/dashboard never needs a real session (F6 "Preview
-// routes keep mock data").
+// Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
 export function OwnerDashboardPage({
   user = deniZaky,
   navItems = previewNavigationByRole.Employee,

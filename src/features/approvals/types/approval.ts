@@ -1,9 +1,5 @@
 import type { z } from 'zod'
-// Type-only import: erased at compile time, so this never creates a runtime
-// circular dependency with features/requests/types/request.ts (which
-// imports from this file at runtime for mapApprovalCycleHistoryItem).
-// Components that need requestStatusLabels/requestTypeLabels import them
-// directly from that module instead of through here.
+// Import tipe ini dihapus saat kompilasi agar tidak membuat dependensi runtime.
 import type { RequestStatus, RequestType } from '@/features/requests/types/request'
 import type {
   approvalCycleHistoryItemSchema,
@@ -28,8 +24,7 @@ export const approvalStepTypeLabels: Record<ApprovalStepType, string> = {
   DIRECTOR: 'Director',
 }
 
-// WAITING/SKIPPED never surface on the Approval Inbox (only PENDING rows
-// do), but both appear in a Request's full approvalCycles history.
+// Menyimpan pemetaan approvalStatusLabels.
 export const approvalStatusLabels: Record<ApprovalStatus, string> = {
   WAITING: 'Not started',
   PENDING: 'Awaiting decision',
@@ -71,12 +66,7 @@ export function mapApprovalCycleHistoryItem(
   return { ...dto, approvals: dto.approvals.map(mapApprovalHistoryItem) }
 }
 
-// Finds the single actionable step across every cycle in a Request's
-// history — there is at most one PENDING approval at a time (an ACTIVE
-// cycle has exactly one active step; REJECTED/APPROVED/REVISION_REQUESTED
-// cycles have none). Never derived from array index/position — the
-// backend's own `status` field is the only source of truth (F3 "Current
-// step").
+// Backend tetap menjadi sumber data dan aturan utama.
 export function findPendingApproval(cycles: ApprovalCycleHistoryItem[]): ApprovalHistoryItem | undefined {
   for (const cycle of cycles) {
     const pending = cycle.approvals.find((approval) => approval.status === 'PENDING')
@@ -125,10 +115,7 @@ export function mapInboxResponse(dto: z.infer<typeof approvalInboxResponseSchema
   return { items: dto.data.map(mapInboxItem), meta: dto.meta }
 }
 
-// GET /approvals/:id's shape — deliberately smaller than a full Request:
-// only RequestSummary (no description, no other steps' history). See
-// api/get-approval-detail.ts for why an approver reviews here instead of
-// the Request Detail page.
+// Mendefinisikan bentuk detail approval dari API.
 export interface ApprovalDetail {
   id: string
   cycleNumber: number

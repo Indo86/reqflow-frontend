@@ -3,8 +3,7 @@ import { adminUserSchema } from '../schemas/user.schema'
 import { z } from 'zod'
 import { mapAdminUser, type AdminUser, type BackendRole } from '../types/user'
 
-// POST /users sends profile fields only. Tenant scope comes from the Admin
-// session; the server generates and returns a temporary password once.
+// Mengirim data ke /users.
 export interface CreateUserInput {
   name: string
   email: string

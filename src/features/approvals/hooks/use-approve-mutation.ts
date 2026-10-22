@@ -3,10 +3,7 @@ import { requestKeys } from '@/features/requests/api/request-query-keys'
 import { approveRequest } from '../api/approve-request'
 import { approvalKeys } from '../api/approval-query-keys'
 
-// Invalidates through the existing F2 request keys (never a second cache
-// system) plus the approval inbox — never `queryClient.clear()` (F3 "Request
-// cache coordination"). No optimistic update: the UI waits for the
-// backend's confirmed result before anything changes (F3 "Approve").
+// Menyetujui approval lalu menyegarkan data terkait.
 export function useApproveMutation(approvalId: string, requestId: string) {
   const queryClient = useQueryClient()
 

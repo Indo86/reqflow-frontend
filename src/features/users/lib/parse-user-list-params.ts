@@ -7,9 +7,7 @@ function isBackendRole(value: string): value is BackendRole {
   return value in roleLabels
 }
 
-// Normalizes raw URL search params into the exact filter shape GET /users
-// accepts, safely ignoring any invalid/unsupported value instead of
-// sending it to the backend or crashing.
+// Mengambil data dari /users.
 export function parseUserListParams(searchParams: URLSearchParams): UserListFilters {
   const rawPage = Number(searchParams.get('page'))
   const page = Number.isInteger(rawPage) && rawPage > 0 ? rawPage : 1

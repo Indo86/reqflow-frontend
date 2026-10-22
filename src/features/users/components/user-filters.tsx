@@ -10,11 +10,7 @@ const statusOptions = [
   { value: 'false', label: 'Inactive' },
 ]
 
-// Drives the list query entirely through URL search params
-// (?q=&role=&departmentId=&isActive=&page=), limited to exactly what
-// GET /users supports. Reuses Reports' existing Department query
-// infrastructure (useDepartmentsQuery) rather than duplicating it — see
-// F6.5 "Query keys".
+// Mengambil data dari /users.
 export function UserFilters() {
   const [searchParams, setSearchParams] = useSearchParams()
   const urlSearch = searchParams.get('q') ?? ''

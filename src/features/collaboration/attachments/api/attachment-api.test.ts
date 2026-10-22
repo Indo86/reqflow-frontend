@@ -40,9 +40,7 @@ describe('attachment API layer', () => {
     expect(init?.body).toBeInstanceOf(FormData)
     const formData = init!.body as FormData
     expect(formData.get('file')).toBe(file)
-    // The browser must generate the multipart boundary itself — apiClient
-    // must never set Content-Type when the body is FormData (only when
-    // using its `json` option).
+    // Membiarkan browser menentukan batas multipart untuk FormData.
     const headers = new Headers(init?.headers)
     expect(headers.has('Content-Type')).toBe(false)
     expect(result.id).toBe(sampleAttachment.id)
@@ -61,7 +59,7 @@ describe('attachment API layer', () => {
 
   it('downloadAttachment fetches GET /attachments/:id/download with credentials and returns a Blob', async () => {
     const fetchSpy = vi.fn(async () =>
-      // A byte body, not a jsdom Blob: Node's Response calls blob.stream(), which jsdom's Blob does not implement.
+      // Memproses isi respons sebagai data biner.
       new Response(new TextEncoder().encode('file bytes'), {
         status: 200,
         headers: {
@@ -78,8 +76,7 @@ describe('attachment API layer', () => {
       expect.objectContaining({ pathname: '/attachments/attachment-1/download' }),
       expect.objectContaining({ credentials: 'include' })
     )
-    // Response.blob() returns Node's Blob, not jsdom's global Blob, so instanceof is not meaningful here;
-    // assert the observable contract (type, size, bytes) instead.
+    // Memproses isi respons sebagai data biner.
     expect(result.blob.type).toBe('application/pdf')
     expect(result.blob.size).toBe('file bytes'.length)
     expect(new TextDecoder().decode(await result.blob.arrayBuffer())).toBe('file bytes')

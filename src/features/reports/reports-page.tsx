@@ -43,15 +43,7 @@ interface ReportsPageProps {
 const statusOptions = Object.entries(requestStatusLabels).map(([value, label]) => ({ value, label }))
 const typeOptions = Object.entries(requestTypeLabels).map(([value, label]) => ({ value, label }))
 
-// See owner-dashboard-page.tsx for the onLogout-gated real/preview pattern.
-// Export Excel, Export PDF and the Department filter are all real in production,
-// backed by GET /reports/requests/export/xlsx, GET /reports/requests/export/pdf and
-// GET /departments respectively (see
-// F6-contract-completion). No "Requests Over Time" chart here: that data
-// lives on /dashboard/requests-over-time, a dashboard-scoped snapshot with
-// different (unfiltered) semantics from Reports' filtered aggregates —
-// Admin Dashboard already covers it, so Reports isn't duplicating a second,
-// differently-scoped chart of the same underlying series.
+// Mengambil data dari /reports/requests/export/xlsx.
 export function ReportsPage({
   user = adminUser,
   navItems = previewNavigationByRole.Admin,
@@ -254,10 +246,7 @@ export function ReportsPage({
           {departmentsQuery.isPending ? (
             <div className="filter-pill" aria-disabled="true">Loading departments...</div>
           ) : departmentsQuery.isError ? (
-            // Degrades to a disabled, honest state rather than a broken or
-            // silently-empty dropdown — the rest of Reports (status/type/
-            // date filters, totals, breakdowns) stays fully usable. See F6-
-            // contract-completion "Department filter states".
+            // Menonaktifkan filter ketika daftar departemen gagal dimuat.
             <div className="filter-pill" aria-disabled="true" title="Department filter unavailable">
               Failed to load departments
             </div>

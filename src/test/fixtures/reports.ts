@@ -16,8 +16,7 @@ const zeroByType = {
   GENERAL: 0,
 }
 
-// Mirrors report.service.ts's RequestReportResult exactly — verified by
-// direct backend inspection. See F6 "backend contract".
+// Menyimpan nilai requestReportFixture yang digunakan pada proses ini.
 export const requestReportFixture = {
   filters: { status: null, type: null, departmentId: null, createdById: null, from: null, to: null },
   totals: { requests: 5, withAmount: 4, amountTotal: '92500000.75' },

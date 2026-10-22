@@ -11,10 +11,7 @@ function renderBell() {
   return renderWithProviders(<NotificationBell item={notificationsNavItem} active={false} />)
 }
 
-// Component-level tests for the self-contained bell — this is deliberately
-// where unread-count behavior is verified, rather than adding
-// /notifications/unread-count stubs to unrelated Dashboard/Requests/
-// Approvals/Reports page tests (see F5 "Avoid test coupling").
+// Menjelaskan kondisi yang diuji pada skenario ini.
 describe('NotificationBell', () => {
   it('renders a numeric badge when the real unread count is greater than zero', async () => {
     stubFetch((url) =>

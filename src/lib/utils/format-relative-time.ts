@@ -10,9 +10,7 @@ const DIVISIONS: { amount: number; unit: Intl.RelativeTimeFormatUnit }[] = [
 
 const formatter = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' })
 
-// Thin wrapper over Intl.RelativeTimeFormat, matching format-date.ts's
-// convention (no date library added). Notification timestamps are the only
-// current caller — see F5 "Date / time display".
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function formatRelativeTime(isoString: string): string {
   let duration = (new Date(isoString).getTime() - Date.now()) / 1000
 

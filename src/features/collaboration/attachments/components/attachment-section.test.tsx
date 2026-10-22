@@ -192,9 +192,7 @@ describe('AttachmentSection', () => {
   })
 })
 
-// Guard against a real regression: no dangerouslySetInnerHTML anywhere in
-// this component's source, and the original filename renders as plain
-// text (React escapes it), never interpreted as markup.
+// Menjaga agar perilaku ini tidak mengalami regresi.
 describe('AttachmentSection security', () => {
   it('renders a filename containing HTML-like characters as inert text', async () => {
     const maliciousName = { ...sampleAttachment, originalName: '<img src=x onerror=alert(1)>.pdf' }

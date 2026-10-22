@@ -3,9 +3,7 @@ import { getRequests } from '../api/get-requests'
 import { requestKeys, type RequestListFilters } from '../api/request-query-keys'
 
 export interface UseRequestsQueryOptions {
-  // Defaults to true. F6 dashboards pass false while rendering a /preview/*
-  // persona (no real session to query against) — see F6 "Preview routes
-  // keep mock data".
+  // Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
   enabled?: boolean
 }
 

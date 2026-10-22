@@ -56,8 +56,7 @@ describe('ReportsPage', () => {
 
     const totalCard = (await screen.findByText('Total Requests')).closest('.stat-card')
     expect(totalCard).toHaveTextContent('5')
-    // Decimal-as-string total formatted via the same safe helper F2 uses for
-    // display — never summed or coerced with Number(...) beforehand.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(screen.getByText(formatRequestAmount('92500000.75'))).toBeInTheDocument()
   })
 
@@ -65,11 +64,7 @@ describe('ReportsPage', () => {
     stubReportEndpoints()
     renderPage()
 
-    // Wait on "No department" specifically — it's unique to the breakdown
-    // list (unlike "Engineering", which also now exists as a hidden
-    // <option> in the real Department filter pill, and "Approved"/
-    // "Purchase" in the Status/Type pills), so it's a reliable data-loaded
-    // signal on its own.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(await screen.findByText('No department')).toBeInTheDocument()
     expect(screen.getAllByText('Engineering').length).toBeGreaterThan(0)
     expect(screen.getByRole('option', { name: 'Approved' })).toBeInTheDocument()
@@ -110,8 +105,8 @@ describe('ReportsPage', () => {
     stubReportEndpoints()
     renderPage()
 
-    expect(await screen.findByText('1 h')).toBeInTheDocument() // APPROVED: 3600s
-    expect(screen.getByText('3 h')).toBeInTheDocument() // REJECTED: 10800s
+    expect(await screen.findByText('1 h')).toBeInTheDocument() // APPROVED: 3.600 detik.
+    expect(screen.getByText('3 h')).toBeInTheDocument() // REJECTED: 10.800 detik.
   })
 
   it('surfaces the excludedTerminalRequestsWithoutAuditEvidence caveat when nonzero', async () => {
@@ -164,10 +159,7 @@ describe('ReportsPage', () => {
   })
 
   it('Export Excel sends the current filters, includes credentials, and triggers a download', async () => {
-    // Patch just the two static methods onto the real URL constructor —
-    // replacing the global URL itself (e.g. via vi.stubGlobal('URL', {...}))
-    // would break every `new URL(...)` call the app makes internally
-    // (apiClient constructs one per request).
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     const objectUrlSpy = vi.fn(() => 'blob:mock-url')
     const revokeSpy = vi.fn()
     URL.createObjectURL = objectUrlSpy

@@ -1,7 +1,4 @@
-// Sample M10 DTOs matching dashboard.service.ts's response shapes exactly
-// (zero-filled byStatus/byType, Decimal-as-string amounts, no isRead-style
-// booleans) — verified by direct backend inspection. See F6 "backend
-// contract".
+// Memvalidasi bentuk data sesuai kontrak API.
 const zeroByStatus = {
   DRAFT: 0,
   SUBMITTED: 0,

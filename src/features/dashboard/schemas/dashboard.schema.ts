@@ -1,10 +1,7 @@
 import { z } from 'zod'
 import { backendRequestStatusSchema, backendRequestTypeSchema } from '@/features/requests/schemas/request.schema'
 
-// Mirrors reqFlow-backend's M10 dashboard.service.ts DashboardSummary /
-// RequestsOverTimeResult / RecentActivityEntry shapes exactly — verified by
-// direct backend inspection. All 5 M10 endpoints share the `{ data: ... }`
-// envelope, never `{ success, data }` or a bare array/object.
+// Memvalidasi ringkasan data dashboard.
 export const dashboardSummarySchema = z.object({
   data: z.object({
     requests: z.object({
@@ -12,7 +9,7 @@ export const dashboardSummarySchema = z.object({
       byStatus: z.record(backendRequestStatusSchema, z.number()),
       byType: z.record(backendRequestTypeSchema, z.number()),
     }),
-    // M5: approval and fulfillment are counted separately. Optional so an older server still parses.
+    // Properti ini opsional agar penggunaan sebelumnya tetap didukung.
     fulfillment: z
       .object({
         awaitingOwner: z.number(),
@@ -26,9 +23,7 @@ export const dashboardSummarySchema = z.object({
       .optional(),
     approvals: z.object({ pendingForCurrentUser: z.number() }),
     notifications: z.object({ unreadForCurrentUser: z.number() }),
-    // Decimal, never a JS number — total is a string when count > 0, null
-    // when count is 0. Never Number(...)'d here; formatted at display time
-    // only via formatRequestAmount. See F6 "Decimal / amount handling".
+    // Menyiapkan data untuk ditampilkan di antarmuka.
     amounts: z.object({ count: z.number(), total: z.string().nullable() }),
   }),
 })
@@ -45,10 +40,7 @@ export const requestsOverTimeSchema = z.object({
   }),
 })
 
-// AuditAction/AuditEntityType are read as plain strings, not a strict zod
-// enum — a future backend value must render through the presentation
-// layer's safe fallback rather than fail parsing entirely (F5's own
-// "unknown notification type" precedent, applied here).
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export const recentActivitySchema = z.object({
   data: z.array(
     z.object({

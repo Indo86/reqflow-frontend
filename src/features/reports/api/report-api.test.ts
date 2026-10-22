@@ -17,7 +17,7 @@ describe('report API layer', () => {
       expect.objectContaining({ pathname: '/reports/requests', search: '?status=APPROVED&from=2026-04-01T00%3A00%3A00.000Z' }),
       expect.objectContaining({ credentials: 'include' })
     )
-    // Decimal total is a string, never coerced to a number here.
+    // Menjelaskan kondisi yang diuji pada skenario ini.
     expect(result.totals.amountTotal).toBe('92500000.75')
     expect(typeof result.totals.amountTotal).toBe('string')
   })

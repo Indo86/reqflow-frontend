@@ -5,7 +5,7 @@ interface AppProvidersProps {
   children: ReactNode
   client?: QueryClient
 }
-// The data router is composed separately through RouterProvider.
+// Menjalankan proses AppProviders.
 export function AppProviders({ children, client = queryClient }: AppProvidersProps) {
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>
 }

@@ -18,16 +18,11 @@ import {
 interface AttachmentSectionProps {
   requestId: string
   currentUserId: string
-  // See CommentSection — same owner-or-current-approver, not-terminal rule
-  // (getWritableRequestForCollaboration), UX only.
+  // Menutup aksi tulis setelah request selesai.
   canWrite: boolean
 }
 
-// Real Request Attachments (F4). Single-file upload only — the backend's
-// multer middleware is configured with `.single('file')`, so this never
-// offers multi-file selection. Client-side size/MIME checks mirror the
-// backend's own constants purely for UX; every upload is re-validated
-// authoritatively server-side regardless.
+// Mengunggah berkas melalui FormData.
 export function AttachmentSection({ requestId, currentUserId, canWrite }: AttachmentSectionProps) {
   const query = useAttachmentsQuery(requestId)
   const uploadMutation = useUploadAttachmentMutation(requestId)

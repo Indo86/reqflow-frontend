@@ -1,11 +1,6 @@
 import { z } from 'zod'
 
-// Mirrors reqFlow-backend's comment.schema.ts / comment.service.ts exactly
-// (verified by direct backend inspection): content is required, trimmed,
-// max 5000 chars — the same rule the backend applies to both create and
-// update. Update is not modeled here: F4 only implements list/create/
-// delete (the backend also exposes PATCH /comments/:id, intentionally out
-// of this milestone's scope).
+// Memvalidasi isi komentar sesuai kontrak API.
 export const commentContentSchema = z
   .string()
   .trim()

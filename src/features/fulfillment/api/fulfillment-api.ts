@@ -8,13 +8,12 @@ import type { FulfillmentListFilters } from './fulfillment-query-keys'
 
 const base = (requestId: string) => `/requests/${requestId}/fulfillment`
 
-// GET /requests/:id/fulfillment: readable by whoever can read the request.
+// Mengambil status fulfillment untuk sebuah request.
 export async function getFulfillment(requestId: string) {
   return fulfillmentResponseSchema.parse(await apiClient(base(requestId))).data
 }
 
-// Every action below is re-authorized by the server (assignee-only for start and
-// complete, Admin-only for cancel and assign); a hidden button is only a courtesy.
+// Menjalankan proses startFulfillment.
 export async function startFulfillment(requestId: string) {
   return fulfillmentResponseSchema.parse(await apiClient(`${base(requestId)}/start`, { method: 'POST' })).data
 }

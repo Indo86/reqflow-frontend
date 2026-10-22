@@ -11,9 +11,7 @@ function isRequestType(value: string): value is RequestType {
   return value in requestTypeLabels
 }
 
-// Normalizes raw URL search params into the exact filter shape GET /requests
-// accepts, safely ignoring any invalid/unsupported value (e.g. a stale or
-// hand-edited URL) instead of sending it to the backend or crashing.
+// Mengambil data dari /requests.
 export function parseRequestListParams(searchParams: URLSearchParams): RequestListFilters {
   const rawPage = Number(searchParams.get('page'))
   const page = Number.isInteger(rawPage) && rawPage > 0 ? rawPage : 1

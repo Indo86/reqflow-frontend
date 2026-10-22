@@ -10,9 +10,7 @@ interface Row {
   hint?: string
 }
 
-// Approval and fulfillment are separate lifecycles, and so are their numbers. The "Approved" figures elsewhere on
-// the dashboard count requests that were PERMITTED; nothing here is derived from them. "Fulfilled" is what executors
-// recorded; it is an internal record, not an external verification.
+// Menangani proses pemenuhan request.
 export function FulfillmentOverview({ counts }: { counts: FulfillmentCounts }) {
   const open = counts.notStarted + counts.inProgress
   const rows: Row[] = [

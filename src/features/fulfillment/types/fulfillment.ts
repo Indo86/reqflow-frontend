@@ -32,8 +32,7 @@ export const fulfillmentStatusVariants: Record<FulfillmentStatus, BadgeVariant> 
   CANCELLED: 'muted',
 }
 
-// What the executor is asked to write, per request type. This is a prompt only:
-// ReqFlow stores the text as an internal record and verifies nothing external.
+// Menyimpan petunjuk penyelesaian untuk setiap jenis request.
 export const completionPrompts: Record<RequestType, { label: string; description: string }> = {
   PURCHASE: {
     label: 'Purchase or receipt confirmation',

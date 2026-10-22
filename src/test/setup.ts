@@ -2,9 +2,7 @@ import '@testing-library/jest-dom/vitest'
 import { cleanup, configure } from '@testing-library/react'
 import { afterEach } from 'vitest'
 
-// jsdom does not implement the native <dialog> element's modal behavior.
-// Polyfill just enough of it (open state + showModal/close) so components
-// using <dialog> can be tested without reaching into browser internals.
+// Menambahkan perilaku dialog yang belum tersedia di jsdom.
 if (!HTMLDialogElement.prototype.showModal) {
   HTMLDialogElement.prototype.showModal = function (this: HTMLDialogElement) {
     this.setAttribute('open', '')
@@ -16,9 +14,7 @@ if (!HTMLDialogElement.prototype.close) {
   }
 }
 
-// findBy*/waitFor default to 1s, which a loaded machine exceeds while a whole page
-// (request + approvals + audit queries) renders in jsdom. Slower, not looser:
-// the assertions are unchanged.
+// Memberi waktu lebih untuk render halaman lengkap saat pengujian.
 configure({ asyncUtilTimeout: 5000 })
 
 afterEach(() => cleanup())

@@ -6,9 +6,7 @@ export interface UseDepartmentsQueryOptions {
   enabled?: boolean
 }
 
-// A lookup-failure here should not take down the rest of Reports — see F6-
-// contract-completion "Department filter states": the caller degrades the
-// filter control alone, not the whole page.
+// Menyediakan hook useDepartmentsQuery.
 export function useDepartmentsQuery(options: UseDepartmentsQueryOptions = {}) {
   return useQuery({
     queryKey: departmentKeys.list(),

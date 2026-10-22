@@ -1,14 +1,10 @@
 import { z } from 'zod'
 
-// Mirrors reqFlow-backend's Role enum (prisma/schema.prisma) exactly — do
-// not add roles the backend doesn't have.
+// Memvalidasi bentuk data sesuai kontrak API.
 export const backendRoleSchema = z.enum(['EMPLOYEE', 'MANAGER', 'FINANCE', 'DIRECTOR', 'ADMIN'])
 export type BackendRole = z.infer<typeof backendRoleSchema>
 
-// Shape of GET /users/me's `data` (see user.service.ts getUserProfile) —
-// deliberately the fuller profile, not GET /auth/me's {id,name,email}-only
-// shape, since this is the only endpoint that returns role/organization/
-// department.
+// Memvalidasi respons sesi dari /users/me.
 export const userProfileResponseSchema = z.object({
   id: z.string(),
   name: z.string(),

@@ -20,16 +20,7 @@ interface ApprovalInboxPageProps {
 const COLUMN_COUNT = 7
 const PAGE_SIZE = 20
 
-// Production Approval Inbox — real data via GET /approvals/inbox, already
-// scoped server-side to the signed-in user's own PENDING steps (see
-// approval.service.ts listInbox). No "Submitted" column: the inbox row has
-// no createdAt field to show one (see approval.schema.ts). No Export
-// button: no export endpoint exists, same reasoning as AdminRequestsPage.
-// No requester avatar: like AdminRequestsPage, real `createdBy` only ever
-// carries {id, name} — no initials — so this shows plain text rather than
-// inventing one. "Completed" has no backing endpoint (listInbox only ever
-// returns PENDING rows — see F3 "Completed approvals") so it renders with
-// no count rather than a fabricated one; only "Pending" is connected.
+// Mengambil data dari /approvals/inbox.
 export function ApprovalInboxPage({ user, navItems, onLogout }: ApprovalInboxPageProps) {
   const [searchParams] = useSearchParams()
   const rawPage = Number(searchParams.get('page'))

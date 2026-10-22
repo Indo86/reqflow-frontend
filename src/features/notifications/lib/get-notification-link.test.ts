@@ -41,9 +41,7 @@ describe('getNotificationLink', () => {
   })
 
   it('an approvalId present on a non-APPROVAL_ASSIGNED type is ignored — still routes by requestId', () => {
-    // Defensive: today only APPROVAL_ASSIGNED ever carries a non-null
-    // approvalId, but this proves the function never blindly prefers
-    // approvalId regardless of type.
+    // Memastikan hasil sesuai dengan perilaku yang diharapkan.
     expect(
       getNotificationLink({
         type: 'REQUEST_APPROVED',

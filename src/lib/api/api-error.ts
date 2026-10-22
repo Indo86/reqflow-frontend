@@ -9,7 +9,7 @@ export class ApiError extends Error {
   readonly status: number
   readonly code?: string
   readonly requestId?: string
-  // Diagnostics only. UI should display message, never arbitrary details/cause.
+  // Menyiapkan data untuk ditampilkan di antarmuka.
   readonly details?: unknown
   constructor(message: string, options: ApiErrorOptions) {
     super(message, { cause: options.cause })
@@ -30,7 +30,7 @@ export function normalizeHttpError(response: Response, payload: unknown): ApiErr
   const envelope = isRecord(payload) ? payload : undefined
   const error = isRecord(envelope?.error) ? envelope.error : envelope
   const code = stringValue(error?.code)
-  // Only the backend's normalized envelope supplies user-facing 4xx messages.
+  // Memilih pesan aman yang dapat ditampilkan kepada pengguna.
   const message =
     response.status < 500 && isRecord(envelope?.error) && code
       ? stringValue(error?.message)

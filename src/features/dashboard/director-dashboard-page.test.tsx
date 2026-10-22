@@ -70,9 +70,7 @@ describe('DirectorDashboardPage', () => {
     const highValueSection = (await screen.findByText('High-value Requests Assigned to You')).closest('.card')
     expect(highValueSection).not.toBeNull()
     const text = highValueSection!.textContent ?? ''
-    // "Big equipment purchase" (75,000,000) must appear before "Small
-    // reimbursement" (500,000) — proving it's sorted, not just passed
-    // through in backend list order.
+    // Memastikan hasil sesuai dengan perilaku yang diharapkan.
     expect(text.indexOf('Big equipment purchase')).toBeLessThan(text.indexOf('Small reimbursement'))
   })
 })

@@ -1,9 +1,6 @@
 import { z } from 'zod'
 
-// GET /requests/:id/audit-log (audit.service.ts getRequestAuditLog). For
-// anyone but the request's owner the server has already reduced `metadata` to
-// a per-action allow-list (audit-presentation.ts); the UI additionally reads
-// only the specific keys it renders and never dumps metadata wholesale.
+// Mengambil data dari /requests/:id/audit-log.
 export const auditEntrySchema = z.object({
   id: z.string(),
   action: z.string(),

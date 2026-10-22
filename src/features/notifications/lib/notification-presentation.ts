@@ -27,8 +27,7 @@ const fallbackPresentation: NotificationPresentation = {
   color: 'var(--muted-text)',
 }
 
-// Falls back safely for any notification type this frontend build doesn't
-// yet know about, rather than crashing (F5 "Notification type presentation").
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function getNotificationPresentation(type: NotificationType): NotificationPresentation {
   return presentationByType[type] ?? fallbackPresentation
 }

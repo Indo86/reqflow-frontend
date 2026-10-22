@@ -28,10 +28,7 @@ interface ManagerDashboardPageProps {
 const RECENT_PAGE_SIZE = 5
 const ATTENTION_PAGE_SIZE = 5
 
-// Reused for both the Manager and Finance real dashboards (no distinct
-// Finance dashboard exists in the F0.5 design) — see dashboard-route.tsx.
-// See owner-dashboard-page.tsx for the onLogout-gated real/preview pattern
-// this and every other F6 page follows.
+// Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
 export function ManagerDashboardPage({
   user = sarahWijaya,
   navItems = previewNavigationByRole.Manager,

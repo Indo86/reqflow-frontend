@@ -38,10 +38,7 @@ const RANGE_OPTIONS: Array<{ value: DashboardRange; label: string }> = [
   { value: 'all', label: 'To Date' },
 ]
 
-// See owner-dashboard-page.tsx for the onLogout-gated real/preview pattern.
-// Six months remains the intentional default. The selected semantic range
-// is part of the query key and the backend chooses the matching UTC window
-// and useful bucket granularity.
+// Menyusun kunci cache untuk kueri ini.
 export function AdminDashboardPage({
   user = adminUser,
   navItems = previewNavigationByRole.Admin,

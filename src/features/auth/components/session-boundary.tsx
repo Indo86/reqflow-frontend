@@ -1,8 +1,6 @@
 import { Loader2 } from 'lucide-react'
 
-// Minimal, restrained bootstrap state — no full-screen branded splash, just
-// enough to avoid rendering protected/guest content before the session
-// check resolves (F1 "Session bootstrap" / "avoid redirect flicker").
+// Menjalankan proses SessionBootstrapFallback.
 export function SessionBootstrapFallback() {
   return (
     <div
@@ -26,9 +24,7 @@ interface SessionErrorFallbackProps {
   onRetry: () => void
 }
 
-// Distinct from "you are logged out" — this renders only when the session
-// check itself failed (network/backend outage), never for a normal
-// unauthenticated response (see getSession()).
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function SessionErrorFallback({ onRetry }: SessionErrorFallbackProps) {
   return (
     <div

@@ -22,10 +22,7 @@ interface MyRequestsPageProps {
 
 const COLUMN_COUNT = 6
 
-// Production "My Requests" — real data via GET /requests. The backend
-// scopes this to the signed-in user's own requests for every non-admin
-// role; this component never filters client-side, it just renders whatever
-// the backend returns for the current filters/page.
+// Menampilkan request milik pengguna dari endpoint /requests.
 export function MyRequestsPage({ user, navItems, onLogout }: MyRequestsPageProps) {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()

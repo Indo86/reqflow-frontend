@@ -32,10 +32,7 @@ export function mapAttachmentListResponse(
   return { items: dto.data.map(mapAttachmentResponse), meta: dto.meta }
 }
 
-// Mirrors config/constants.ts exactly (verified by direct backend
-// inspection) — UX hint only; the backend re-validates both authoritatively
-// on every upload (413 ATTACHMENT_TOO_LARGE / 415
-// UNSUPPORTED_ATTACHMENT_TYPE) regardless of what the client checked.
+// Mengunggah berkas melalui FormData.
 export const MAX_ATTACHMENT_SIZE_BYTES = 10 * 1024 * 1024
 
 export const ALLOWED_ATTACHMENT_MIME_TYPES = [

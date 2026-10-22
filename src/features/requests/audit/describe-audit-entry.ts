@@ -9,7 +9,7 @@ const POLICY_LABEL: Record<string, string> = {
 
 export interface AuditDescription {
   title: string
-  // An extra line of context (a reason, a decision comment, what changed).
+  // Menangani komentar pada request.
   detail?: string
 }
 
@@ -21,10 +21,7 @@ const withReason = (value: unknown): string | undefined => {
   return reason ? `Reason: ${reason}` : undefined
 }
 
-// Turns one audit event into a sentence a reviewer can read. It reads only the
-// handful of keys each action is known to carry, so an unexpected field in the
-// metadata can never leak into the UI, and an unknown action degrades to a
-// generic label instead of crashing.
+// Menyiapkan data untuk ditampilkan di antarmuka.
 export function describeAuditEntry(entry: AuditEntry): AuditDescription {
   const meta = entry.metadata ?? {}
   const step = STEP_LABEL[String(meta.stepType)] ?? 'Approver'

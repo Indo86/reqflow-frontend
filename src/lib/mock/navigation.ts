@@ -18,11 +18,7 @@ export interface NavItemConfig {
   icon: LucideIcon
 }
 
-// Used only by the /preview/* design-inspection routes, which render a fixed
-// mock persona regardless of who (if anyone) is actually signed in. Kept
-// deliberately separate from productionNavigationByRole below so preview
-// persona-switching can never influence, or be influenced by, real session
-// state — see F1 "Development preview routes".
+// Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
 export const previewNavigationByRole: Record<Role, NavItemConfig[]> = {
   Employee: [
     { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -55,14 +51,7 @@ export const previewNavigationByRole: Record<Role, NavItemConfig[]> = {
   ],
 }
 
-// Used by real authenticated routes once F1 session/role data is available.
-// hrefs point at the plain generic routes, which are role-aware (see
-// src/app/router/*-route.tsx) and resolve to the same static F0.5 page
-// components previewNavigationByRole above points at directly. Mirrors the
-// authority model from the F0.5 design: Approvals only for Manager/Finance/
-// Director; Reports/org-wide Requests only for Admin. This is top-level
-// navigation UX only — the backend remains authoritative for every actual
-// request.
+// Hak akses tetap divalidasi oleh backend.
 export const productionNavigationByRole: Record<Role, NavItemConfig[]> = {
   Employee: [
     { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -90,17 +79,14 @@ export const productionNavigationByRole: Record<Role, NavItemConfig[]> = {
   Admin: [
     { key: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { key: 'requests', label: 'Requests', href: '/requests', icon: FileText },
-    // F6.5: Admin-only. Not added to previewNavigationByRole above — there
-    // is no F0.5 mock Users screen for /preview/* to point at.
+    // Menggunakan data API di halaman produksi tanpa mengubah halaman preview.
     { key: 'users', label: 'Users', href: '/users', icon: Users },
     { key: 'notifications', label: 'Notifications', href: '/notifications', icon: Bell },
     { key: 'reports', label: 'Reports', href: '/reports', icon: BarChart3 },
   ],
 }
 
-// M4: any user can be assigned a fulfillment task, and Admin assigns them, so the
-// entry is for every role. The page shows only what the server returns for the
-// signed-in user. Inserted before Notifications to keep the work items together.
+// Menyiapkan data notifikasi untuk pengguna.
 for (const items of Object.values(productionNavigationByRole)) {
   const at = items.findIndex((item) => item.key === 'notifications')
   items.splice(at < 0 ? items.length : at, 0, { key: 'fulfillment', label: 'Fulfillment', href: '/fulfillment', icon: ListChecks })

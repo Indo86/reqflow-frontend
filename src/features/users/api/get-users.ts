@@ -3,10 +3,7 @@ import { userListResponseSchema } from '../schemas/user.schema'
 import { mapAdminUser, type UserListResult } from '../types/user'
 import type { UserListFilters } from './user-query-keys'
 
-// GET /users — Admin-only, organization scope derived entirely from the
-// session server-side; there is no organizationId param to send (see F6.5
-// "Do not accept organizationId for scope"). Filters mirror exactly what
-// the backend supports: q (name/email), role, departmentId, isActive.
+// Mengambil data dari /users.
 export async function getUsers(filters: UserListFilters): Promise<UserListResult> {
   const params = new URLSearchParams()
   params.set('page', String(filters.page))

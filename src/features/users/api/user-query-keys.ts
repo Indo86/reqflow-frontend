@@ -9,9 +9,7 @@ export interface UserListFilters {
   isActive?: boolean
 }
 
-// Feature-owned query keys — never a single global registry. Filters are
-// included directly in the list key so distinct filter combinations cache
-// and invalidate independently.
+// Menyusun kunci cache untuk kueri ini.
 export const userKeys = {
   all: ['users'] as const,
   lists: () => [...userKeys.all, 'list'] as const,

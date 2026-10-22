@@ -6,13 +6,7 @@ interface RealApprovalAttentionTableProps {
   items: InboxItem[]
 }
 
-// Real-data counterpart to approval-attention-table.tsx (kept for preview
-// personas). Reuses the exact GET /approvals/inbox shape from F3 — there is
-// no separate "dashboard attention" endpoint, and the inbox row has no
-// submitted-date field to show one (see F3 approval-inbox-page.tsx, same
-// omission). Each row links to its own approval, never a single shared
-// href — the mock table's reviewHref was a fixed string, which real per-row
-// approvalIds fix.
+// Mengambil data dari /approvals/inbox.
 export function RealApprovalAttentionTable({ items }: RealApprovalAttentionTableProps) {
   return (
     <div className="table-scroll">

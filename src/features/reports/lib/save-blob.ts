@@ -1,5 +1,4 @@
-// Hands a Blob to the browser as a download and revokes the temporary object
-// URL right after the download has started, so it's never held onto.
+// Menjalankan proses saveBlob.
 export function saveBlob(blob: Blob, filename: string): void {
   const objectUrl = URL.createObjectURL(blob)
   try {

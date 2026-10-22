@@ -13,11 +13,7 @@ interface ApprovalDecisionDialogProps {
   onCancel: () => void
 }
 
-// Shared by Approve (comment optional), Reject, and Request Revision
-// (both comment required by the backend — decisionWithRequiredCommentSchema)
-// — same native <dialog> pattern as requests/components/confirm-dialog.tsx,
-// extended with a comment field. Validates "required" client-side only as a
-// UX nicety; the backend's own validation remains authoritative.
+// Menampilkan dialog keputusan beserta komentar opsional.
 export function ApprovalDecisionDialog({
   open,
   title,

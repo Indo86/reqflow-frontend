@@ -8,12 +8,7 @@ import { loginFormSchema, type LoginFormValues } from '../schemas/login.schema'
 
 const DEFAULT_LANDING_ROUTE = '/dashboard'
 
-// apiClient's normalizeHttpError already reduces every 4xx to the backend's
-// own safe {code,message} and every 5xx/unparsed response to a generic
-// message (see api-error.ts) — so error.message here is already safe to
-// show verbatim. We only decide whether the *requestId* is worth surfacing:
-// for an unexpected failure (network down, 5xx, or a shape we don't
-// recognize), not for an ordinary "invalid credentials"/validation 4xx.
+// Menampilkan pesan error login yang aman.
 function isUnexpectedFailure(error: ApiError): boolean {
   return error.status === 0 || error.status >= 500 || !error.code
 }
@@ -42,7 +37,7 @@ export function LoginPage() {
       const from = (location.state as LocationState | null)?.from
       navigate(from ? `${from.pathname}${from.search}` : DEFAULT_LANDING_ROUTE, { replace: true })
     } catch {
-      // Surfaced below via loginMutation.error — nothing further to do here.
+      // Error login ditampilkan oleh state mutation.
     }
   })
 
@@ -166,7 +161,7 @@ export function LoginPage() {
         <div className="login-footer">© 2026 Internal Systems · v2.4.1</div>
       </section>
 
-      {/* Decorative only: nothing here is needed to sign in, so it is hidden from assistive tech. */}
+      {/* Gambar dekoratif tidak dibaca oleh teknologi bantu. */}
       <aside className="login-visual" aria-hidden="true">
         <img src="/login-office.jpg" alt="" decoding="async" />
         <div className="login-visual-content">

@@ -1,9 +1,6 @@
 import { z } from 'zod'
 
-// Mirrors reqFlow-backend's Role enum (prisma/schema.prisma) and
-// user.service.ts's AdminUserSummary shape exactly — verified by direct
-// backend inspection (F6.5). Never passwordHash or any other auth
-// internal — the backend DTO itself never includes it.
+// Memvalidasi bentuk data sesuai kontrak API.
 export const backendRoleSchema = z.enum(['EMPLOYEE', 'MANAGER', 'FINANCE', 'DIRECTOR', 'ADMIN'])
 
 const departmentRefSchema = z
@@ -26,8 +23,7 @@ export const adminUserSchema = z.object({
 
 export type AdminUserResponse = z.infer<typeof adminUserSchema>
 
-// GET /users — meta has no totalPages (unlike Requests' list meta); see
-// types/user.ts's mapper for where that gets derived.
+// Mengambil data dari /users.
 export const userListResponseSchema = z.object({
   data: z.array(adminUserSchema),
   meta: z.object({
